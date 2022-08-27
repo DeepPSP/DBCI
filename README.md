@@ -1,6 +1,6 @@
 # Confidence Intervals for Difference of Binomial Proportions
 
-Computation of confidence intervals for binomial proportions and for difference of Binomial Proportions.
+Computation of confidence intervals for binomial proportions and for difference of binomial proportions.
 
 ## References
 
