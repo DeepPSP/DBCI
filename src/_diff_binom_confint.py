@@ -7,7 +7,10 @@ from scipy.stats import norm
 from ._confint import ConfidenceInterval
 
 
-__all__ = ["compute_difference_confidence_interval"]
+__all__ = [
+    "compute_difference_confidence_interval",
+    "list_difference_confidence_interval_types",
+]
 
 
 def compute_difference_confidence_interval(
@@ -82,7 +85,7 @@ def compute_difference_confidence_interval(
             conf_level,
             confint_type.lower(),
         )
-    elif "wald" in confint_type.lower():
+    elif confint_type.lower() in ["wald", "wald_cc"]:
         item = z * np.sqrt(
             ratio * (1 - ratio) / tot + ref_ratio * (1 - ref_ratio) / ref_tot
         )
@@ -155,5 +158,40 @@ def compute_difference_confidence_interval(
         return ConfidenceInterval(
             delta - item, delta + item, conf_level, confint_type.lower()
         )
+    elif confint_type.lower() == "hauck-anderson":
+        raise NotImplementedError
+    elif confint_type.lower() == "agresti-caffo":
+        raise NotImplementedError
+    elif confint_type.lower() == "santner-snell":
+        raise NotImplementedError
+    elif confint_type.lower() == "chan-zhang":
+        raise NotImplementedError
+    elif confint_type.lower() == "brown-li":
+        raise NotImplementedError
+    elif confint_type.lower() == "miettinen-nurminen-brown-li":
+        raise NotImplementedError
     else:
         raise ValueError(f"{confint_type} is not supported")
+
+
+def list_difference_confidence_interval_types() -> None:
+    """ """
+    supported_types = [
+        "wilson",
+        "newcombe",
+        "wilson_cc",
+        "newcombe_cc",
+        "wald",
+        "wald_cc",
+        "haldane",
+        "jeffreys-perks",
+        "mee",
+        "miettinen-nurminen",
+        # "hauck-anderson",
+        # "agresti-caffo",
+        # "santner-snell",
+        # "chan-zhang",
+        # "brown-li",
+        # "miettinen-nurminen-brown-li",
+    ]
+    print("\n".join(supported_types))
