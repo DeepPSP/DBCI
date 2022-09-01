@@ -115,7 +115,7 @@ def compute_difference_confidence_interval(
         u = v + 0.5 / ref_tot
         if confint_type.lower() == "haldane":
             psi = 0.5 * (ratio + ref_ratio)
-        else:
+        else:  # "jeffreys-perks"
             psi = 0.5 * (
                 (n_positive + 0.5) / (tot + 1) + (ref_positive + 0.5) / (ref_tot + 1)
             )
@@ -138,6 +138,33 @@ def compute_difference_confidence_interval(
         )
         return ConfidenceInterval(
             theta_star - w, theta_star + w, conf_level, confint_type.lower()
+        )
+    elif confint_type.lower() in ["mee", "miettinen-nurminen"]:
+        delta = ratio - ref_ratio
+        theta = ref_tot / tot
+        a = 1 + theta
+        b = -(a + ratio + theta * ref_ratio + delta * (theta + 2))
+        c = delta * (delta + 2 * ratio + theta + 1) + ratio + theta * ref_ratio
+        d = -ratio * delta * (1 + delta)
+        tmp = b / 3 / a
+        v = tmp**3 - b * c / 6 / a**2 + d / 2 / a
+        u = v * np.sqrt(tmp**2 + c / 3 / a) / np.abs(v)
+        w = (np.pi + np.arccos(v / u**3)) / 3
+        ratio_mle = 2 * u * np.cos(w) - tmp
+        ref_ratio_mle = ratio_mle + delta
+        if confint_type.lower() == "mee":
+            lamb = 1
+        else:  # "miettinen-nurminen"
+            lamb = (tot + ref_tot) / (tot + ref_tot + 1)
+        item = z * np.sqrt(
+            lamb
+            * (
+                ratio_mle * (1 - ratio_mle) / tot
+                + ref_ratio_mle * (1 - ref_ratio_mle) / ref_tot
+            )
+        )
+        return ConfidenceInterval(
+            delta - item, delta + item, conf_level, confint_type.lower()
         )
     else:
         raise ValueError(f"{confint_type} is not supported")
