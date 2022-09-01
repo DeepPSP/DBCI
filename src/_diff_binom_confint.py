@@ -45,42 +45,12 @@ def compute_difference_confidence_interval(
     ratio = n_positive / tot
     ref_ratio = ref_positive / ref_tot
     if confint_type.lower() in ["wilson", "newcombe"]:
-        lower1 = (
-            (
-                2 * tot * ratio
-                + z**2
-                - z * np.sqrt(4 * tot * ratio * (1 - ratio) + z**2)
-            )
-            / 2
-            / (tot + z**2)
-        )
-        upper1 = (
-            (
-                2 * tot * ratio
-                + z**2
-                + z * np.sqrt(4 * tot * ratio * (1 - ratio) + z**2)
-            )
-            / 2
-            / (tot + z**2)
-        )
-        lower2 = (
-            (
-                2 * ref_tot * ref_ratio
-                + z**2
-                - z * np.sqrt(4 * ref_tot * ref_ratio * (1 - ref_ratio) + z**2)
-            )
-            / 2
-            / (ref_tot + z**2)
-        )
-        upper2 = (
-            (
-                2 * ref_tot * ref_ratio
-                + z**2
-                + z * np.sqrt(4 * ref_tot * ref_ratio * (1 - ref_ratio) + z**2)
-            )
-            / 2
-            / (ref_tot + z**2)
-        )
+        item1 = z * np.sqrt(4 * tot * ratio * (1 - ratio) + z**2)
+        lower1 = (2 * tot * ratio + z**2 - item1) / 2 / (tot + z**2)
+        upper1 = (2 * tot * ratio + z**2 + item1) / 2 / (tot + z**2)
+        item2 = z * np.sqrt(4 * ref_tot * ref_ratio * (1 - ref_ratio) + z**2)
+        lower2 = (2 * ref_tot * ref_ratio + z**2 - item2) / 2 / (ref_tot + z**2)
+        upper2 = (2 * ref_tot * ref_ratio + z**2 + item2) / 2 / (ref_tot + z**2)
         return ConfidenceInterval(
             ratio
             - ref_ratio
@@ -92,7 +62,26 @@ def compute_difference_confidence_interval(
             confint_type.lower(),
         )
     elif confint_type.lower() in ["wilson_cc", "newcombe_cc"]:
-        raise NotImplementedError
+        item1 = 1 + z * np.sqrt(
+            z**2 - 2 - 1 / tot + 4 * ratio * (tot * (1 - ratio) + 1)
+        )
+        lower1 = (2 * tot * ratio + z**2 - item1) / 2 / (tot + z**2)
+        upper1 = (2 * tot * ratio + z**2 + item1) / 2 / (tot + z**2)
+        item2 = 1 + z * np.sqrt(
+            z**2 - 2 - 1 / ref_tot + 4 * ref_ratio * (ref_tot * (1 - ref_ratio) + 1)
+        )
+        lower2 = (2 * ref_tot * ref_ratio + z**2 - item2) / 2 / (ref_tot + z**2)
+        upper2 = (2 * ref_tot * ref_ratio + z**2 + item2) / 2 / (ref_tot + z**2)
+        return ConfidenceInterval(
+            ratio
+            - ref_ratio
+            - np.sqrt((ratio - lower1) ** 2 + (upper2 - ref_ratio) ** 2),
+            ratio
+            - ref_ratio
+            + np.sqrt((ref_ratio - lower2) ** 2 + (upper1 - ratio) ** 2),
+            conf_level,
+            confint_type.lower(),
+        )
     elif "wald" in confint_type.lower():
         item = z * np.sqrt(
             ratio * (1 - ratio) / tot + ref_ratio * (1 - ref_ratio) / ref_tot
