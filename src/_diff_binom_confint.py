@@ -47,6 +47,7 @@ def compute_difference_confidence_interval(
     ref_tot = ref_positive + ref_negative
     ratio = n_positive / tot
     ref_ratio = ref_positive / ref_tot
+    delta_ratio = ratio - ref_ratio
     if confint_type.lower() in ["wilson", "newcombe"]:
         item1 = z * np.sqrt(4 * tot * ratio * (1 - ratio) + z**2)
         lower1 = (2 * tot * ratio + z**2 - item1) / 2 / (tot + z**2)
@@ -55,16 +56,14 @@ def compute_difference_confidence_interval(
         lower2 = (2 * ref_tot * ref_ratio + z**2 - item2) / 2 / (ref_tot + z**2)
         upper2 = (2 * ref_tot * ref_ratio + z**2 + item2) / 2 / (ref_tot + z**2)
         return ConfidenceInterval(
-            ratio
-            - ref_ratio
-            - np.sqrt((ratio - lower1) ** 2 + (upper2 - ref_ratio) ** 2),
-            ratio
-            - ref_ratio
-            + np.sqrt((ref_ratio - lower2) ** 2 + (upper1 - ratio) ** 2),
+            delta_ratio - np.sqrt((ratio - lower1) ** 2 + (upper2 - ref_ratio) ** 2),
+            delta_ratio + np.sqrt((ref_ratio - lower2) ** 2 + (upper1 - ratio) ** 2),
             conf_level,
             confint_type.lower(),
         )
     elif confint_type.lower() in ["wilson_cc", "newcombe_cc"]:
+        # has error
+        raise NotADirectoryError
         item1 = 1 + z * np.sqrt(
             z**2 - 2 - 1 / tot + 4 * ratio * (tot * (1 - ratio) + 1)
         )
@@ -76,12 +75,8 @@ def compute_difference_confidence_interval(
         lower2 = (2 * ref_tot * ref_ratio + z**2 - item2) / 2 / (ref_tot + z**2)
         upper2 = (2 * ref_tot * ref_ratio + z**2 + item2) / 2 / (ref_tot + z**2)
         return ConfidenceInterval(
-            ratio
-            - ref_ratio
-            - np.sqrt((ratio - lower1) ** 2 + (upper2 - ref_ratio) ** 2),
-            ratio
-            - ref_ratio
-            + np.sqrt((ref_ratio - lower2) ** 2 + (upper1 - ratio) ** 2),
+            delta_ratio - np.sqrt((ratio - lower1) ** 2 + (upper2 - ref_ratio) ** 2),
+            delta_ratio + np.sqrt((ref_ratio - lower2) ** 2 + (upper1 - ratio) ** 2),
             conf_level,
             confint_type.lower(),
         )
@@ -91,14 +86,14 @@ def compute_difference_confidence_interval(
         )
         if confint_type.lower() == "wald_cc":
             return ConfidenceInterval(
-                ratio - ref_ratio - item - 0.5 / tot - 0.5 / ref_tot,
-                ratio - ref_ratio + item + 0.5 / tot + 0.5 / ref_tot,
+                delta_ratio - item - 0.5 / tot - 0.5 / ref_tot,
+                delta_ratio + item + 0.5 / tot + 0.5 / ref_tot,
                 conf_level,
                 confint_type.lower(),
             )
         return ConfidenceInterval(
-            ratio - ref_ratio - item,
-            ratio - ref_ratio + item,
+            delta_ratio - item,
+            delta_ratio + item,
             conf_level,
             confint_type.lower(),
         )
@@ -113,51 +108,54 @@ def compute_difference_confidence_interval(
             )
         w = (
             np.sqrt(
-                u
-                * (
-                    4 * psi * (1 - psi)
-                    - (ratio - ref_ratio) ** 2
-                    + 2 * v * (1 - 2 * psi) * (ratio - ref_ratio)
-                    + 4 * ((z * u) ** 2) * psi * (1 - psi)
-                    + (z * v * (1 - 2 * psi)) ** 2
-                )
+                u * (4 * psi * (1 - psi) - delta_ratio**2)
+                + 2 * v * (1 - 2 * psi) * delta_ratio
+                + 4 * ((z * u) ** 2) * psi * (1 - psi)
+                + (z * v * (1 - 2 * psi)) ** 2
             )
             * z
             / (1 + u * z**2)
         )
-        theta_star = ((ratio - ref_ratio) + v * (1 - 2 * psi) * z**2) / (
-            1 + u * z**2
-        )
+        theta_star = (delta_ratio + v * (1 - 2 * psi) * z**2) / (1 + u * z**2)
         return ConfidenceInterval(
             theta_star - w, theta_star + w, conf_level, confint_type.lower()
         )
     elif confint_type.lower() in ["mee", "miettinen-nurminen"]:
-        delta = ratio - ref_ratio
-        theta = ref_tot / tot
-        a = 1 + theta
-        b = -(a + ratio + theta * ref_ratio + delta * (theta + 2))
-        c = delta * (delta + 2 * ratio + theta + 1) + ratio + theta * ref_ratio
-        d = -ratio * delta * (1 + delta)
-        tmp = b / 3 / a
-        v = tmp**3 - b * c / 6 / a**2 + d / 2 / a
-        u = v * np.sqrt(tmp**2 + c / 3 / a) / np.abs(v)
-        w = (np.pi + np.arccos(v / u**3)) / 3
-        ratio_mle = 2 * u * np.cos(w) - tmp
-        ref_ratio_mle = ratio_mle + delta
-        if confint_type.lower() == "mee":
-            lamb = 1
-        else:  # "miettinen-nurminen"
-            lamb = (tot + ref_tot) / (tot + ref_tot + 1)
-        item = z * np.sqrt(
-            lamb
-            * (
-                ratio_mle * (1 - ratio_mle) / tot
-                + ref_ratio_mle * (1 - ref_ratio_mle) / ref_tot
-            )
-        )
-        return ConfidenceInterval(
-            delta - item, delta + item, conf_level, confint_type.lower()
-        )
+        # impelementation has error
+        raise NotImplementedError
+        # theta = ref_tot / tot
+        # a = 1 + theta
+        # increment = 1e-5
+        # for j in np.arange(-1, 1, increment):
+        #     b = -(1 + theta + ratio + theta * ref_ratio + j * (theta + 2))
+        #     c = j * (j + 2 * ratio + theta + 1) + ratio + theta * ref_ratio
+        #     d = -ratio * j * (1 + j)
+        #     tmp = b / 3 / a
+        #     v = tmp**3 - b * c / 6 / a**2 + d / 2 / a
+        #     u = np.sign(v) * np.sqrt(tmp**2 + c / 3 / a)
+        #     w = (np.pi + np.arccos(v / u**3)) / 3
+        #     ratio_mle = 2 * u * np.cos(w) - tmp
+        #     ref_ratio_mle = ratio_mle + j
+        #     if confint_type.lower() == "mee":
+        #         lamb = 1
+        #     else:  # "miettinen-nurminen"
+        #         lamb = (tot + ref_tot) / (tot + ref_tot + 1)
+        #     item = z * np.sqrt(
+        #         lamb
+        #         * (
+        #             ratio_mle * (1 - ratio_mle) / tot
+        #             + ref_ratio_mle * (1 - ref_ratio_mle) / ref_tot
+        #         )
+        #     )
+        # return ConfidenceInterval(
+        #     delta_ratio - item, delta_ratio + item, conf_level, confint_type.lower()
+        # )
+    elif confint_type.lower() == "true-profile":
+        raise NotImplementedError
+    elif confint_type.lower() == "exact":
+        raise NotImplementedError
+    elif confint_type.lower() == "mid-p":
+        raise NotImplementedError
     elif confint_type.lower() == "hauck-anderson":
         raise NotImplementedError
     elif confint_type.lower() == "agresti-caffo":
@@ -169,6 +167,12 @@ def compute_difference_confidence_interval(
     elif confint_type.lower() == "brown-li":
         raise NotImplementedError
     elif confint_type.lower() == "miettinen-nurminen-brown-li":
+        raise NotImplementedError
+    elif confint_type.lower() == "agresti-min":
+        raise NotImplementedError
+    elif confint_type.lower() == "wang":
+        raise NotImplementedError
+    elif confint_type.lower() == "pradhan-banerjee":
         raise NotImplementedError
     else:
         raise ValueError(f"{confint_type} is not supported")
@@ -185,8 +189,11 @@ def list_difference_confidence_interval_types() -> None:
         "wald_cc",
         "haldane",
         "jeffreys-perks",
-        "mee",
-        "miettinen-nurminen",
+        # "mee",
+        # "miettinen-nurminen",
+        # "true-profile",
+        # "exact",
+        # "mid-p",
         # "hauck-anderson",
         # "agresti-caffo",
         # "santner-snell",
