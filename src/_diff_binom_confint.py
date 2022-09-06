@@ -1,6 +1,8 @@
 """
 """
 
+import warnings
+
 import numpy as np
 from scipy.stats import norm
 
@@ -42,6 +44,7 @@ def compute_difference_confidence_interval(
     an instance of `ConfidenceInterval`
 
     """
+    warnings.simplefilter(action="ignore", category=RuntimeWarning)
     z = norm.ppf((1 + conf_level) / 2)
     tot = n_positive + n_negative
     ref_tot = ref_positive + ref_negative
@@ -121,37 +124,73 @@ def compute_difference_confidence_interval(
             theta_star - w, theta_star + w, conf_level, confint_type.lower()
         )
     elif confint_type.lower() in ["mee", "miettinen-nurminen"]:
-        # impelementation has error
-        raise NotImplementedError
-        # theta = ref_tot / tot
-        # a = 1 + theta
-        # increment = 1e-5
-        # for j in np.arange(-1, 1, increment):
-        #     b = -(1 + theta + ratio + theta * ref_ratio + j * (theta + 2))
-        #     c = j * (j + 2 * ratio + theta + 1) + ratio + theta * ref_ratio
-        #     d = -ratio * j * (1 + j)
-        #     tmp = b / 3 / a
-        #     v = tmp**3 - b * c / 6 / a**2 + d / 2 / a
-        #     u = np.sign(v) * np.sqrt(tmp**2 + c / 3 / a)
-        #     w = (np.pi + np.arccos(v / u**3)) / 3
-        #     ratio_mle = 2 * u * np.cos(w) - tmp
-        #     ref_ratio_mle = ratio_mle + j
-        #     if confint_type.lower() == "mee":
-        #         lamb = 1
-        #     else:  # "miettinen-nurminen"
-        #         lamb = (tot + ref_tot) / (tot + ref_tot + 1)
-        #     item = z * np.sqrt(
-        #         lamb
-        #         * (
-        #             ratio_mle * (1 - ratio_mle) / tot
-        #             + ref_ratio_mle * (1 - ref_ratio_mle) / ref_tot
-        #         )
-        #     )
-        # return ConfidenceInterval(
-        #     delta_ratio - item, delta_ratio + item, conf_level, confint_type.lower()
-        # )
+        theta = ref_tot / tot
+        a = 1 + theta
+        increment = 1e-5
+        itv = []
+        flag = None
+        for j in np.arange(-1, 1 + increment, increment):
+            b = -(1 + theta + ratio + theta * ref_ratio + j * (theta + 2))
+            c = j * (j + 2 * ratio + theta + 1) + ratio + theta * ref_ratio
+            d = -ratio * j * (1 + j)
+            tmp_b = b / 3 / a
+            tmp_c = c / 3 / a
+            v = tmp_b**3 - tmp_b * tmp_c * 3 / 2 + d / 2 / a
+            u = np.sign(v) * np.sqrt(tmp_b**2 - tmp_c)
+            w = (np.pi + np.arccos(v / u**3)) / 3
+            ratio_mle = 2 * u * np.cos(w) - tmp_b
+            ref_ratio_mle = ratio_mle - j
+            if confint_type.lower() == "mee":
+                lamb = 1
+            else:  # "miettinen-nurminen"
+                lamb = (tot + ref_tot) / (tot + ref_tot - 1)
+            var = np.sqrt(
+                lamb
+                * (
+                    ratio_mle * (1 - ratio_mle) / tot
+                    + ref_ratio_mle * (1 - ref_ratio_mle) / ref_tot
+                )
+            )
+            var = (delta_ratio - j) / var
+            if -z < var < z:
+                flag = True
+                itv.append(j)
+            elif flag:
+                break
+        return ConfidenceInterval(
+            np.min(itv), np.max(itv), conf_level, confint_type.lower()
+        )
     elif confint_type.lower() == "true-profile":
-        raise NotImplementedError
+        theta = ref_tot / tot
+        a = 1 + theta
+        increment = 1e-5
+        itv = []
+        flag = None
+        for j in np.arange(-1, 1 + increment, increment):
+            b = -(1 + theta + ratio + theta * ref_ratio + j * (theta + 2))
+            c = j * (j + 2 * ratio + theta + 1) + ratio + theta * ref_ratio
+            d = -ratio * j * (1 + j)
+            tmp_b = b / 3 / a
+            tmp_c = c / 3 / a
+            v = tmp_b**3 - tmp_b * tmp_c * 3 / 2 + d / 2 / a
+            u = np.sign(v) * np.sqrt(tmp_b**2 - tmp_c)
+            w = (np.pi + np.arccos(v / u**3)) / 3
+            ratio_mle = 2 * u * np.cos(w) - tmp_b
+            ref_ratio_mle = ratio_mle - j
+            var = (
+                n_positive * np.log(ratio_mle / ratio)
+                + ref_positive * np.log(ref_ratio_mle / ref_ratio)
+                + n_negative * np.log((1 - ratio_mle) / (1 - ratio))
+                + ref_negative * np.log((1 - ref_ratio_mle) / (1 - ref_ratio))
+            )
+            if var >= -(z**2) / 2:
+                flag = True
+                itv.append(j)
+            elif flag:
+                break
+        return ConfidenceInterval(
+            np.min(itv), np.max(itv), conf_level, confint_type.lower()
+        )
     elif confint_type.lower() == "exact":
         raise NotImplementedError
     elif confint_type.lower() == "mid-p":
@@ -187,9 +226,9 @@ _supported_types = [
     "wald_cc",
     "haldane",
     "jeffreys-perks",
-    # "mee",
-    # "miettinen-nurminen",
-    # "true-profile",
+    "mee",
+    "miettinen-nurminen",
+    "true-profile",
     # "exact",
     # "mid-p",
     # "hauck-anderson",
