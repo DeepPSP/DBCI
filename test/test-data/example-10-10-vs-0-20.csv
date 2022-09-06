@@ -1,6 +1,6 @@
 method,lower_bound,upper_bound
 wald,1.0000,1.0000
-wald_cc,0.9250,
+wald-cc,0.9250,
 haldane,0.7482,1.0000
 jeffreys-perks,0.7431,
 mee,0.7225,1.0000
@@ -9,7 +9,7 @@ true-profile,0.8252,1.0000
 exact,0.6915,1.0000
 mid-p,0.7411,1.0000
 wilson,0.6791,1.0000
-wilson_cc,0.6014,1.0000
+wilson-cc,0.6014,1.0000
 hauck-anderson,0.9500,
 agresti-caffo,0.6922,
 santner-snell,0.6915,1.0000

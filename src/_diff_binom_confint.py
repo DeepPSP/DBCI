@@ -24,6 +24,8 @@ def compute_difference_confidence_interval(
     confint_type: str = "wilson",
 ) -> ConfidenceInterval:
     """
+    Compute the confidence interval of the difference between two binomial proportions.
+
     Parameters
     ----------
     n_positive: int,
@@ -64,7 +66,7 @@ def compute_difference_confidence_interval(
             conf_level,
             confint_type.lower(),
         )
-    elif confint_type.lower() in ["wilson_cc", "newcombe_cc", "score_cc"]:
+    elif confint_type.lower() in ["wilson-cc", "newcombe-cc", "score-cc"]:
         # https://corplingstats.wordpress.com/2019/04/27/correcting-for-continuity/
         # equation (6) and (6')
         e = 2 * tot * ratio + z**2
@@ -85,11 +87,11 @@ def compute_difference_confidence_interval(
             conf_level,
             confint_type.lower(),
         )
-    elif confint_type.lower() in ["wald", "wald_cc"]:
+    elif confint_type.lower() in ["wald", "wald-cc"]:
         item = z * np.sqrt(
             ratio * (1 - ratio) / tot + ref_ratio * (1 - ref_ratio) / ref_tot
         )
-        if confint_type.lower() == "wald_cc":
+        if confint_type.lower() == "wald-cc":
             return ConfidenceInterval(
                 delta_ratio - item - 0.5 / tot - 0.5 / ref_tot,
                 delta_ratio + item + 0.5 / tot + 0.5 / ref_tot,
@@ -264,11 +266,11 @@ _supported_types = [
     "wilson",
     "newcombe",
     "score",
-    "wilson_cc",
-    "newcombe_cc",
-    "score_cc",
+    "wilson-cc",
+    "newcombe-cc",
+    "score-cc",
     "wald",
-    "wald_cc",
+    "wald-cc",
     "haldane",
     "jeffreys-perks",
     "mee",
@@ -289,9 +291,9 @@ _supported_types = [
 
 _type_aliases = {
     "wilson": "newcombe",
-    "wilson_cc": "newcombe_cc",
+    "wilson-cc": "newcombe-cc",
     "score": "newcombe",
-    "score_cc": "newcombe_cc",
+    "score-cc": "newcombe-cc",
 }
 
 

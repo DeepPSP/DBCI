@@ -1,13 +1,13 @@
 method,lower_bound,upper_bound
 wald,-0.1162,0.0843
-wald_cc,-0.1259,0.0940
+wald-cc,-0.1259,0.0940
 haldane,-0.1152,0.0834
 jeffreys-perks,-0.1160,0.0843
 mee,-0.1188,0.0857
 miettinen-nurminen,-0.1191,0.0860
 true-profile,-0.1176,0.0849
 wilson,-0.1177,0.0851
-wilson_cc,-0.1245,0.0918
+wilson-cc,-0.1245,0.0918
 hauck-anderson,-0.1216,0.0898
 agresti-caffo,-0.1168,0.0850
 santner-snell,-0.1514,0.1219
