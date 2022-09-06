@@ -193,10 +193,6 @@ def compute_difference_confidence_interval(
         return ConfidenceInterval(
             np.min(itv), np.max(itv), conf_level, confint_type.lower()
         )
-    elif confint_type.lower() == "exact":
-        raise NotImplementedError
-    elif confint_type.lower() == "mid-p":
-        raise NotImplementedError
     elif confint_type.lower() == "hauck-anderson":
         item = 1 / 2 / min(tot, ref_tot) + z * np.sqrt(
             ratio * (1 - ratio) / (tot - 1)
@@ -218,10 +214,6 @@ def compute_difference_confidence_interval(
             conf_level,
             confint_type.lower(),
         )
-    elif confint_type.lower() == "santner-snell":
-        raise NotImplementedError
-    elif confint_type.lower() == "chan-zhang":
-        raise NotImplementedError
     elif confint_type.lower() == "brown-li":
         ratio_1 = (n_positive + 0.5) / (tot + 1)
         ratio_2 = (ref_positive + 0.5) / (ref_tot + 1)
@@ -250,6 +242,14 @@ def compute_difference_confidence_interval(
         lower = weight * lower_mn + (1 - weight) * lower_bl
         upper = weight * upper_mn + (1 - weight) * upper_bl
         return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
+    elif confint_type.lower() == "exact":
+        raise NotImplementedError
+    elif confint_type.lower() == "mid-p":
+        raise NotImplementedError
+    elif confint_type.lower() == "santner-snell":
+        raise NotImplementedError
+    elif confint_type.lower() == "chan-zhang":
+        raise NotImplementedError
     elif confint_type.lower() == "agresti-min":
         raise NotImplementedError
     elif confint_type.lower() == "wang":
