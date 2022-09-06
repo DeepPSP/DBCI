@@ -11,6 +11,7 @@ Computation of confidence intervals for binomial proportions and for difference 
 3. <a name="ref3"></a> [statsmodels.stats.proportion](https://www.statsmodels.org/devel/_modules/statsmodels/stats/proportion.html)
 4. <a name="ref4"></a> [scipy.stats._binomtest](https://github.com/scipy/scipy/blob/main/scipy/stats/_binomtest.py)
 5. <a name="ref5"></a> [corplingstats](https://corplingstats.wordpress.com/2019/04/27/correcting-for-continuity/)
+6. <a name="ref6"></a> [DescTools.StatsAndCIs](https://github.com/AndriSignorell/DescTools/blob/master/R/StatsAndCIs.r)
 
 ## NOTE
 

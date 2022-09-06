@@ -46,8 +46,9 @@ def compute_difference_confidence_interval(
     an instance of `ConfidenceInterval`
 
     """
+    qnorm = norm.ppf
     warnings.simplefilter(action="ignore", category=RuntimeWarning)
-    z = norm.ppf((1 + conf_level) / 2)
+    z = qnorm((1 + conf_level) / 2)
     tot = n_positive + n_negative
     ref_tot = ref_positive + ref_negative
     ratio = n_positive / tot

@@ -1,13 +1,18 @@
 """
 """
 
+from typing import NoReturn
+
 import numpy as np
-from scipy.stats import norm
+from scipy.stats import norm, beta
 
 from ._confint import ConfidenceInterval
 
 
-__all__ = ["compute_confidence_interval"]
+__all__ = [
+    "compute_confidence_interval",
+    "list_confidence_interval_types",
+]
 
 
 def compute_confidence_interval(
@@ -17,6 +22,8 @@ def compute_confidence_interval(
     confint_type: str = "wilson",
 ) -> ConfidenceInterval:
     """
+    Compute the confidence interval for a binomial proportion.
+
     Parameters
     ----------
     n_positive: int,
@@ -33,37 +40,184 @@ def compute_confidence_interval(
     an instance of `ConfidenceInterval`
 
     """
-    z = norm.ppf((1 + conf_level) / 2)
+    qnorm = norm.ppf
+    qbeta = beta.ppf
+
+    z = qnorm((1 + conf_level) / 2)
     tot = n_positive + n_negative
-    if confint_type.lower() == "wilson":
-        rate = n_positive / tot
+    ratio = n_positive / tot
+    if confint_type.lower() in ["wilson", "newcombe"]:
+        item = z * np.sqrt((ratio * (1 - ratio) + z * z / (4 * tot)) / tot)
         return ConfidenceInterval(
-            (
-                (
-                    rate
-                    + z * z / (2 * tot)
-                    - z * np.sqrt((rate * (1 - rate) + z * z / (4 * tot)) / tot)
-                )
-                / (1 + z * z / tot)
-            ),
-            (
-                (
-                    rate
-                    + z * z / (2 * tot)
-                    + z * np.sqrt((rate * (1 - rate) + z * z / (4 * tot)) / tot)
-                )
-                / (1 + z * z / tot)
-            ),
+            ((ratio + z * z / (2 * tot) - item) / (1 + z * z / tot)),
+            ((ratio + z * z / (2 * tot) + item) / (1 + z * z / tot)),
             conf_level,
             confint_type.lower(),
         )
-    elif confint_type.lower() == "wald":
-        rate = n_positive / tot
+    elif confint_type.lower() in ["wilson-cc", "newcombe-cc"]:
+        e = 2 * tot * ratio + z**2
+        f = z**2 - 1 / tot + 4 * tot * ratio * (1 - ratio)
+        g = 4 * ratio - 2
+        h = 2 * (tot + z**2)
         return ConfidenceInterval(
-            rate - z * np.sqrt(rate * (1 - rate) / tot),
-            rate + z * np.sqrt(rate * (1 - rate) / tot),
+            (e - (z * np.sqrt(f + g) + 1)) / h,
+            (e + (z * np.sqrt(f - g) + 1)) / h,
             conf_level,
             confint_type.lower(),
         )
+    elif confint_type.lower() in ["wald", "wald-cc"]:
+        item = z * np.sqrt(ratio * (1 - ratio) / tot)
+        if confint_type.lower() == "wald-cc":
+            item += 0.5 / tot
+        return ConfidenceInterval(
+            ratio - item,
+            ratio + item,
+            conf_level,
+            confint_type.lower(),
+        )
+    elif confint_type.lower() == "agresti-coull":
+        ratio_tilde = (n_positive + 0.5 * z**2) / (tot + z**2)
+        item = z * np.sqrt(ratio_tilde * (1 - ratio_tilde) / (tot + z**2))
+        return ConfidenceInterval(
+            ratio_tilde - item,
+            ratio_tilde + item,
+            conf_level,
+            confint_type.lower(),
+        )
+    elif confint_type.lower() == "jeffreys":
+        return ConfidenceInterval(
+            qbeta(0.5 * (1 - conf_level), n_positive + 0.5, n_negative + 0.5)
+            if n_positive > 0
+            else 0,
+            qbeta(0.5 * (1 + conf_level), n_positive + 0.5, n_negative + 0.5)
+            if n_negative > 0
+            else 1,
+            conf_level,
+            confint_type.lower(),
+        )
+    elif confint_type.lower() == "clopper-pearson":
+        return ConfidenceInterval(
+            qbeta(0.5 * (1 - conf_level), n_positive, n_negative + 1),
+            qbeta(0.5 * (1 + conf_level), n_positive + 1, n_negative),
+            conf_level,
+            confint_type.lower(),
+        )
+    elif confint_type.lower() == "arcsine":
+        ratio_tilde = (n_positive + 0.375) / (tot + 0.75)
+        return ConfidenceInterval(
+            np.sin(np.arcsin(np.sqrt(ratio_tilde)) - 0.5 * z / np.sqrt(tot)) ** 2,
+            np.sin(np.arcsin(np.sqrt(ratio_tilde)) + 0.5 * z / np.sqrt(tot)) ** 2,
+            conf_level,
+            confint_type.lower(),
+        )
+    elif confint_type.lower() == "logit":
+        lambda_hat = np.log(ratio / (1 - ratio))
+        V_hat = 1 / ratio / n_negative
+        lambda_lower = lambda_hat - z * np.sqrt(V_hat)
+        lambda_upper = lambda_hat + z * np.sqrt(V_hat)
+        return ConfidenceInterval(
+            np.exp(lambda_lower) / (1 + np.exp(lambda_lower)),
+            np.exp(lambda_upper) / (1 + np.exp(lambda_upper)),
+            conf_level,
+            confint_type.lower(),
+        )
+    elif confint_type.lower() == "pratt":
+        if n_positive == 0:
+            return ConfidenceInterval(
+                0,
+                1 - np.power(1 - conf_level, 1 / tot),
+                conf_level,
+                confint_type.lower(),
+            )
+        elif n_positive == 1:
+            return ConfidenceInterval(
+                1 - np.power(0.5 * (1 + conf_level), 1 / tot),
+                1 - np.power(0.5 * (1 - conf_level), 1 / tot),
+                conf_level,
+                confint_type.lower(),
+            )
+        elif n_negative == 1:
+            return ConfidenceInterval(
+                np.power(0.5 * (1 - conf_level), 1 / tot),
+                np.power(0.5 * (1 + conf_level), 1 / tot),
+                conf_level,
+                confint_type.lower(),
+            )
+        elif n_negative == 0:
+            return ConfidenceInterval(
+                np.power(1 - conf_level, 1 / tot), 1, conf_level, confint_type.lower()
+            )
+        else:
+            a = ((n_positive + 1) / n_negative) ** 2
+            b = 81 * (n_positive + 1) * n_negative - 9 * tot - 8
+            c = (
+                -3
+                * z
+                * np.sqrt(
+                    9 * (n_positive + 1) * n_negative * (9 * tot + 5 - z**2) + tot + 1
+                )
+            )
+            d = 81 * (n_positive + 1) ** 2 - 9 * (n_positive + 1) * (2 + z**2) + 1
+            lower = 1 + (a * (b + c) / d) ** 3
+            a = (n_positive / (n_negative - 1)) ** 2
+            b = 81 * n_positive * (n_negative - 1) - 9 * tot - 8
+            c = (
+                3
+                * z
+                * np.sqrt(
+                    9 * n_positive * (n_negative - 1) * (9 * tot + 5 - z**2) + tot + 1
+                )
+            )
+            d = 81 * n_positive**2 - 9 * n_positive * (2 + z**2) + 1
+            upper = 1 + (a * (b + c) / d) ** 3
+            return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
+    elif confint_type.lower() == "witting":
+        raise NotImplementedError
+    elif confint_type.lower() == "midp":
+        raise NotImplementedError
+    elif confint_type.lower() == "lik":
+        raise NotImplementedError
+    elif confint_type.lower() == "blaker":
+        raise NotImplementedError
+    elif confint_type.lower() in ["modified-wilson", "modified-newcombe"]:
+        raise NotImplementedError
+    elif confint_type.lower() == "modified-jeffreys":
+        raise NotImplementedError
     else:
         raise ValueError(f"{confint_type} is not supported")
+
+
+_supported_types = [
+    "wilson",
+    "newcombe",
+    "wilson-cc",
+    "newcombe-cc",
+    "wald",
+    "wald-cc",
+    "agresti-coull",
+    "jeffreys",
+    "clopper-pearson",
+    "arcsine",
+    "logit",
+    "pratt",
+    # "witting",
+    # "midp",
+    # "lik",
+    # "blaker",
+    # "modified-wilson",
+    # "modified-newcombe",
+    # "modified-jeffreys",
+]
+
+
+_type_aliases = {
+    "wilson": "newcombe",
+    "wilson-cc": "newcombe-cc",
+    "modified-wilson": "modified-newcombe",
+}
+
+
+def list_confidence_interval_types() -> NoReturn:
+    """ """
+
+    print("\n".join(_supported_types))
