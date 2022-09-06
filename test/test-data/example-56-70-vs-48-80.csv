@@ -10,7 +10,7 @@ exact,0.0529,0.3403
 mid-p,0.0539,0.3393
 wilson,0.0524,0.3339
 wilson_cc,0.0428,0.3422
-hauck-andersen,0.0494,0.3506
+hauck-anderson,0.0494,0.3506
 agresti-caffo,0.0525,0.3358
 santner-snell,0.0390,0.3533
 chan-zhang,0.0382,0.3453
