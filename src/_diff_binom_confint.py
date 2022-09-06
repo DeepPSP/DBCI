@@ -178,27 +178,30 @@ def compute_difference_confidence_interval(
         raise ValueError(f"{confint_type} is not supported")
 
 
+_supported_types = [
+    "wilson",
+    "newcombe",
+    # "wilson_cc",
+    # "newcombe_cc",
+    "wald",
+    "wald_cc",
+    "haldane",
+    "jeffreys-perks",
+    # "mee",
+    # "miettinen-nurminen",
+    # "true-profile",
+    # "exact",
+    # "mid-p",
+    # "hauck-anderson",
+    # "agresti-caffo",
+    # "santner-snell",
+    # "chan-zhang",
+    # "brown-li",
+    # "miettinen-nurminen-brown-li",
+]
+
+
 def list_difference_confidence_interval_types() -> None:
     """ """
-    supported_types = [
-        "wilson",
-        "newcombe",
-        "wilson_cc",
-        "newcombe_cc",
-        "wald",
-        "wald_cc",
-        "haldane",
-        "jeffreys-perks",
-        # "mee",
-        # "miettinen-nurminen",
-        # "true-profile",
-        # "exact",
-        # "mid-p",
-        # "hauck-anderson",
-        # "agresti-caffo",
-        # "santner-snell",
-        # "chan-zhang",
-        # "brown-li",
-        # "miettinen-nurminen-brown-li",
-    ]
-    print("\n".join(supported_types))
+    
+    print("\n".join(_supported_types))
