@@ -1,5 +1,7 @@
 # Confidence Intervals for Difference of Binomial Proportions
 
+![pytest](https://github.com/DeepPSP/DBCI/actions/workflows/run-pytest.yml/badge.svg)
+
 Computation of confidence intervals for binomial proportions and for difference of binomial proportions.
 
 ## References
