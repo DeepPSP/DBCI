@@ -15,3 +15,12 @@ Computation of confidence intervals for binomial proportions and for difference 
 [Reference 1](#ref1) has errors in the description of the methods `Wilson CC`, `Mee`, `Miettinen-Nurminen`.
 The correct computation of `Wilson CC` is given in [Reference 5](#ref5).
 The correct computation of `Mee`, `Miettinen-Nurminen` are given in the **code blocks** in [Reference 1](#ref1)
+
+## Test data
+
+[Test data](test/test-data/) are taken from [Reference 1](#ref1) for automatic test of the correctness of the implementation of the algorithms.
+The filenames has the following pattern:
+
+```python
+"example-(?P<n_positive>[\\d]+)-(?P<n_tot>[\\d]+)-vs-(?P<ref_positive>[\\d]+)-(?P<ref_tot>[\\d]+)\\.csv"
+```
