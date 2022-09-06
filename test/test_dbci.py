@@ -70,7 +70,11 @@ def test_difference_confidence_interval():
 
     for confint_type in _supported_types:
         lower, upper = compute_difference_confidence_interval(
-            n_positive, n_negative, ref_positive, ref_negative, confint_type=confint_type
+            n_positive,
+            n_negative,
+            ref_positive,
+            ref_negative,
+            confint_type=confint_type,
         ).astuple()
         print(f"{confint_type.ljust(max_length)}: [{lower:.2%}, {upper:.2%}]")
         try:

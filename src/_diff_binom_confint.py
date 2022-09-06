@@ -203,5 +203,5 @@ _supported_types = [
 
 def list_difference_confidence_interval_types() -> None:
     """ """
-    
+
     print("\n".join(_supported_types))
