@@ -51,7 +51,7 @@ def compute_difference_confidence_interval(
     ratio = n_positive / tot
     ref_ratio = ref_positive / ref_tot
     delta_ratio = ratio - ref_ratio
-    if confint_type.lower() in ["wilson", "newcombe"]:
+    if confint_type.lower() in ["wilson", "newcombe", "score"]:
         item1 = z * np.sqrt(4 * tot * ratio * (1 - ratio) + z**2)
         lower1 = (2 * tot * ratio + z**2 - item1) / 2 / (tot + z**2)
         upper1 = (2 * tot * ratio + z**2 + item1) / 2 / (tot + z**2)
@@ -64,19 +64,21 @@ def compute_difference_confidence_interval(
             conf_level,
             confint_type.lower(),
         )
-    elif confint_type.lower() in ["wilson_cc", "newcombe_cc"]:
-        # has error
-        raise NotADirectoryError
-        item1 = 1 + z * np.sqrt(
-            z**2 - 2 - 1 / tot + 4 * ratio * (tot * (1 - ratio) + 1)
-        )
-        lower1 = (2 * tot * ratio + z**2 - item1) / 2 / (tot + z**2)
-        upper1 = (2 * tot * ratio + z**2 + item1) / 2 / (tot + z**2)
-        item2 = 1 + z * np.sqrt(
-            z**2 - 2 - 1 / ref_tot + 4 * ref_ratio * (ref_tot * (1 - ref_ratio) + 1)
-        )
-        lower2 = (2 * ref_tot * ref_ratio + z**2 - item2) / 2 / (ref_tot + z**2)
-        upper2 = (2 * ref_tot * ref_ratio + z**2 + item2) / 2 / (ref_tot + z**2)
+    elif confint_type.lower() in ["wilson_cc", "newcombe_cc", "score_cc"]:
+        # https://corplingstats.wordpress.com/2019/04/27/correcting-for-continuity/
+        # equation (6) and (6')
+        e = 2 * tot * ratio + z**2
+        f = z**2 - 1 / tot + 4 * tot * ratio * (1 - ratio)
+        g = 4 * ratio - 2
+        h = 2 * (tot + z**2)
+        lower1 = (e - (z * np.sqrt(f + g) + 1)) / h
+        upper1 = (e + (z * np.sqrt(f - g) + 1)) / h
+        e = 2 * ref_tot * ref_ratio + z**2
+        f = z**2 - 1 / ref_tot + 4 * ref_tot * ref_ratio * (1 - ref_ratio)
+        g = 4 * ref_ratio - 2
+        h = 2 * (ref_tot + z**2)
+        lower2 = (e - (z * np.sqrt(f + g) + 1)) / h
+        upper2 = (e + (z * np.sqrt(f - g) + 1)) / h
         return ConfidenceInterval(
             delta_ratio - np.sqrt((ratio - lower1) ** 2 + (upper2 - ref_ratio) ** 2),
             delta_ratio + np.sqrt((ref_ratio - lower2) ** 2 + (upper1 - ratio) ** 2),
@@ -261,8 +263,10 @@ def compute_difference_confidence_interval(
 _supported_types = [
     "wilson",
     "newcombe",
-    # "wilson_cc",
-    # "newcombe_cc",
+    "score",
+    "wilson_cc",
+    "newcombe_cc",
+    "score_cc",
     "wald",
     "wald_cc",
     "haldane",
@@ -278,11 +282,16 @@ _supported_types = [
     # "chan-zhang",
     "brown-li",
     "miettinen-nurminen-brown-li",
+    # "agresti-min",
+    # "wang",
+    # "pradhan-banerjee",
 ]
 
 _type_aliases = {
     "wilson": "newcombe",
     "wilson_cc": "newcombe_cc",
+    "score": "newcombe",
+    "score_cc": "newcombe_cc",
 }
 
 
