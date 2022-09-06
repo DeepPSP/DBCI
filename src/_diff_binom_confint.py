@@ -196,9 +196,17 @@ def compute_difference_confidence_interval(
     elif confint_type.lower() == "mid-p":
         raise NotImplementedError
     elif confint_type.lower() == "hauck-anderson":
-        raise NotImplementedError
+        item = 1 / 2 / min(tot, ref_tot) + z * np.sqrt(ratio * (1 - ratio) / (tot-1) + ref_ratio * (1 - ref_ratio) / (ref_tot-1))
+        return ConfidenceInterval(
+            delta_ratio - item, delta_ratio + item, conf_level, confint_type.lower()
+        )
     elif confint_type.lower() == "agresti-caffo":
-        raise NotImplementedError
+        ratio_1 = (n_positive + 1) / (tot + 2)
+        ratio_2 = (ref_positive + 1) / (ref_tot + 2)
+        item = z * np.sqrt((ratio_1 * (1 - ratio_1) / (tot+2)) + (ratio_2 * (1 - ratio_2) / (ref_tot+2)))
+        return ConfidenceInterval(
+            ratio_1 - ratio_2 - item, ratio_1 - ratio_2 + item, conf_level, confint_type.lower()
+        )
     elif confint_type.lower() == "santner-snell":
         raise NotImplementedError
     elif confint_type.lower() == "chan-zhang":
@@ -231,13 +239,18 @@ _supported_types = [
     "true-profile",
     # "exact",
     # "mid-p",
-    # "hauck-anderson",
-    # "agresti-caffo",
+    "hauck-anderson",
+    "agresti-caffo",
     # "santner-snell",
     # "chan-zhang",
     # "brown-li",
     # "miettinen-nurminen-brown-li",
 ]
+
+_type_aliases = {
+    "wilson": "newcombe",
+    "wilson_cc": "newcombe_cc",
+}
 
 
 def list_difference_confidence_interval_types() -> None:
