@@ -97,8 +97,12 @@ def test_difference_confidence_interval():
         ).astuple()
         print(f"{confint_type.ljust(max_length)}: [{lower:.2%}, {upper:.2%}]")
         row = df_data[df_data["method"] == confint_type].iloc[0]
-        assert lower == approx(row["lower_bound"], abs=error_bound), f"for {confint_type}, lower bound should be {row['lower_bound']:.2%}, but got {lower:.2%}"
-        assert upper == approx(row["upper_bound"], abs=error_bound), f"for {confint_type}, upper bound should be {row['upper_bound']:.2%}, but got {upper:.2%}"
+        assert lower == approx(
+            row["lower_bound"], abs=error_bound
+        ), f"for {confint_type}, lower bound should be {row['lower_bound']:.2%}, but got {lower:.2%}"
+        assert upper == approx(
+            row["upper_bound"], abs=error_bound
+        ), f"for {confint_type}, upper bound should be {row['upper_bound']:.2%}, but got {upper:.2%}"
 
     print("test_difference_confidence_interval passed")
 

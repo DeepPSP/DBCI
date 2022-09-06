@@ -196,25 +196,58 @@ def compute_difference_confidence_interval(
     elif confint_type.lower() == "mid-p":
         raise NotImplementedError
     elif confint_type.lower() == "hauck-anderson":
-        item = 1 / 2 / min(tot, ref_tot) + z * np.sqrt(ratio * (1 - ratio) / (tot-1) + ref_ratio * (1 - ref_ratio) / (ref_tot-1))
+        item = 1 / 2 / min(tot, ref_tot) + z * np.sqrt(
+            ratio * (1 - ratio) / (tot - 1)
+            + ref_ratio * (1 - ref_ratio) / (ref_tot - 1)
+        )
         return ConfidenceInterval(
             delta_ratio - item, delta_ratio + item, conf_level, confint_type.lower()
         )
     elif confint_type.lower() == "agresti-caffo":
         ratio_1 = (n_positive + 1) / (tot + 2)
         ratio_2 = (ref_positive + 1) / (ref_tot + 2)
-        item = z * np.sqrt((ratio_1 * (1 - ratio_1) / (tot+2)) + (ratio_2 * (1 - ratio_2) / (ref_tot+2)))
+        item = z * np.sqrt(
+            (ratio_1 * (1 - ratio_1) / (tot + 2))
+            + (ratio_2 * (1 - ratio_2) / (ref_tot + 2))
+        )
         return ConfidenceInterval(
-            ratio_1 - ratio_2 - item, ratio_1 - ratio_2 + item, conf_level, confint_type.lower()
+            ratio_1 - ratio_2 - item,
+            ratio_1 - ratio_2 + item,
+            conf_level,
+            confint_type.lower(),
         )
     elif confint_type.lower() == "santner-snell":
         raise NotImplementedError
     elif confint_type.lower() == "chan-zhang":
         raise NotImplementedError
     elif confint_type.lower() == "brown-li":
-        raise NotImplementedError
+        ratio_1 = (n_positive + 0.5) / (tot + 1)
+        ratio_2 = (ref_positive + 0.5) / (ref_tot + 1)
+        item = z * np.sqrt(
+            ratio_1 * (1 - ratio_1) / tot + ratio_2 * (1 - ratio_2) / ref_tot
+        )
+        return ConfidenceInterval(
+            ratio_1 - ratio_2 - item,
+            ratio_1 - ratio_2 + item,
+            conf_level,
+            confint_type.lower(),
+        )
     elif confint_type.lower() == "miettinen-nurminen-brown-li":
-        raise NotImplementedError
+        weight = 2 / 3
+        lower_mn, upper_mn = compute_difference_confidence_interval(
+            n_positive,
+            n_negative,
+            ref_positive,
+            ref_negative,
+            conf_level,
+            "miettinen-nurminen",
+        ).astuple()
+        lower_bl, upper_bl = compute_difference_confidence_interval(
+            n_positive, n_negative, ref_positive, ref_negative, conf_level, "brown-li"
+        ).astuple()
+        lower = weight * lower_mn + (1 - weight) * lower_bl
+        upper = weight * upper_mn + (1 - weight) * upper_bl
+        return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
     elif confint_type.lower() == "agresti-min":
         raise NotImplementedError
     elif confint_type.lower() == "wang":
@@ -243,8 +276,8 @@ _supported_types = [
     "agresti-caffo",
     # "santner-snell",
     # "chan-zhang",
-    # "brown-li",
-    # "miettinen-nurminen-brown-li",
+    "brown-li",
+    "miettinen-nurminen-brown-li",
 ]
 
 _type_aliases = {
