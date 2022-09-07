@@ -7,6 +7,44 @@
 
 Computation of confidence intervals for binomial proportions and for difference of binomial proportions.
 
+## Installation
+
+Run
+
+```bash
+python -m pip install diff-binom-confint
+```
+
+or install the latest version in [GitHub](https://github.com/DeepPSP/DBCI/) using
+
+```bash
+python -m pip install git+https://github.com/DeepPSP/DBCI.git
+```
+
+or git clone this repository and install locally via
+
+```bash
+cd DBCI
+python -m pip install .
+```
+
+## Usage examples
+
+```python
+from diff_binom_confint import compute_difference_confidence_interval
+
+n_positive, n_total = 84, 101
+ref_positive, ref_total = 89, 105
+
+confint = compute_difference_confidence_interval(
+    n_positive,
+    n_total,
+    ref_positive,
+    ref_total,
+    confint_type="wilson",
+)
+```
+
 ## References
 
 1. <a name="ref1"></a> [SAS](https://www.lexjansen.com/wuss/2016/127_Final_Paper_PDF.pdf)
