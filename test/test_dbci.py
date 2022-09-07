@@ -23,16 +23,16 @@ _TEST_DATA_DIR = Path(__file__).parent / "test-data"
 
 
 def load_test_data() -> List[pd.DataFrame]:
-    test_file_pattern = "example-(?P<n_positive>[\\d]+)-(?P<n_tot>[\\d]+)-vs-(?P<ref_positive>[\\d]+)-(?P<ref_tot>[\\d]+)\\.csv"
+    test_file_pattern = "example-(?P<n_positive>[\\d]+)-(?P<n_total>[\\d]+)-vs-(?P<ref_positive>[\\d]+)-(?P<ref_total>[\\d]+)\\.csv"
     test_files = Path(_TEST_DATA_DIR).glob("*.csv")
     test_data = []
     for file in test_files:
         match = re.match(test_file_pattern, file.name)
         if match:
             n_positive = int(match.group("n_positive"))
-            n_tot = int(match.group("n_tot"))
+            n_total = int(match.group("n_total"))
             ref_positive = int(match.group("ref_positive"))
-            ref_tot = int(match.group("ref_tot"))
+            ref_total = int(match.group("ref_total"))
             df_data = pd.read_csv(file)
             for t1, t2 in _type_aliases.items():
                 if t1 in df_data["method"].values:
@@ -46,12 +46,13 @@ def load_test_data() -> List[pd.DataFrame]:
             test_data.append(
                 {
                     "n_positive": n_positive,
-                    "n_negative": n_tot - n_positive,
+                    "n_total": n_total,
                     "ref_positive": ref_positive,
-                    "ref_negative": ref_tot - ref_positive,
+                    "ref_total": ref_total,
                     "data": df_data,
                 }
             )
+    print(f"Totally {len(test_data)} test data loaded")
     return test_data
 
 
@@ -71,8 +72,8 @@ def test_difference_confidence_interval():
     Reynes JLA, Pulido F, et al., “Lopinavir/ritonavir combined with raltegravir demonstrated similar antiviral efficacy and safety as lopinavir/ritonavir combined with tenofovir disoproxil fumarate/emtricitabine in treatment-naïve HIV-1 infected subjects.” Program and abstracts of the XVIII International AIDS Conference; July 18-23, 2010; Vienna, Austria. Abstract MOAB0101.
 
     """
-    n_positive, n_negative = 84, 101 - 84
-    ref_positive, ref_negative = 89, 105 - 89
+    n_positive, n_total = 84, 101
+    ref_positive, ref_total = 89, 105
     df_data = pd.read_csv(_TEST_DATA_DIR / "example-84-101-vs-89-105.csv")
     for t1, t2 in _type_aliases.items():
         if t1 in df_data["method"].values:
@@ -90,9 +91,9 @@ def test_difference_confidence_interval():
     for confint_type in _supported_types:
         lower, upper = compute_difference_confidence_interval(
             n_positive,
-            n_negative,
+            n_total,
             ref_positive,
-            ref_negative,
+            ref_total,
             confint_type=confint_type,
         ).astuple()
         print(f"{confint_type.ljust(max_length)}: [{lower:.2%}, {upper:.2%}]")
