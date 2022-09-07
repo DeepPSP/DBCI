@@ -9,14 +9,14 @@ import pandas as pd
 from pytest import approx
 
 try:
-    from dbci import compute_difference_confidence_interval
-    from dbci._diff_binom_confint import _supported_types, _type_aliases
+    from diff_binom_confint import compute_difference_confidence_interval
+    from diff_binom_confint._diff_binom_confint import _supported_types, _type_aliases
 except ImportError:
     import sys
 
     sys.path.insert(0, str(Path(__file__).parents[1]))
-    from dbci import compute_difference_confidence_interval
-    from dbci._diff_binom_confint import _supported_types, _type_aliases
+    from diff_binom_confint import compute_difference_confidence_interval
+    from diff_binom_confint._diff_binom_confint import _supported_types, _type_aliases
 
 
 _TEST_DATA_DIR = Path(__file__).parent / "test-data"

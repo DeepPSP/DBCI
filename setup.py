@@ -4,7 +4,7 @@
 import setuptools
 from pathlib import Path
 
-from dbci import __version__
+from diff_binom_confint import __version__
 
 
 cwd = Path(__file__).resolve().parent
@@ -23,7 +23,7 @@ extras["dev"] = extras["test"]
 
 
 setuptools.setup(
-    name="dbci",
+    name="diff_binom_confint",
     version=__version__,
     author="DeepPSP",
     author_email="wenh06@gmail.com",

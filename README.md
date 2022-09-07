@@ -1,8 +1,8 @@
 # Confidence Intervals for Difference of Binomial Proportions
 
 ![pytest](https://github.com/DeepPSP/DBCI/actions/workflows/run-pytest.yml/badge.svg)
-![PyPI](https://img.shields.io/pypi/v/dbci?style=flat-square)
-![downloads](https://img.shields.io/pypi/dm/dbci?style=flat-square)
+![PyPI](https://img.shields.io/pypi/v/diff-binom-confint?style=flat-square)
+![downloads](https://img.shields.io/pypi/dm/diff-binom-confint?style=flat-square)
 ![license](https://img.shields.io/github/license/DeepPSP/DBCI?style=flat-square)
 
 Computation of confidence intervals for binomial proportions and for difference of binomial proportions.
