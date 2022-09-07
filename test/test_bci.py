@@ -15,8 +15,8 @@ except ImportError:
     import sys
 
     sys.path.insert(0, str(Path(__file__).parents[1]))
-    from src import compute_confidence_interval
-    from src._binom_confint import _supported_types, _type_aliases
+    from dbci import compute_confidence_interval
+    from dbci._binom_confint import _supported_types, _type_aliases
 
 
 _TEST_DATA_DIR = Path(__file__).parent / "test-data"
