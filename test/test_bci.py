@@ -48,6 +48,7 @@ def load_test_data() -> List[pd.DataFrame]:
                     "data": df_data,
                 }
             )
+    print(f"Totally {len(test_data)} test data loaded")
     return test_data
 
 

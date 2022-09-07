@@ -21,9 +21,33 @@ The correct computation of `Mee`, `Miettinen-Nurminen` are given in the **code b
 
 ## Test data
 
-[Test data](test/test-data/) are taken from [Reference 1](#ref1) for automatic test of the correctness of the implementation of the algorithms.
+[Test data](test/test-data/) are
+
+1. taken from [Reference 1](#ref1) for automatic test of the correctness of the implementation of the algorithms.
+2. generated using [DescTools.StatsAndCIs](#ref6) via
+
+    ```R
+    library("DescTools")
+    library("data.table")
+
+    results = data.table()
+    for (m in c("wilson", "wald", "waldcc", "agresti-coull", "jeffreys",
+                    "modified wilson", "wilsoncc","modified jeffreys",
+                    "clopper-pearson", "arcsine", "logit", "witting", "pratt", 
+                    "midp", "lik", "blaker")){
+        ci = BinomCI(84,101,method = m)
+        new_row = data.table("method" = m, "ratio"=ci[1], "lower_bound" = ci[2], "upper_bound" = ci[3])
+        results = rbindlist(list(results, new_row))
+    }
+    fwrite(results, "./test/test-data/example-84-101.csv")  # with manual slight adjustment of method names
+    ```
+
 The filenames has the following pattern:
 
 ```python
-"example-(?P<n_positive>[\\d]+)-(?P<n_tot>[\\d]+)-vs-(?P<ref_positive>[\\d]+)-(?P<ref_tot>[\\d]+)\\.csv"
+# for computing confidence interval for difference of binomial proportions
+"example-(?P<n_positive>[\\d]+)-(?P<n_total>[\\d]+)-vs-(?P<ref_positive>[\\d]+)-(?P<ref_total>[\\d]+)\\.csv"
+
+# for computing confidence interval for binomial proportions
+"example-(?P<n_positive>[\\d]+)-(?P<n_total>[\\d]+)\\.csv"
 ```
