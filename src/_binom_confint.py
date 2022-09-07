@@ -17,7 +17,7 @@ __all__ = [
 
 def compute_confidence_interval(
     n_positive: int,
-    n_negative: int,
+    n_total: int,
     conf_level: float = 0.95,
     confint_type: str = "wilson",
 ) -> ConfidenceInterval:
@@ -28,8 +28,8 @@ def compute_confidence_interval(
     ----------
     n_positive: int,
         number of positive samples
-    n_negative: int,
-        number of negative samples
+    n_total: int,
+        total number of samples
     conf_level: float, default 0.95,
         confidence level, should be inside the interval (0, 1)
     confint_type: str, default "wilson",
@@ -44,21 +44,21 @@ def compute_confidence_interval(
     qbeta = beta.ppf
 
     z = qnorm((1 + conf_level) / 2)
-    tot = n_positive + n_negative
-    ratio = n_positive / tot
+    n_negative = n_total - n_positive
+    ratio = n_positive / n_total
     if confint_type.lower() in ["wilson", "newcombe"]:
-        item = z * np.sqrt((ratio * (1 - ratio) + z * z / (4 * tot)) / tot)
+        item = z * np.sqrt((ratio * (1 - ratio) + z * z / (4 * n_total)) / n_total)
         return ConfidenceInterval(
-            ((ratio + z * z / (2 * tot) - item) / (1 + z * z / tot)),
-            ((ratio + z * z / (2 * tot) + item) / (1 + z * z / tot)),
+            ((ratio + z * z / (2 * n_total) - item) / (1 + z * z / n_total)),
+            ((ratio + z * z / (2 * n_total) + item) / (1 + z * z / n_total)),
             conf_level,
             confint_type.lower(),
         )
     elif confint_type.lower() in ["wilson-cc", "newcombe-cc"]:
-        e = 2 * tot * ratio + z**2
-        f = z**2 - 1 / tot + 4 * tot * ratio * (1 - ratio)
+        e = 2 * n_total * ratio + z**2
+        f = z**2 - 1 / n_total + 4 * n_total * ratio * (1 - ratio)
         g = 4 * ratio - 2
-        h = 2 * (tot + z**2)
+        h = 2 * (n_total + z**2)
         return ConfidenceInterval(
             (e - (z * np.sqrt(f + g) + 1)) / h,
             (e + (z * np.sqrt(f - g) + 1)) / h,
@@ -66,9 +66,9 @@ def compute_confidence_interval(
             confint_type.lower(),
         )
     elif confint_type.lower() in ["wald", "wald-cc"]:
-        item = z * np.sqrt(ratio * (1 - ratio) / tot)
+        item = z * np.sqrt(ratio * (1 - ratio) / n_total)
         if confint_type.lower() == "wald-cc":
-            item += 0.5 / tot
+            item += 0.5 / n_total
         return ConfidenceInterval(
             ratio - item,
             ratio + item,
@@ -76,8 +76,8 @@ def compute_confidence_interval(
             confint_type.lower(),
         )
     elif confint_type.lower() == "agresti-coull":
-        ratio_tilde = (n_positive + 0.5 * z**2) / (tot + z**2)
-        item = z * np.sqrt(ratio_tilde * (1 - ratio_tilde) / (tot + z**2))
+        ratio_tilde = (n_positive + 0.5 * z**2) / (n_total + z**2)
+        item = z * np.sqrt(ratio_tilde * (1 - ratio_tilde) / (n_total + z**2))
         return ConfidenceInterval(
             ratio_tilde - item,
             ratio_tilde + item,
@@ -103,10 +103,10 @@ def compute_confidence_interval(
             confint_type.lower(),
         )
     elif confint_type.lower() == "arcsine":
-        ratio_tilde = (n_positive + 0.375) / (tot + 0.75)
+        ratio_tilde = (n_positive + 0.375) / (n_total + 0.75)
         return ConfidenceInterval(
-            np.sin(np.arcsin(np.sqrt(ratio_tilde)) - 0.5 * z / np.sqrt(tot)) ** 2,
-            np.sin(np.arcsin(np.sqrt(ratio_tilde)) + 0.5 * z / np.sqrt(tot)) ** 2,
+            np.sin(np.arcsin(np.sqrt(ratio_tilde)) - 0.5 * z / np.sqrt(n_total)) ** 2,
+            np.sin(np.arcsin(np.sqrt(ratio_tilde)) + 0.5 * z / np.sqrt(n_total)) ** 2,
             conf_level,
             confint_type.lower(),
         )
@@ -125,51 +125,58 @@ def compute_confidence_interval(
         if n_positive == 0:
             return ConfidenceInterval(
                 0,
-                1 - np.power(1 - conf_level, 1 / tot),
+                1 - np.power(1 - conf_level, 1 / n_total),
                 conf_level,
                 confint_type.lower(),
             )
         elif n_positive == 1:
             return ConfidenceInterval(
-                1 - np.power(0.5 * (1 + conf_level), 1 / tot),
-                1 - np.power(0.5 * (1 - conf_level), 1 / tot),
+                1 - np.power(0.5 * (1 + conf_level), 1 / n_total),
+                1 - np.power(0.5 * (1 - conf_level), 1 / n_total),
                 conf_level,
                 confint_type.lower(),
             )
         elif n_negative == 1:
             return ConfidenceInterval(
-                np.power(0.5 * (1 - conf_level), 1 / tot),
-                np.power(0.5 * (1 + conf_level), 1 / tot),
+                np.power(0.5 * (1 - conf_level), 1 / n_total),
+                np.power(0.5 * (1 + conf_level), 1 / n_total),
                 conf_level,
                 confint_type.lower(),
             )
         elif n_negative == 0:
             return ConfidenceInterval(
-                np.power(1 - conf_level, 1 / tot), 1, conf_level, confint_type.lower()
+                np.power(1 - conf_level, 1 / n_total),
+                1,
+                conf_level,
+                confint_type.lower(),
             )
         else:
             a = ((n_positive + 1) / n_negative) ** 2
-            b = 81 * (n_positive + 1) * n_negative - 9 * tot - 8
+            b = 81 * (n_positive + 1) * n_negative - 9 * n_total - 8
             c = (
                 -3
                 * z
                 * np.sqrt(
-                    9 * (n_positive + 1) * n_negative * (9 * tot + 5 - z**2) + tot + 1
+                    9 * (n_positive + 1) * n_negative * (9 * n_total + 5 - z**2)
+                    + n_total
+                    + 1
                 )
             )
             d = 81 * (n_positive + 1) ** 2 - 9 * (n_positive + 1) * (2 + z**2) + 1
-            lower = 1 + (a * (b + c) / d) ** 3
+            upper = 1 / (1 + a * ((b + c) / d) ** 3)
             a = (n_positive / (n_negative - 1)) ** 2
-            b = 81 * n_positive * (n_negative - 1) - 9 * tot - 8
+            b = 81 * n_positive * (n_negative - 1) - 9 * n_total - 8
             c = (
                 3
                 * z
                 * np.sqrt(
-                    9 * n_positive * (n_negative - 1) * (9 * tot + 5 - z**2) + tot + 1
+                    9 * n_positive * (n_negative - 1) * (9 * n_total + 5 - z**2)
+                    + n_total
+                    + 1
                 )
             )
             d = 81 * n_positive**2 - 9 * n_positive * (2 + z**2) + 1
-            upper = 1 + (a * (b + c) / d) ** 3
+            lower = 1 / (1 + a * ((b + c) / d) ** 3)
             return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
     elif confint_type.lower() == "witting":
         raise NotImplementedError
