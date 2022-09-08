@@ -7,6 +7,7 @@ import numpy as np
 from scipy.stats import norm, beta
 
 from ._confint import ConfidenceInterval
+from ._utils import add_docstring, remove_parameters_returns_from_docstring
 
 
 __all__ = [
@@ -15,11 +16,15 @@ __all__ = [
 ]
 
 
+RNG = np.random.default_rng()
+
+
 def compute_confidence_interval(
     n_positive: int,
     n_total: int,
     conf_level: float = 0.95,
     confint_type: str = "wilson",
+    clip: bool = True,
 ) -> ConfidenceInterval:
     """
     Compute the confidence interval for a binomial proportion.
@@ -34,12 +39,60 @@ def compute_confidence_interval(
         confidence level, should be inside the interval (0, 1)
     confint_type: str, default "wilson",
         type (computation method) of the confidence interval
+    clip: bool, default True,
+        whether to clip the confidence interval to the interval (0, 1)
 
     Returns
     -------
-    an instance of `ConfidenceInterval`
+    confint: ConfidenceInterval,
+        the confidence interval
 
     """
+
+    if confint_type not in _supported_types:
+        raise ValueError(
+            f"confint_type should be one of {_supported_types}, "
+            f"but got {confint_type}"
+        )
+
+    if conf_level <= 0 or conf_level >= 1:
+        raise ValueError(
+            f"conf_level should be inside the interval (0, 1), " f"but got {conf_level}"
+        )
+
+    if n_positive > n_total:
+        raise ValueError(
+            f"n_positive should be less than or equal to n_total, "
+            f"but got n_positive={n_positive} and n_total={n_total}"
+        )
+
+    if n_positive < 0 or n_total < 0:
+        raise ValueError(
+            f"n_positive and n_total should be non-negative, "
+            f"but got n_positive={n_positive} and n_total={n_total}"
+        )
+
+    confint = _compute_confidence_interval(
+        n_positive, n_total, conf_level, confint_type
+    )
+    if clip:
+        confint.lower_bound = max(0, confint.lower_bound)
+        confint.upper_bound = min(1, confint.upper_bound)
+    return confint
+
+
+@add_docstring(
+    remove_parameters_returns_from_docstring(
+        compute_confidence_interval.__doc__, parameters="clip"
+    )
+)
+def _compute_confidence_interval(
+    n_positive: int,
+    n_total: int,
+    conf_level: float = 0.95,
+    confint_type: str = "wilson",
+) -> ConfidenceInterval:
+    """ """
     qnorm = norm.ppf
     qbeta = beta.ppf
 
@@ -179,7 +232,7 @@ def compute_confidence_interval(
             lower = 1 / (1 + a * ((b + c) / d) ** 3)
             return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
     elif confint_type.lower() == "witting":
-        raise NotImplementedError
+        n_pos_tilde = n_positive + RNG.uniform(0, 1)
     elif confint_type.lower() == "mid-p":
         raise NotImplementedError
     elif confint_type.lower() == "lik":
