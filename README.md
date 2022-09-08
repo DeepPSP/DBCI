@@ -78,6 +78,30 @@ confint = compute_difference_confidence_interval(
 <details>
 <summary>Click to view!</summary>
 
+|   Method (type)             | Implemented        |
+|-----------------------------|--------------------|
+| wilson                      | :heavy_check_mark: |
+| wilson-cc                   | :heavy_check_mark: |
+| wald                        | :heavy_check_mark: |
+| wald-cc                     | :heavy_check_mark: |
+| haldane                     | :heavy_check_mark: |
+| jeffreys-perks              | :heavy_check_mark: |
+| mee                         | :heavy_check_mark: |
+| miettinen-nurminen          | :heavy_check_mark: |
+| true-profile                | :heavy_check_mark: |
+| hauck-anderson              | :heavy_check_mark: |
+| agresti-caffo               | :heavy_check_mark: |
+| brown-li                    | :heavy_check_mark: |
+| brown-li-jeffrey            | :heavy_check_mark: |
+| miettinen-nurminen-brown-li | :heavy_check_mark: |
+| exact                       | :x:                |
+| mid-p                       | :x:                |
+| santner-snell               | :x:                |
+| chan-zhang                  | :x:                |
+| agresti-min                 | :x:                |
+| wang                        | :x:                |
+| pradhan-banerjee            | :x:                |
+
 </details>
 
 ## References
