@@ -45,6 +45,41 @@ confint = compute_difference_confidence_interval(
 )
 ```
 
+## Implemented methods
+
+### Confidence intervals for binomial proportions
+
+<details>
+<summary>Click to view!</summary>
+
+|   Method (type)   | Implemented        |
+|-------------------|--------------------|
+| wilson            | :heavy_check_mark: |
+| wilson-cc         | :heavy_check_mark: |
+| wald              | :heavy_check_mark: |
+| wald-cc           | :heavy_check_mark: |
+| agresti-coull     | :heavy_check_mark: |
+| jeffreys          | :heavy_check_mark: |
+| clopper-pearson   | :heavy_check_mark: |
+| arcsine           | :heavy_check_mark: |
+| logit             | :heavy_check_mark: |
+| pratt             | :heavy_check_mark: |
+| witting           | :x:                |
+| midp              | :x:                |
+| lik               | :x:                |
+| blaker            | :x:                |
+| modified-wilson   | :x:                |
+| modified-jeffreys | :x:                |
+
+</details>
+
+### confidence intervals for difference of binomial proportions
+
+<details>
+<summary>Click to view!</summary>
+
+</details>
+
 ## References
 
 1. <a name="ref1"></a> [SAS](https://www.lexjansen.com/wuss/2016/127_Final_Paper_PDF.pdf)
