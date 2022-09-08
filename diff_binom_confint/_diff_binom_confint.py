@@ -16,6 +16,10 @@ __all__ = [
 ]
 
 
+# alias of statistical functions
+qnorm = norm.ppf
+
+
 def compute_difference_confidence_interval(
     n_positive: int,
     n_total: int,
@@ -81,7 +85,7 @@ def compute_difference_confidence_interval(
         )
 
     if n_total <= 0:
-        raise ValueError(f"n_total should be non-negative, but got n_total={n_total}")
+        raise ValueError(f"n_total should be positive, but got n_total={n_total}")
 
     if ref_positive < 0:
         raise ValueError(
@@ -89,9 +93,7 @@ def compute_difference_confidence_interval(
         )
 
     if ref_total <= 0:
-        raise ValueError(
-            f"ref_total should be non-negative, but got ref_total={ref_total}"
-        )
+        raise ValueError(f"ref_total should be positive, but got ref_total={ref_total}")
 
     confint = _compute_difference_confidence_interval(
         n_positive, n_total, ref_positive, ref_total, conf_level, confint_type
@@ -138,8 +140,9 @@ def _compute_difference_confidence_interval(
     an instance of `ConfidenceInterval`
 
     """
-    qnorm = norm.ppf
+
     warnings.simplefilter(action="ignore", category=RuntimeWarning)
+
     z = qnorm((1 + conf_level) / 2)
     n_negative = n_total - n_positive
     ref_negative = ref_total - ref_positive

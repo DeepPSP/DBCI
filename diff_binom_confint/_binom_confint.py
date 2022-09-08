@@ -4,7 +4,7 @@
 from typing import NoReturn
 
 import numpy as np
-from scipy.stats import norm, beta
+from scipy.stats import norm, beta, binom
 
 from ._confint import ConfidenceInterval
 from ._utils import add_docstring, remove_parameters_returns_from_docstring
@@ -16,7 +16,14 @@ __all__ = [
 ]
 
 
-RNG = np.random.default_rng()
+RNG = np.random.default_rng()  # random number generator
+
+
+# aliases of statistical functions
+pbinom = binom.cdf
+qbinom = binom.ppf
+qnorm = norm.ppf
+qbeta = beta.ppf
 
 
 def compute_confidence_interval(
@@ -66,11 +73,13 @@ def compute_confidence_interval(
             f"but got n_positive={n_positive} and n_total={n_total}"
         )
 
-    if n_positive < 0 or n_total < 0:
+    if n_positive < 0:
         raise ValueError(
-            f"n_positive and n_total should be non-negative, "
-            f"but got n_positive={n_positive} and n_total={n_total}"
+            f"n_positive should be non-negative, but got n_positive={n_positive}"
         )
+
+    if n_total <= 0:
+        raise ValueError(f"n_total should be positive, but got n_total={n_total}")
 
     confint = _compute_confidence_interval(
         n_positive, n_total, conf_level, confint_type
@@ -93,8 +102,6 @@ def _compute_confidence_interval(
     confint_type: str = "wilson",
 ) -> ConfidenceInterval:
     """ """
-    qnorm = norm.ppf
-    qbeta = beta.ppf
 
     z = qnorm((1 + conf_level) / 2)
     n_negative = n_total - n_positive
@@ -232,13 +239,25 @@ def _compute_confidence_interval(
             lower = 1 / (1 + a * ((b + c) / d) ** 3)
             return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
     elif confint_type.lower() == "witting":
-        n_pos_tilde = n_positive + RNG.uniform(0, 1)
+        # n_pos_tilde = n_positive + RNG.uniform(0, 1)
+        raise NotImplementedError
     elif confint_type.lower() == "mid-p":
         raise NotImplementedError
     elif confint_type.lower() == "lik":
         raise NotImplementedError
     elif confint_type.lower() == "blaker":
-        raise NotImplementedError
+        # tol = np.sqrt(np.finfo(float).eps)
+        tol = 1e-5
+        lower, upper = 0, 1
+        if n_positive > 0:
+            lower = qbeta(0.5 * (1 - conf_level), n_positive, n_negative + 1)
+            while _acceptbin(n_positive, n_total, lower + tol) < 1 - conf_level:
+                lower += tol
+        if n_negative > 0:
+            upper = qbeta(0.5 * (1 + conf_level), n_positive + 1, n_negative)
+            while _acceptbin(n_positive, n_total, upper - tol) < 1 - conf_level:
+                upper -= tol
+        return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
     elif confint_type.lower() in ["modified-wilson", "modified-newcombe"]:
         raise NotImplementedError
     elif confint_type.lower() == "modified-jeffreys":
@@ -263,7 +282,7 @@ _supported_types = [
     # "witting",
     # "mid-p",
     # "lik",
-    # "blaker",
+    "blaker",
     # "modified-wilson",
     # "modified-newcombe",
     # "modified-jeffreys",
@@ -281,3 +300,15 @@ def list_confidence_interval_types() -> NoReturn:
     """ """
 
     print("\n".join(_supported_types))
+
+
+def _acceptbin(n_positive: int, n_total: int, prob: int) -> float:
+    """ """
+
+    p1 = 1 - pbinom(n_positive - 1, n_total, prob)
+    p2 = pbinom(n_positive, n_total, prob)
+
+    a1 = p1 + pbinom(qbinom(p1, n_total, prob) - 1, n_total, prob)
+    a2 = p2 + 1 - pbinom(qbinom(1 - p2, n_total, prob), n_total, prob)
+
+    return min(a1, a2)
