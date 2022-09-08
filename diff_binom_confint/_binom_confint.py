@@ -180,7 +180,7 @@ def compute_confidence_interval(
             return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
     elif confint_type.lower() == "witting":
         raise NotImplementedError
-    elif confint_type.lower() == "midp":
+    elif confint_type.lower() == "mid-p":
         raise NotImplementedError
     elif confint_type.lower() == "lik":
         raise NotImplementedError
@@ -208,7 +208,7 @@ _supported_types = [
     "logit",
     "pratt",
     # "witting",
-    # "midp",
+    # "mid-p",
     # "lik",
     # "blaker",
     # "modified-wilson",
