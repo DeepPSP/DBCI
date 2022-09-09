@@ -358,7 +358,11 @@ def _compute_difference_confidence_interval(
     elif confint_type.lower() == "pradhan-banerjee":
         raise NotImplementedError
     else:
-        raise ValueError(f"{confint_type} is not supported")
+        newline = "\n"
+        raise ValueError(
+            f"""{confint_type} is not supported, """
+            f"""choose one from {newline}{newline.join(_supported_types)}"""
+        )
 
 
 _supported_types = [
@@ -388,6 +392,10 @@ _supported_types = [
     # "wang",
     # "pradhan-banerjee",
 ]
+
+
+_stochastic_types = []
+
 
 _type_aliases = {
     "wilson": "newcombe",

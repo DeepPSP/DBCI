@@ -244,8 +244,15 @@ def _compute_confidence_interval(
             lower = 1 / (1 + a * ((b + c) / d) ** 3)
             return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
     elif confint_type.lower() == "witting":
-        # n_pos_tilde = n_positive + RNG.uniform(0, 1)
-        raise NotImplementedError
+        # stochastic, checked by seeting n_pos_tilde = n_positive
+        # n_pos_tilde = n_positive
+        n_pos_tilde = n_positive + RNG.uniform(0, 1)
+        return ConfidenceInterval(
+            _qbinom_abscont(conf_level, n_total, n_pos_tilde),
+            _qbinom_abscont(1 - conf_level, n_total, n_pos_tilde),
+            conf_level,
+            confint_type.lower(),
+        )
     elif confint_type.lower() == "mid-p":
         if n_positive == 0:
             lower = 0
@@ -350,9 +357,25 @@ def _compute_confidence_interval(
             upper = min(1, term1 + term2)
         return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
     elif confint_type.lower() == "modified-jeffreys":
-        raise NotImplementedError
+        if n_negative == 0:
+            lower = np.power(margin, 1 / n_total)
+        elif n_positive <= 1:
+            lower = 0
+        else:
+            lower = qbeta(margin, n_positive + 0.5, n_negative + 0.5)
+        if n_positive == 0:
+            upper = 1 - np.power(margin, 1 / n_total)
+        elif n_negative <= 1:
+            upper = 1
+        else:
+            upper = qbeta(1 - margin, n_positive + 0.5, n_negative + 0.5)
+        return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
     else:
-        raise ValueError(f"{confint_type} is not supported")
+        newline = "\n"
+        raise ValueError(
+            f"""{confint_type} is not supported, """
+            f"""choose one from {newline}{newline.join(_supported_types)}"""
+        )
 
 
 _supported_types = [
@@ -368,13 +391,18 @@ _supported_types = [
     "arcsine",
     "logit",
     "pratt",
-    # "witting",
+    "witting",
     "mid-p",
     "lik",
     "blaker",
     "modified-wilson",
     "modified-newcombe",
-    # "modified-jeffreys",
+    "modified-jeffreys",
+]
+
+
+_stochastic_types = [
+    "witting",
 ]
 
 
@@ -421,3 +449,18 @@ def _f_low(pi: float, x: int, n: int, conf_level: float) -> float:
 def _f_up(pi: float, x: int, n: int, conf_level: float) -> float:
     """function to find root of for the upper bound of the CI"""
     return 0.5 * dbinom(x, n, pi) + pbinom(x - 1, n, pi) - 0.5 * (1 - conf_level)
+
+
+def _pbinom_abscont(q: float, size: int, prob: float) -> float:
+    """ """
+    v = np.trunc(q)
+    term1 = pbinom(v - 1, size, prob)
+    term2 = (q - v) * dbinom(v, size, prob)
+    return term1 + term2
+
+
+def _qbinom_abscont(p: float, size: int, x: int) -> float:
+    """ """
+    return uniroot(
+        lambda prob: _pbinom_abscont(x, size, prob) - p, 0, 1, full_output=False
+    )

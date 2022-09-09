@@ -10,13 +10,21 @@ from pytest import approx
 
 try:
     from diff_binom_confint import compute_difference_confidence_interval
-    from diff_binom_confint._diff_binom_confint import _supported_types, _type_aliases
+    from diff_binom_confint._diff_binom_confint import (
+        _supported_types,
+        _type_aliases,
+        _stochastic_types,
+    )
 except ImportError:
     import sys
 
     sys.path.insert(0, str(Path(__file__).parents[1]))
     from diff_binom_confint import compute_difference_confidence_interval
-    from diff_binom_confint._diff_binom_confint import _supported_types, _type_aliases
+    from diff_binom_confint._diff_binom_confint import (
+        _supported_types,
+        _type_aliases,
+        _stochastic_types,
+    )
 
 
 _TEST_DATA_DIR = Path(__file__).parent / "test-data"
@@ -89,6 +97,8 @@ def test_difference_confidence_interval():
     error_bound = 1e-4
 
     for confint_type in _supported_types:
+        if confint_type in _stochastic_types:
+            continue
         lower, upper = compute_difference_confidence_interval(
             n_positive,
             n_total,
