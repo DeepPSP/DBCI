@@ -73,7 +73,7 @@ confint = compute_difference_confidence_interval(
 
 </details>
 
-### confidence intervals for difference of binomial proportions
+### Confidence intervals for difference of binomial proportions
 
 <details>
 <summary>Click to view!</summary>
