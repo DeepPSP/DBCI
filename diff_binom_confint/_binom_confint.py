@@ -4,7 +4,7 @@
 from typing import NoReturn
 
 import numpy as np
-from scipy.stats import norm, beta, binom
+from scipy.stats import norm, beta, binom, ncx2
 from scipy.optimize import brentq
 
 from ._confint import ConfidenceInterval
@@ -27,6 +27,7 @@ dbinom = binom.pmf
 dbinom_log = binom.logpmf
 qnorm = norm.ppf
 qbeta = beta.ppf
+qchisq = ncx2.ppf
 uniroot = brentq
 
 
@@ -328,7 +329,26 @@ def _compute_confidence_interval(
                 upper -= tol
         return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
     elif confint_type.lower() in ["modified-wilson", "modified-newcombe"]:
-        raise NotImplementedError
+        term1 = (n_positive + 0.5 * z**2) / (n_total + z**2)
+        term2 = (
+            z
+            * np.sqrt(n_total)
+            * np.sqrt(ratio * (1 - ratio) + z**2 / (4 * n_total))
+            / (n_total + z**2)
+        )
+        if (n_total <= 50 and n_positive in [1, 2]) or (
+            n_total >= 51 and n_positive in [1, 2, 3]
+        ):
+            lower = 0.5 * qchisq(0.5 * (1 - conf_level), 2 * n_positive, 0) / n_total
+        else:
+            lower = max(0, term1 - term2)
+        if (n_total <= 50 and n_negative in [1, 2]) or (
+            n_total >= 51 and n_negative in [1, 2, 3]
+        ):
+            upper = 0.5 * qchisq(0.5 * (1 - conf_level), 2 * n_negative, 0) / n_total
+        else:
+            upper = min(1, term1 + term2)
+        return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
     elif confint_type.lower() == "modified-jeffreys":
         raise NotImplementedError
     else:
@@ -352,8 +372,8 @@ _supported_types = [
     "mid-p",
     "lik",
     "blaker",
-    # "modified-wilson",
-    # "modified-newcombe",
+    "modified-wilson",
+    "modified-newcombe",
     # "modified-jeffreys",
 ]
 
