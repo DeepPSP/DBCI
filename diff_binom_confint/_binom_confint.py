@@ -5,6 +5,7 @@ from typing import NoReturn
 
 import numpy as np
 from scipy.stats import norm, beta, binom
+from scipy.optimize import brentq
 
 from ._confint import ConfidenceInterval
 from ._utils import add_docstring, remove_parameters_returns_from_docstring
@@ -22,8 +23,11 @@ RNG = np.random.default_rng()  # random number generator
 # aliases of statistical functions
 pbinom = binom.cdf
 qbinom = binom.ppf
+dbinom = binom.pmf
+dbinom_log = binom.logpmf
 qnorm = norm.ppf
 qbeta = beta.ppf
+uniroot = brentq
 
 
 def compute_confidence_interval(
@@ -244,7 +248,54 @@ def _compute_confidence_interval(
     elif confint_type.lower() == "mid-p":
         raise NotImplementedError
     elif confint_type.lower() == "lik":
-        raise NotImplementedError
+        tol = 1e-5
+        lower, upper = 0, 1
+        if (
+            n_positive != 0
+            and tol < ratio
+            and _bin_dev(tol, n_positive, ratio, n_total, -z, tol) <= 0
+        ):
+            lower = uniroot(
+                lambda y: _bin_dev(y, n_positive, ratio, n_total, -z, tol),
+                tol,
+                1 - tol if (ratio < tol or ratio == 1) else ratio,
+                full_output=False,
+            )
+        if n_negative != 0 and ratio < 1 - tol:
+            if (
+                _bin_dev(
+                    1 - tol,
+                    n_positive,
+                    tol if ratio > 1 - tol else ratio,
+                    n_total,
+                    z,
+                    tol,
+                )
+                < 0
+                and _bin_dev(
+                    tol,
+                    n_positive,
+                    1 - tol if (ratio < tol or ratio == 1) else ratio,
+                    n_total,
+                    -z,
+                    tol,
+                )
+                <= 0
+            ):
+                upper = lower = uniroot(
+                    lambda y: _bin_dev(y, n_positive, ratio, n_total, -z, tol),
+                    tol,
+                    ratio,
+                    full_output=False,
+                )
+            else:
+                upper = uniroot(
+                    lambda y: _bin_dev(y, n_positive, ratio, n_total, z, tol),
+                    tol if ratio > 1 - tol else ratio,
+                    1 - tol,
+                    full_output=False,
+                )
+        return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
     elif confint_type.lower() == "blaker":
         # tol = np.sqrt(np.finfo(float).eps)
         tol = 1e-5
@@ -281,7 +332,7 @@ _supported_types = [
     "pratt",
     # "witting",
     # "mid-p",
-    # "lik",
+    "lik",
     "blaker",
     # "modified-wilson",
     # "modified-newcombe",
@@ -312,3 +363,11 @@ def _acceptbin(n_positive: int, n_total: int, prob: int) -> float:
     a2 = p2 + 1 - pbinom(qbinom(1 - p2, n_total, prob), n_total, prob)
 
     return min(a1, a2)
+
+
+def _bin_dev(y, x, mu, wt, bound=0, tol=1e-5) -> float:
+    """binomial deviance for y, x, wt"""
+    ll_y = 0 if y in [0, 1] else dbinom_log(x, wt, y)
+    ll_mu = 0 if mu in [0, 1] else dbinom_log(x, wt, mu)
+    res = 0 if np.abs(y - mu) < tol else np.sign(y - mu) * np.sqrt(-2 * (ll_y - ll_mu))
+    return res - bound

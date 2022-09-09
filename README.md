@@ -66,8 +66,8 @@ confint = compute_difference_confidence_interval(
 | pratt             | :heavy_check_mark: |
 | witting           | :x:                |
 | mid-p             | :x:                |
-| lik               | :x:                |
-| blaker            | :x:                |
+| lik               | :heavy_check_mark: |
+| blaker            | :heavy_check_mark: |
 | modified-wilson   | :x:                |
 | modified-jeffreys | :x:                |
 
