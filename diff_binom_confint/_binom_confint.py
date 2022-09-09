@@ -109,10 +109,12 @@ def _compute_confidence_interval(
     """ """
 
     z = qnorm((1 + conf_level) / 2)
+    margin = 0.5 * (1 - conf_level)
     n_negative = n_total - n_positive
     ratio = n_positive / n_total
+    neg_ratio = 1 - ratio
     if confint_type.lower() in ["wilson", "newcombe"]:
-        item = z * np.sqrt((ratio * (1 - ratio) + z * z / (4 * n_total)) / n_total)
+        item = z * np.sqrt((ratio * neg_ratio + z * z / (4 * n_total)) / n_total)
         return ConfidenceInterval(
             ((ratio + z * z / (2 * n_total) - item) / (1 + z * z / n_total)),
             ((ratio + z * z / (2 * n_total) + item) / (1 + z * z / n_total)),
@@ -121,7 +123,7 @@ def _compute_confidence_interval(
         )
     elif confint_type.lower() in ["wilson-cc", "newcombe-cc"]:
         e = 2 * n_total * ratio + z**2
-        f = z**2 - 1 / n_total + 4 * n_total * ratio * (1 - ratio)
+        f = z**2 - 1 / n_total + 4 * n_total * ratio * neg_ratio
         g = 4 * ratio - 2
         h = 2 * (n_total + z**2)
         return ConfidenceInterval(
@@ -131,7 +133,7 @@ def _compute_confidence_interval(
             confint_type.lower(),
         )
     elif confint_type.lower() in ["wald", "wald-cc"]:
-        item = z * np.sqrt(ratio * (1 - ratio) / n_total)
+        item = z * np.sqrt(ratio * neg_ratio / n_total)
         if confint_type.lower() == "wald-cc":
             item += 0.5 / n_total
         return ConfidenceInterval(
@@ -151,10 +153,8 @@ def _compute_confidence_interval(
         )
     elif confint_type.lower() == "jeffreys":
         return ConfidenceInterval(
-            qbeta(0.5 * (1 - conf_level), n_positive + 0.5, n_negative + 0.5)
-            if n_positive > 0
-            else 0,
-            qbeta(0.5 * (1 + conf_level), n_positive + 0.5, n_negative + 0.5)
+            qbeta(margin, n_positive + 0.5, n_negative + 0.5) if n_positive > 0 else 0,
+            qbeta(1 - margin, n_positive + 0.5, n_negative + 0.5)
             if n_negative > 0
             else 1,
             conf_level,
@@ -162,8 +162,8 @@ def _compute_confidence_interval(
         )
     elif confint_type.lower() == "clopper-pearson":
         return ConfidenceInterval(
-            qbeta(0.5 * (1 - conf_level), n_positive, n_negative + 1),
-            qbeta(0.5 * (1 + conf_level), n_positive + 1, n_negative),
+            qbeta(margin, n_positive, n_negative + 1),
+            qbeta(1 - margin, n_positive + 1, n_negative),
             conf_level,
             confint_type.lower(),
         )
@@ -176,7 +176,7 @@ def _compute_confidence_interval(
             confint_type.lower(),
         )
     elif confint_type.lower() == "logit":
-        lambda_hat = np.log(ratio / (1 - ratio))
+        lambda_hat = np.log(ratio / neg_ratio)
         V_hat = 1 / ratio / n_negative
         lambda_lower = lambda_hat - z * np.sqrt(V_hat)
         lambda_upper = lambda_hat + z * np.sqrt(V_hat)
@@ -196,15 +196,15 @@ def _compute_confidence_interval(
             )
         elif n_positive == 1:
             return ConfidenceInterval(
-                1 - np.power(0.5 * (1 + conf_level), 1 / n_total),
-                1 - np.power(0.5 * (1 - conf_level), 1 / n_total),
+                1 - np.power(1 - margin, 1 / n_total),
+                1 - np.power(margin, 1 / n_total),
                 conf_level,
                 confint_type.lower(),
             )
         elif n_negative == 1:
             return ConfidenceInterval(
-                np.power(0.5 * (1 - conf_level), 1 / n_total),
-                np.power(0.5 * (1 + conf_level), 1 / n_total),
+                np.power(margin, 1 / n_total),
+                np.power(1 - margin, 1 / n_total),
                 conf_level,
                 confint_type.lower(),
             )
@@ -320,11 +320,11 @@ def _compute_confidence_interval(
         tol = 1e-5
         lower, upper = 0, 1
         if n_positive > 0:
-            lower = qbeta(0.5 * (1 - conf_level), n_positive, n_negative + 1)
+            lower = qbeta(margin, n_positive, n_negative + 1)
             while _acceptbin(n_positive, n_total, lower + tol) < 1 - conf_level:
                 lower += tol
         if n_negative > 0:
-            upper = qbeta(0.5 * (1 + conf_level), n_positive + 1, n_negative)
+            upper = qbeta(1 - margin, n_positive + 1, n_negative)
             while _acceptbin(n_positive, n_total, upper - tol) < 1 - conf_level:
                 upper -= tol
         return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
@@ -333,19 +333,19 @@ def _compute_confidence_interval(
         term2 = (
             z
             * np.sqrt(n_total)
-            * np.sqrt(ratio * (1 - ratio) + z**2 / (4 * n_total))
+            * np.sqrt(ratio * neg_ratio + z**2 / (4 * n_total))
             / (n_total + z**2)
         )
         if (n_total <= 50 and n_positive in [1, 2]) or (
             n_total >= 51 and n_positive in [1, 2, 3]
         ):
-            lower = 0.5 * qchisq(0.5 * (1 - conf_level), 2 * n_positive, 0) / n_total
+            lower = 0.5 * qchisq(margin, 2 * n_positive, 0) / n_total
         else:
             lower = max(0, term1 - term2)
         if (n_total <= 50 and n_negative in [1, 2]) or (
             n_total >= 51 and n_negative in [1, 2, 3]
         ):
-            upper = 0.5 * qchisq(0.5 * (1 - conf_level), 2 * n_negative, 0) / n_total
+            upper = 0.5 * qchisq(margin, 2 * n_negative, 0) / n_total
         else:
             upper = min(1, term1 + term2)
         return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())

@@ -147,13 +147,15 @@ def _compute_difference_confidence_interval(
     n_negative = n_total - n_positive
     ref_negative = ref_total - ref_positive
     ratio = n_positive / n_total
+    neg_ratio = 1 - ratio
     ref_ratio = ref_positive / ref_total
+    ref_neg_ratio = 1 - ref_ratio
     delta_ratio = ratio - ref_ratio
     if confint_type.lower() in ["wilson", "newcombe", "score"]:
-        item1 = z * np.sqrt(4 * n_total * ratio * (1 - ratio) + z**2)
+        item1 = z * np.sqrt(4 * n_total * ratio * neg_ratio + z**2)
         lower1 = (2 * n_total * ratio + z**2 - item1) / 2 / (n_total + z**2)
         upper1 = (2 * n_total * ratio + z**2 + item1) / 2 / (n_total + z**2)
-        item2 = z * np.sqrt(4 * ref_total * ref_ratio * (1 - ref_ratio) + z**2)
+        item2 = z * np.sqrt(4 * ref_total * ref_ratio * ref_neg_ratio + z**2)
         lower2 = (2 * ref_total * ref_ratio + z**2 - item2) / 2 / (ref_total + z**2)
         upper2 = (2 * ref_total * ref_ratio + z**2 + item2) / 2 / (ref_total + z**2)
         return ConfidenceInterval(
@@ -166,13 +168,13 @@ def _compute_difference_confidence_interval(
         # https://corplingstats.wordpress.com/2019/04/27/correcting-for-continuity/
         # equation (6) and (6')
         e = 2 * n_total * ratio + z**2
-        f = z**2 - 1 / n_total + 4 * n_total * ratio * (1 - ratio)
+        f = z**2 - 1 / n_total + 4 * n_total * ratio * neg_ratio
         g = 4 * ratio - 2
         h = 2 * (n_total + z**2)
         lower1 = (e - (z * np.sqrt(f + g) + 1)) / h
         upper1 = (e + (z * np.sqrt(f - g) + 1)) / h
         e = 2 * ref_total * ref_ratio + z**2
-        f = z**2 - 1 / ref_total + 4 * ref_total * ref_ratio * (1 - ref_ratio)
+        f = z**2 - 1 / ref_total + 4 * ref_total * ref_ratio * ref_neg_ratio
         g = 4 * ref_ratio - 2
         h = 2 * (ref_total + z**2)
         lower2 = (e - (z * np.sqrt(f + g) + 1)) / h
@@ -185,7 +187,7 @@ def _compute_difference_confidence_interval(
         )
     elif confint_type.lower() in ["wald", "wald-cc"]:
         item = z * np.sqrt(
-            ratio * (1 - ratio) / n_total + ref_ratio * (1 - ref_ratio) / ref_total
+            ratio * neg_ratio / n_total + ref_ratio * ref_neg_ratio / ref_total
         )
         if confint_type.lower() == "wald-cc":
             return ConfidenceInterval(
@@ -281,8 +283,8 @@ def _compute_difference_confidence_interval(
             var = (
                 n_positive * np.log(ratio_mle / ratio)
                 + ref_positive * np.log(ref_ratio_mle / ref_ratio)
-                + n_negative * np.log((1 - ratio_mle) / (1 - ratio))
-                + ref_negative * np.log((1 - ref_ratio_mle) / (1 - ref_ratio))
+                + n_negative * np.log((1 - ratio_mle) / neg_ratio)
+                + ref_negative * np.log((1 - ref_ratio_mle) / ref_neg_ratio)
             )
             if var >= -(z**2) / 2:
                 flag = True
@@ -294,8 +296,8 @@ def _compute_difference_confidence_interval(
         )
     elif confint_type.lower() == "hauck-anderson":
         item = 1 / 2 / min(n_total, ref_total) + z * np.sqrt(
-            ratio * (1 - ratio) / (n_total - 1)
-            + ref_ratio * (1 - ref_ratio) / (ref_total - 1)
+            ratio * neg_ratio / (n_total - 1)
+            + ref_ratio * ref_neg_ratio / (ref_total - 1)
         )
         return ConfidenceInterval(
             delta_ratio - item, delta_ratio + item, conf_level, confint_type.lower()
