@@ -64,12 +64,12 @@ confint = compute_difference_confidence_interval(
 | arcsine           | :heavy_check_mark: |
 | logit             | :heavy_check_mark: |
 | pratt             | :heavy_check_mark: |
-| witting           | :x:                |
+| witting           | :heavy_check_mark: |
 | mid-p             | :heavy_check_mark: |
 | lik               | :heavy_check_mark: |
 | blaker            | :heavy_check_mark: |
 | modified-wilson   | :heavy_check_mark: |
-| modified-jeffreys | :x:                |
+| modified-jeffreys | :heavy_check_mark: |
 
 </details>
 
