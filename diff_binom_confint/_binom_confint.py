@@ -246,7 +246,25 @@ def _compute_confidence_interval(
         # n_pos_tilde = n_positive + RNG.uniform(0, 1)
         raise NotImplementedError
     elif confint_type.lower() == "mid-p":
-        raise NotImplementedError
+        if n_positive == 0:
+            lower = 0
+        else:
+            lower = uniroot(
+                lambda pi: _f_low(pi, n_positive, n_total, conf_level),
+                0,
+                ratio,
+                full_output=False,
+            )
+        if n_negative == 0:
+            upper = 1
+        else:
+            upper = uniroot(
+                lambda pi: _f_up(pi, n_positive, n_total, conf_level),
+                ratio,
+                1,
+                full_output=False,
+            )
+        return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
     elif confint_type.lower() == "lik":
         tol = 1e-5
         lower, upper = 0, 1
@@ -331,7 +349,7 @@ _supported_types = [
     "logit",
     "pratt",
     # "witting",
-    # "mid-p",
+    "mid-p",
     "lik",
     "blaker",
     # "modified-wilson",
@@ -365,9 +383,21 @@ def _acceptbin(n_positive: int, n_total: int, prob: int) -> float:
     return min(a1, a2)
 
 
-def _bin_dev(y, x, mu, wt, bound=0, tol=1e-5) -> float:
+def _bin_dev(
+    y: float, x: int, mu: float, wt: int, bound: float = 0.0, tol: float = 1e-5
+) -> float:
     """binomial deviance for y, x, wt"""
     ll_y = 0 if y in [0, 1] else dbinom_log(x, wt, y)
     ll_mu = 0 if mu in [0, 1] else dbinom_log(x, wt, mu)
     res = 0 if np.abs(y - mu) < tol else np.sign(y - mu) * np.sqrt(-2 * (ll_y - ll_mu))
     return res - bound
+
+
+def _f_low(pi: float, x: int, n: int, conf_level: float) -> float:
+    """function to find root of for the lower bound of the CI"""
+    return 0.5 * dbinom(x, n, pi) + 1 - pbinom(x, n, pi) - 0.5 * (1 - conf_level)
+
+
+def _f_up(pi: float, x: int, n: int, conf_level: float) -> float:
+    """function to find root of for the upper bound of the CI"""
+    return 0.5 * dbinom(x, n, pi) + pbinom(x - 1, n, pi) - 0.5 * (1 - conf_level)
