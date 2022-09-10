@@ -11,9 +11,9 @@ from pytest import approx
 try:
     from diff_binom_confint import compute_difference_confidence_interval
     from diff_binom_confint._diff_binom_confint import (
-        _supported_types,
-        _type_aliases,
-        _stochastic_types,
+        _supported_methods,
+        _method_aliases,
+        _stochastic_methods,
     )
 except ImportError:
     import sys
@@ -21,9 +21,9 @@ except ImportError:
     sys.path.insert(0, str(Path(__file__).parents[1]))
     from diff_binom_confint import compute_difference_confidence_interval
     from diff_binom_confint._diff_binom_confint import (
-        _supported_types,
-        _type_aliases,
-        _stochastic_types,
+        _supported_methods,
+        _method_aliases,
+        _stochastic_methods,
     )
 
 
@@ -42,7 +42,7 @@ def load_test_data() -> List[pd.DataFrame]:
             ref_positive = int(match.group("ref_positive"))
             ref_total = int(match.group("ref_total"))
             df_data = pd.read_csv(file)
-            for t1, t2 in _type_aliases.items():
+            for t1, t2 in _method_aliases.items():
                 if t1 in df_data["method"].values:
                     df_data = pd.concat(
                         [df_data, df_data[df_data["method"] == t1].assign(method=t2)]
@@ -83,7 +83,7 @@ def test_difference_confidence_interval():
     n_positive, n_total = 84, 101
     ref_positive, ref_total = 89, 105
     df_data = pd.read_csv(_TEST_DATA_DIR / "example-84-101-vs-89-105.csv")
-    for t1, t2 in _type_aliases.items():
+    for t1, t2 in _method_aliases.items():
         if t1 in df_data["method"].values:
             df_data = pd.concat(
                 [df_data, df_data[df_data["method"] == t1].assign(method=t2)]
@@ -93,27 +93,27 @@ def test_difference_confidence_interval():
                 [df_data, df_data[df_data["method"] == t2].assign(method=t1)]
             )
 
-    max_length = max([len(x) for x in _supported_types]) + 1
+    max_length = max([len(x) for x in _supported_methods]) + 1
     error_bound = 1e-4
 
-    for confint_type in _supported_types:
-        if confint_type in _stochastic_types:
+    for confint_method in _supported_methods:
+        if confint_method in _stochastic_methods:
             continue
         lower, upper = compute_difference_confidence_interval(
             n_positive,
             n_total,
             ref_positive,
             ref_total,
-            confint_type=confint_type,
+            method=confint_method,
         ).astuple()
-        print(f"{confint_type.ljust(max_length)}: [{lower:.2%}, {upper:.2%}]")
-        row = df_data[df_data["method"] == confint_type].iloc[0]
+        print(f"{confint_method.ljust(max_length)}: [{lower:.2%}, {upper:.2%}]")
+        row = df_data[df_data["method"] == confint_method].iloc[0]
         assert lower == approx(
             row["lower_bound"], abs=error_bound
-        ), f"for {confint_type}, lower bound should be {row['lower_bound']:.2%}, but got {lower:.2%}"
+        ), f"for {confint_method}, lower bound should be {row['lower_bound']:.2%}, but got {lower:.2%}"
         assert upper == approx(
             row["upper_bound"], abs=error_bound
-        ), f"for {confint_type}, upper bound should be {row['upper_bound']:.2%}, but got {upper:.2%}"
+        ), f"for {confint_method}, upper bound should be {row['upper_bound']:.2%}, but got {upper:.2%}"
 
     print("test_difference_confidence_interval passed")
 

@@ -7,6 +7,7 @@ import numpy as np
 from scipy.stats import norm, beta, binom, ncx2
 from scipy.optimize import brentq
 from deprecate_kwargs import deprecate_kwargs
+from deprecated import deprecated
 
 from ._confint import ConfidenceInterval
 from ._utils import add_docstring, remove_parameters_returns_from_docstring
@@ -14,7 +15,7 @@ from ._utils import add_docstring, remove_parameters_returns_from_docstring
 
 __all__ = [
     "compute_confidence_interval",
-    "list_confidence_interval_types",
+    "list_confidence_interval_methods",
 ]
 
 
@@ -401,11 +402,13 @@ _supported_types = [
     "modified-newcombe",
     "modified-jeffreys",
 ]
+_supported_methods = _supported_types
 
 
 _stochastic_types = [
     "witting",
 ]
+_stochastic_methods = _stochastic_types
 
 
 _type_aliases = {
@@ -413,9 +416,17 @@ _type_aliases = {
     "wilson-cc": "newcombe-cc",
     "modified-wilson": "modified-newcombe",
 }
+_method_aliases = _type_aliases
 
 
+@deprecated(version="0.0.4", reason="Use `list_confidence_interval_methods` instead.")
 def list_confidence_interval_types() -> NoReturn:
+    """ """
+
+    print("\n".join(_supported_types))
+
+
+def list_confidence_interval_methods() -> NoReturn:
     """ """
 
     print("\n".join(_supported_types))

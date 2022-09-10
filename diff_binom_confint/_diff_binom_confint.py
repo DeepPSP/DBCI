@@ -6,6 +6,7 @@ import warnings
 import numpy as np
 from scipy.stats import norm
 from deprecate_kwargs import deprecate_kwargs
+from deprecated import deprecated
 
 from ._confint import ConfidenceInterval
 from ._utils import add_docstring, remove_parameters_returns_from_docstring
@@ -13,7 +14,7 @@ from ._utils import add_docstring, remove_parameters_returns_from_docstring
 
 __all__ = [
     "compute_difference_confidence_interval",
-    "list_difference_confidence_interval_types",
+    "list_difference_confidence_interval_methods",
 ]
 
 
@@ -394,9 +395,11 @@ _supported_types = [
     # "wang",
     # "pradhan-banerjee",
 ]
+_supported_methods = _supported_types
 
 
 _stochastic_types = []
+_stochastic_methods = _stochastic_types
 
 
 _type_aliases = {
@@ -406,9 +409,19 @@ _type_aliases = {
     "score-cc": "newcombe-cc",
     "brown-li-jeffrey": "brown-li",
 }
+_method_aliases = _type_aliases
 
 
+@deprecated(
+    version="0.0.4", reason="Use `list_difference_confidence_interval_methods` instead."
+)
 def list_difference_confidence_interval_types() -> None:
+    """ """
+
+    print("\n".join(_supported_types))
+
+
+def list_difference_confidence_interval_methods() -> None:
     """ """
 
     print("\n".join(_supported_types))
