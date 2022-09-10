@@ -5,6 +5,7 @@ import warnings
 
 import numpy as np
 from scipy.stats import norm
+from deprecate_kwargs import deprecate_kwargs
 
 from ._confint import ConfidenceInterval
 from ._utils import add_docstring, remove_parameters_returns_from_docstring
@@ -20,6 +21,7 @@ __all__ = [
 qnorm = norm.ppf
 
 
+@deprecate_kwargs([["method", "confint_type"]])
 def compute_difference_confidence_interval(
     n_positive: int,
     n_total: int,

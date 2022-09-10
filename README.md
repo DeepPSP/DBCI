@@ -41,7 +41,8 @@ confint = compute_difference_confidence_interval(
     n_total,
     ref_positive,
     ref_total,
-    confint_type="wilson",
+    conf_level=0.95,
+    method="wilson",
 )
 ```
 

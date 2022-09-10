@@ -6,6 +6,7 @@ from typing import NoReturn
 import numpy as np
 from scipy.stats import norm, beta, binom, ncx2
 from scipy.optimize import brentq
+from deprecate_kwargs import deprecate_kwargs
 
 from ._confint import ConfidenceInterval
 from ._utils import add_docstring, remove_parameters_returns_from_docstring
@@ -31,6 +32,7 @@ qchisq = ncx2.ppf
 uniroot = brentq
 
 
+@deprecate_kwargs([["method", "confint_type"]])
 def compute_confidence_interval(
     n_positive: int,
     n_total: int,

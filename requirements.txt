@@ -1,4 +1,5 @@
 numpy
 scipy
+deprecate-kwargs
 dataclasses  # Python 3.6 only
 typing-extensions  # Python 3.6 only
