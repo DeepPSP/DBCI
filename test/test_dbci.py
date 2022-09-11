@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 from typing import List
 
+import numpy as np
 import pandas as pd
 from pytest import approx
 
@@ -118,6 +119,78 @@ def test_difference_confidence_interval():
     print("test_difference_confidence_interval passed")
 
 
+def test_difference_confidence_interval_edge_case():
+    """ """
+    n_positive, n_total = 10, 10
+    ref_positive, ref_total = 0, 20
+    df_data = pd.read_csv(_TEST_DATA_DIR / "example-10-10-vs-0-20.csv")
+    for t1, t2 in _method_aliases.items():
+        if t1 in df_data["method"].values:
+            df_data = pd.concat(
+                [df_data, df_data[df_data["method"] == t1].assign(method=t2)]
+            )
+        elif t2 in df_data["method"].values:
+            df_data = pd.concat(
+                [df_data, df_data[df_data["method"] == t2].assign(method=t1)]
+            )
+
+    max_length = max([len(x) for x in _supported_methods]) + 1 + len("clipped ")
+    error_bound = 1e-4
+
+    for confint_method in _supported_methods:
+        if confint_method in _stochastic_methods:
+            continue
+        if confint_method in ["true-profile"]:
+            # TODO: fix this
+            continue
+        lower_clip, upper_clip = compute_difference_confidence_interval(
+            n_positive,
+            n_total,
+            ref_positive,
+            ref_total,
+            method=confint_method,
+            clip=True,
+        ).astuple()
+        l_just_len = max_length - len("clipped ")
+        print(
+            f"clipped {confint_method.ljust(l_just_len)}: [{lower_clip:.2%}, {upper_clip:.2%}]"
+        )
+
+        lower_noclip, upper_noclip = compute_difference_confidence_interval(
+            n_positive,
+            n_total,
+            ref_positive,
+            ref_total,
+            method=confint_method,
+            clip=False,
+        ).astuple()
+        l_just_len = max_length
+        print(
+            f"{confint_method.ljust(l_just_len)}: [{lower_noclip:.2%}, {upper_noclip:.2%}]"
+        )
+
+        row = df_data[df_data["method"] == confint_method].iloc[0]
+        assert (
+            lower_clip == lower_noclip == approx(row["lower_bound"], abs=error_bound)
+        ), f"for {confint_method}, lower bound should be {row['lower_bound']:.2%}, but got {lower_clip:.2%}"
+        if np.isnan(row["upper_bound"]):
+            assert (
+                upper_noclip > 1
+            ), f"for {confint_method}, non-clipped upper bound should be > 1, but got {upper_noclip:.2%}"
+            assert upper_clip == approx(
+                1
+            ), f"for {confint_method}, clipped upper bound should be 1, but got {upper_clip:.2%}"
+        else:
+            assert (
+                upper_noclip
+                == upper_clip
+                == approx(row["upper_bound"], abs=error_bound)
+            ), f"for {confint_method}, upper bound should be {row['upper_bound']:.2%}, but got {upper_noclip:.2%}"
+
+    print("test_difference_confidence_interval_edge_case passed")
+
+
 if __name__ == "__main__":
     load_test_data()
     test_difference_confidence_interval()
+    test_difference_confidence_interval_edge_case()
