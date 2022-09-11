@@ -73,6 +73,9 @@ def test_confidence_interval():
             df_data = pd.concat(
                 [df_data, df_data[df_data["method"] == t2].assign(method=t1)]
             )
+    assert set(_supported_methods) <= set(
+        df_data["method"].values
+    ), f"""methods {set(_supported_methods) - set(df_data["method"].values)} has no test data"""
 
     max_length = max([len(x) for x in _supported_methods]) + 1
     error_bound = 1e-4

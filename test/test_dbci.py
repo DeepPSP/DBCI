@@ -93,6 +93,9 @@ def test_difference_confidence_interval():
             df_data = pd.concat(
                 [df_data, df_data[df_data["method"] == t2].assign(method=t1)]
             )
+    assert set(_supported_methods) <= set(
+        df_data["method"].values
+    ), f"""methods {set(_supported_methods) - set(df_data["method"].values)} has no test data"""
 
     max_length = max([len(x) for x in _supported_methods]) + 1
     error_bound = 1e-4
@@ -133,8 +136,11 @@ def test_difference_confidence_interval_edge_case():
             df_data = pd.concat(
                 [df_data, df_data[df_data["method"] == t2].assign(method=t1)]
             )
+    assert set(_supported_methods) <= set(
+        df_data["method"].values
+    ), f"""methods {set(_supported_methods) - set(df_data["method"].values)} has no test data"""
 
-    max_length = max([len(x) for x in _supported_methods]) + 1 + len("clipped ")
+    max_length = max([len(x) for x in _supported_methods]) + 1 + len("[clipped] ")
     error_bound = 1e-4
 
     for confint_method in _supported_methods:
@@ -151,9 +157,9 @@ def test_difference_confidence_interval_edge_case():
             method=confint_method,
             clip=True,
         ).astuple()
-        l_just_len = max_length - len("clipped ")
+        l_just_len = max_length - len("[clipped] ")
         print(
-            f"clipped {confint_method.ljust(l_just_len)}: [{lower_clip:.2%}, {upper_clip:.2%}]"
+            f"[clipped] {confint_method.ljust(l_just_len)}: [{lower_clip:.2%}, {upper_clip:.2%}]"
         )
 
         lower_noclip, upper_noclip = compute_difference_confidence_interval(
