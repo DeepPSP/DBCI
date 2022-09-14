@@ -9,7 +9,7 @@ from scipy.optimize import brentq
 from deprecate_kwargs import deprecate_kwargs
 from deprecated import deprecated
 
-from ._confint import ConfidenceInterval
+from ._confint import ConfidenceInterval, _SIDE_NAME_MAP, ConfidenceIntervalSides
 from ._utils import add_docstring, remove_parameters_returns_from_docstring
 
 
@@ -40,6 +40,7 @@ def compute_confidence_interval(
     conf_level: float = 0.95,
     confint_type: str = "wilson",
     clip: bool = True,
+    sides: str = "two-sided",
 ) -> ConfidenceInterval:
     """
     Compute the confidence interval for a binomial proportion.
@@ -47,15 +48,21 @@ def compute_confidence_interval(
     Parameters
     ----------
     n_positive: int,
-        number of positive samples
+        number of positive samples.
     n_total: int,
-        total number of samples
+        total number of samples.
     conf_level: float, default 0.95,
-        confidence level, should be inside the interval (0, 1)
+        confidence level, should be inside the interval (0, 1).
     confint_type: str, default "wilson",
-        type (computation method) of the confidence interval
+        type (computation method) of the confidence interval.
     clip: bool, default True,
-        whether to clip the confidence interval to the interval (0, 1)
+        whether to clip the confidence interval to the interval (0, 1).
+    sides: str, default "two-sided",
+        the sides of the confidence interval, should be one of
+        "two-sided" (aliases "2-sided", "two_sided", "2_sided", "ts", "t"),
+        "left-sided" (aliases "left_sided", "left", "ls", "l"),
+        "right-sided" (aliases "right_sided", "right", "rs", "r"),
+        case insensitive.
 
     Returns
     -------
@@ -89,15 +96,38 @@ def compute_confidence_interval(
     if n_total <= 0:
         raise ValueError(f"n_total should be positive, but got n_total={n_total}")
 
+    if sides.lower() not in _SIDE_NAME_MAP["two-sided"]:
+        raise ValueError(
+            f"sides should be one of {list(_SIDE_NAME_MAP)}, but got {sides}"
+        )
+    else:
+        sides = _SIDE_NAME_MAP[sides.lower()]
+
     confint = _compute_confidence_interval(
-        n_positive, n_total, conf_level, confint_type
+        n_positive, n_total, conf_level, confint_type, sides
     )
+
     if clip:
         confint.lower_bound = max(0, confint.lower_bound)
         confint.upper_bound = min(1, confint.upper_bound)
+
+    if confint.sides == ConfidenceIntervalSides.LeftSided.value:
+        confint.upper_bound = 1
+    elif confint.sides == ConfidenceIntervalSides.RightSided.value:
+        confint.lower_bound = -1
+
     return confint
 
 
+@add_docstring(
+    """
+    NOTE
+    ----
+    the lower bound and upper bound are not adjusted w.r.t. `sides`.
+
+    """,
+    "append",
+)
 @add_docstring(
     remove_parameters_returns_from_docstring(
         compute_confidence_interval.__doc__, parameters="clip"
@@ -108,6 +138,7 @@ def _compute_confidence_interval(
     n_total: int,
     conf_level: float = 0.95,
     confint_type: str = "wilson",
+    sides: str = "two-sided",
 ) -> ConfidenceInterval:
     """ """
 

@@ -8,7 +8,7 @@ from scipy.stats import norm
 from deprecate_kwargs import deprecate_kwargs
 from deprecated import deprecated
 
-from ._confint import ConfidenceInterval
+from ._confint import ConfidenceInterval, _SIDE_NAME_MAP, ConfidenceIntervalSides
 from ._utils import add_docstring, remove_parameters_returns_from_docstring
 
 
@@ -31,6 +31,7 @@ def compute_difference_confidence_interval(
     conf_level: float = 0.95,
     confint_type: str = "wilson",
     clip: bool = True,
+    sides: str = "two-sided",
 ) -> ConfidenceInterval:
     """
     Compute the confidence interval of the difference between two binomial proportions.
@@ -38,19 +39,25 @@ def compute_difference_confidence_interval(
     Parameters
     ----------
     n_positive: int,
-        number of positive samples
+        number of positive samples.
     n_total: int,
-        total number of samples
+        total number of samples.
     ref_positive: int,
-        number of positive samples of the reference
+        number of positive samples of the reference.
     ref_total: int,
-        total number of samples of the reference
+        total number of samples of the reference.
     conf_level: float, default 0.95,
-        confidence level, should be inside the interval (0, 1)
+        confidence level, should be inside the interval (0, 1).
     confint_type: str, default "wilson",
-        type (computation method) of the confidence interval
+        type (computation method) of the confidence interval.
     clip: bool, default True,
-        whether to clip the confidence interval to the interval (-1, 1)
+        whether to clip the confidence interval to the interval (-1, 1).
+    sides: str, default "two-sided",
+        the sides of the confidence interval, should be one of
+        "two-sided" (aliases "2-sided", "two_sided", "2_sided", "ts", "t"),
+        "left-sided" (aliases "left_sided", "left", "ls", "l"),
+        "right-sided" (aliases "right_sided", "right", "rs", "r"),
+        case insensitive.
 
     Returns
     -------
@@ -98,15 +105,38 @@ def compute_difference_confidence_interval(
     if ref_total <= 0:
         raise ValueError(f"ref_total should be positive, but got ref_total={ref_total}")
 
+    if sides.lower() not in _SIDE_NAME_MAP["two-sided"]:
+        raise ValueError(
+            f"sides should be one of {list(_SIDE_NAME_MAP)}, but got {sides}"
+        )
+    else:
+        sides = _SIDE_NAME_MAP[sides.lower()]
+
     confint = _compute_difference_confidence_interval(
-        n_positive, n_total, ref_positive, ref_total, conf_level, confint_type
+        n_positive, n_total, ref_positive, ref_total, conf_level, confint_type, sides
     )
+
     if clip:
         confint.lower_bound = max(confint.lower_bound, -1)
         confint.upper_bound = min(confint.upper_bound, 1)
+
+    if confint.sides == ConfidenceIntervalSides.LeftSided.value:
+        confint.upper_bound = 1
+    elif confint.sides == ConfidenceIntervalSides.RightSided.value:
+        confint.lower_bound = -1
+
     return confint
 
 
+@add_docstring(
+    """
+    NOTE
+    ----
+    the lower bound and upper bound are not adjusted w.r.t. `sides`.
+
+    """,
+    "append",
+)
 @add_docstring(
     remove_parameters_returns_from_docstring(
         compute_difference_confidence_interval.__doc__, parameters="clip"
@@ -119,34 +149,16 @@ def _compute_difference_confidence_interval(
     ref_total: int,
     conf_level: float = 0.95,
     confint_type: str = "wilson",
+    sides: str = "two-sided",
 ) -> ConfidenceInterval:
-    """
-    Compute the confidence interval of the difference between two binomial proportions.
-
-    Parameters
-    ----------
-    n_positive: int,
-        number of positive samples
-    n_total: int,
-        total number of samples
-    ref_positive: int,
-        number of positive samples of the reference
-    ref_total: int,
-        total number of samples of the reference
-    conf_level: float, default 0.95,
-        confidence level, should be inside the interval (0, 1)
-    confint_type: str, default "wilson",
-        type (computation method) of the confidence interval
-
-    Returns
-    -------
-    an instance of `ConfidenceInterval`
-
-    """
+    """ """
 
     warnings.simplefilter(action="ignore", category=RuntimeWarning)
 
-    z = qnorm((1 + conf_level) / 2)
+    if sides != "two-sided":
+        z = qnorm(conf_level)
+    else:
+        z = qnorm((1 + conf_level) / 2)
     n_negative = n_total - n_positive
     ref_negative = ref_total - ref_positive
     ratio = n_positive / n_total
