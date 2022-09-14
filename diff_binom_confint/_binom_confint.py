@@ -142,7 +142,10 @@ def _compute_confidence_interval(
 ) -> ConfidenceInterval:
     """ """
 
-    z = qnorm((1 + conf_level) / 2)
+    if sides != "two-sided":
+        z = qnorm(conf_level)
+    else:
+        z = qnorm((1 + conf_level) / 2)
     margin = 0.5 * (1 - conf_level)
     n_negative = n_total - n_positive
     ratio = n_positive / n_total
