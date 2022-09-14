@@ -4,10 +4,13 @@
 from dataclasses import dataclass
 from typing import NoReturn, Tuple
 
+from deprecate_kwargs import deprecate_kwargs
+
 
 __all__ = ["ConfidenceInterval"]
 
 
+@deprecate_kwargs([["method", "type"]])
 @dataclass
 class ConfidenceInterval:
     """
@@ -34,6 +37,12 @@ class ConfidenceInterval:
 
     def __post_init__(self) -> NoReturn:
         assert 0 < self.level < 1
+        # replace field `type` with `method`
+        self.method = self.type
+        del self.type
+        method_fld = self.__dataclass_fields__.pop("type")
+        method_fld.name = "method"
+        self.__dataclass_fields__["method"] = method_fld
 
     def astuple(self) -> Tuple[float, float]:
         return (self.lower_bound, self.upper_bound)
