@@ -164,6 +164,7 @@ def _compute_difference_confidence_interval(
         return ConfidenceInterval(
             delta_ratio - np.sqrt((ratio - lower1) ** 2 + (upper2 - ref_ratio) ** 2),
             delta_ratio + np.sqrt((ref_ratio - lower2) ** 2 + (upper1 - ratio) ** 2),
+            delta_ratio,
             conf_level,
             confint_type.lower(),
         )
@@ -185,6 +186,7 @@ def _compute_difference_confidence_interval(
         return ConfidenceInterval(
             delta_ratio - np.sqrt((ratio - lower1) ** 2 + (upper2 - ref_ratio) ** 2),
             delta_ratio + np.sqrt((ref_ratio - lower2) ** 2 + (upper1 - ratio) ** 2),
+            delta_ratio,
             conf_level,
             confint_type.lower(),
         )
@@ -196,12 +198,14 @@ def _compute_difference_confidence_interval(
             return ConfidenceInterval(
                 delta_ratio - item - 0.5 / n_total - 0.5 / ref_total,
                 delta_ratio + item + 0.5 / n_total + 0.5 / ref_total,
+                delta_ratio,
                 conf_level,
                 confint_type.lower(),
             )
         return ConfidenceInterval(
             delta_ratio - item,
             delta_ratio + item,
+            delta_ratio,
             conf_level,
             confint_type.lower(),
         )
@@ -227,7 +231,11 @@ def _compute_difference_confidence_interval(
         )
         theta_star = (delta_ratio + v * (1 - 2 * psi) * z**2) / (1 + u * z**2)
         return ConfidenceInterval(
-            theta_star - w, theta_star + w, conf_level, confint_type.lower()
+            theta_star - w,
+            theta_star + w,
+            delta_ratio,
+            conf_level,
+            confint_type.lower(),
         )
     elif confint_type.lower() in ["mee", "miettinen-nurminen"]:
         theta = ref_total / n_total
@@ -264,7 +272,7 @@ def _compute_difference_confidence_interval(
             elif flag:
                 break
         return ConfidenceInterval(
-            np.min(itv), np.max(itv), conf_level, confint_type.lower()
+            np.min(itv), np.max(itv), delta_ratio, conf_level, confint_type.lower()
         )
     elif confint_type.lower() == "true-profile":
         theta = ref_total / n_total
@@ -295,7 +303,7 @@ def _compute_difference_confidence_interval(
             elif flag:
                 break
         return ConfidenceInterval(
-            np.min(itv), np.max(itv), conf_level, confint_type.lower()
+            np.min(itv), np.max(itv), delta_ratio, conf_level, confint_type.lower()
         )
     elif confint_type.lower() == "hauck-anderson":
         item = 1 / 2 / min(n_total, ref_total) + z * np.sqrt(
@@ -303,7 +311,11 @@ def _compute_difference_confidence_interval(
             + ref_ratio * ref_neg_ratio / (ref_total - 1)
         )
         return ConfidenceInterval(
-            delta_ratio - item, delta_ratio + item, conf_level, confint_type.lower()
+            delta_ratio - item,
+            delta_ratio + item,
+            delta_ratio,
+            conf_level,
+            confint_type.lower(),
         )
     elif confint_type.lower() == "agresti-caffo":
         ratio_1 = (n_positive + 1) / (n_total + 2)
@@ -315,6 +327,7 @@ def _compute_difference_confidence_interval(
         return ConfidenceInterval(
             ratio_1 - ratio_2 - item,
             ratio_1 - ratio_2 + item,
+            delta_ratio,
             conf_level,
             confint_type.lower(),
         )
@@ -327,6 +340,7 @@ def _compute_difference_confidence_interval(
         return ConfidenceInterval(
             ratio_1 - ratio_2 - item,
             ratio_1 - ratio_2 + item,
+            delta_ratio,
             conf_level,
             confint_type.lower(),
         )
@@ -345,7 +359,9 @@ def _compute_difference_confidence_interval(
         ).astuple()
         lower = weight * lower_mn + (1 - weight) * lower_bl
         upper = weight * upper_mn + (1 - weight) * upper_bl
-        return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
+        return ConfidenceInterval(
+            lower, upper, delta_ratio, conf_level, confint_type.lower()
+        )
     elif confint_type.lower() == "exact":
         raise NotImplementedError
     elif confint_type.lower() == "mid-p":

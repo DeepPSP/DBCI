@@ -121,6 +121,7 @@ def _compute_confidence_interval(
         return ConfidenceInterval(
             ((ratio + z * z / (2 * n_total) - item) / (1 + z * z / n_total)),
             ((ratio + z * z / (2 * n_total) + item) / (1 + z * z / n_total)),
+            ratio,
             conf_level,
             confint_type.lower(),
         )
@@ -132,6 +133,7 @@ def _compute_confidence_interval(
         return ConfidenceInterval(
             (e - (z * np.sqrt(f + g) + 1)) / h,
             (e + (z * np.sqrt(f - g) + 1)) / h,
+            ratio,
             conf_level,
             confint_type.lower(),
         )
@@ -142,6 +144,7 @@ def _compute_confidence_interval(
         return ConfidenceInterval(
             ratio - item,
             ratio + item,
+            ratio,
             conf_level,
             confint_type.lower(),
         )
@@ -151,6 +154,7 @@ def _compute_confidence_interval(
         return ConfidenceInterval(
             ratio_tilde - item,
             ratio_tilde + item,
+            ratio_tilde,
             conf_level,
             confint_type.lower(),
         )
@@ -160,6 +164,7 @@ def _compute_confidence_interval(
             qbeta(1 - margin, n_positive + 0.5, n_negative + 0.5)
             if n_negative > 0
             else 1,
+            ratio,
             conf_level,
             confint_type.lower(),
         )
@@ -167,6 +172,7 @@ def _compute_confidence_interval(
         return ConfidenceInterval(
             qbeta(margin, n_positive, n_negative + 1),
             qbeta(1 - margin, n_positive + 1, n_negative),
+            ratio,
             conf_level,
             confint_type.lower(),
         )
@@ -175,6 +181,7 @@ def _compute_confidence_interval(
         return ConfidenceInterval(
             np.sin(np.arcsin(np.sqrt(ratio_tilde)) - 0.5 * z / np.sqrt(n_total)) ** 2,
             np.sin(np.arcsin(np.sqrt(ratio_tilde)) + 0.5 * z / np.sqrt(n_total)) ** 2,
+            ratio_tilde,
             conf_level,
             confint_type.lower(),
         )
@@ -186,6 +193,7 @@ def _compute_confidence_interval(
         return ConfidenceInterval(
             np.exp(lambda_lower) / (1 + np.exp(lambda_lower)),
             np.exp(lambda_upper) / (1 + np.exp(lambda_upper)),
+            ratio,
             conf_level,
             confint_type.lower(),
         )
@@ -194,6 +202,7 @@ def _compute_confidence_interval(
             return ConfidenceInterval(
                 0,
                 1 - np.power(1 - conf_level, 1 / n_total),
+                ratio,
                 conf_level,
                 confint_type.lower(),
             )
@@ -201,6 +210,7 @@ def _compute_confidence_interval(
             return ConfidenceInterval(
                 1 - np.power(1 - margin, 1 / n_total),
                 1 - np.power(margin, 1 / n_total),
+                ratio,
                 conf_level,
                 confint_type.lower(),
             )
@@ -215,6 +225,7 @@ def _compute_confidence_interval(
             return ConfidenceInterval(
                 np.power(1 - conf_level, 1 / n_total),
                 1,
+                ratio,
                 conf_level,
                 confint_type.lower(),
             )
@@ -245,7 +256,9 @@ def _compute_confidence_interval(
             )
             d = 81 * n_positive**2 - 9 * n_positive * (2 + z**2) + 1
             lower = 1 / (1 + a * ((b + c) / d) ** 3)
-            return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
+            return ConfidenceInterval(
+                lower, upper, ratio, conf_level, confint_type.lower()
+            )
     elif confint_type.lower() == "witting":
         # stochastic, checked by seeting n_pos_tilde = n_positive
         # n_pos_tilde = n_positive
@@ -253,6 +266,7 @@ def _compute_confidence_interval(
         return ConfidenceInterval(
             _qbinom_abscont(conf_level, n_total, n_pos_tilde),
             _qbinom_abscont(1 - conf_level, n_total, n_pos_tilde),
+            ratio,
             conf_level,
             confint_type.lower(),
         )
@@ -275,7 +289,7 @@ def _compute_confidence_interval(
                 1,
                 full_output=False,
             )
-        return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
+        return ConfidenceInterval(lower, upper, ratio, conf_level, confint_type.lower())
     elif confint_type.lower() == "lik":
         tol = 1e-5
         lower, upper = 0, 1
@@ -324,7 +338,7 @@ def _compute_confidence_interval(
                     1 - tol,
                     full_output=False,
                 )
-        return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
+        return ConfidenceInterval(lower, upper, ratio, conf_level, confint_type.lower())
     elif confint_type.lower() == "blaker":
         # tol = np.sqrt(np.finfo(float).eps)
         tol = 1e-5
@@ -337,7 +351,7 @@ def _compute_confidence_interval(
             upper = qbeta(1 - margin, n_positive + 1, n_negative)
             while _acceptbin(n_positive, n_total, upper - tol) < 1 - conf_level:
                 upper -= tol
-        return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
+        return ConfidenceInterval(lower, upper, ratio, conf_level, confint_type.lower())
     elif confint_type.lower() in ["modified-wilson", "modified-newcombe"]:
         term1 = (n_positive + 0.5 * z**2) / (n_total + z**2)
         term2 = (
@@ -358,7 +372,7 @@ def _compute_confidence_interval(
             upper = 0.5 * qchisq(margin, 2 * n_negative, 0) / n_total
         else:
             upper = min(1, term1 + term2)
-        return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
+        return ConfidenceInterval(lower, upper, ratio, conf_level, confint_type.lower())
     elif confint_type.lower() == "modified-jeffreys":
         if n_negative == 0:
             lower = np.power(margin, 1 / n_total)
@@ -372,7 +386,7 @@ def _compute_confidence_interval(
             upper = 1
         else:
             upper = qbeta(1 - margin, n_positive + 0.5, n_negative + 0.5)
-        return ConfidenceInterval(lower, upper, conf_level, confint_type.lower())
+        return ConfidenceInterval(lower, upper, ratio, conf_level, confint_type.lower())
     else:
         newline = "\n"
         raise ValueError(

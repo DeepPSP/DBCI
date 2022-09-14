@@ -17,6 +17,8 @@ class ConfidenceInterval:
         the lower bound of the confidence interval
     upper_bound: float,
         the upper bound of the confidence interval
+    estimate: float,
+        estimate of (the difference of) the binomial proportion
     level: float,
         confidence level, should be inside the interval (0, 1)
     type: str,
@@ -26,6 +28,7 @@ class ConfidenceInterval:
 
     lower_bound: float
     upper_bound: float
+    estimate: float
     level: float
     type: str
 
