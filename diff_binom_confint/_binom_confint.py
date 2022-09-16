@@ -1,7 +1,7 @@
 """
 """
 
-from typing import NoReturn
+from typing import NoReturn, Union
 
 import numpy as np
 from scipy.stats import norm, beta, binom, ncx2
@@ -40,7 +40,7 @@ def compute_confidence_interval(
     conf_level: float = 0.95,
     confint_type: str = "wilson",
     clip: bool = True,
-    sides: str = "two-sided",
+    sides: Union[str, int] = "two-sided",
 ) -> ConfidenceInterval:
     """
     Compute the confidence interval for a binomial proportion.
@@ -57,9 +57,9 @@ def compute_confidence_interval(
         type (computation method) of the confidence interval.
     clip: bool, default True,
         whether to clip the confidence interval to the interval (0, 1).
-    sides: str, default "two-sided",
+    sides: str or int, default "two-sided",
         the sides of the confidence interval, should be one of
-        "two-sided" (aliases "2-sided", "two_sided", "2_sided", "ts", "t"),
+        "two-sided" (aliases "2-sided", "two_sided", "2_sided", "2-sides", "two_sides", "two-sides", "2_sides", "ts", "t", "two", "2", 2),
         "left-sided" (aliases "left_sided", "left", "ls", "l"),
         "right-sided" (aliases "right_sided", "right", "rs", "r"),
         case insensitive.
@@ -96,12 +96,13 @@ def compute_confidence_interval(
     if n_total <= 0:
         raise ValueError(f"n_total should be positive, but got n_total={n_total}")
 
-    if sides.lower() not in _SIDE_NAME_MAP["two-sided"]:
+    sides = str(sides).lower()
+    if sides not in _SIDE_NAME_MAP:
         raise ValueError(
             f"sides should be one of {list(_SIDE_NAME_MAP)}, but got {sides}"
         )
     else:
-        sides = _SIDE_NAME_MAP[sides.lower()]
+        sides = _SIDE_NAME_MAP[sides]
 
     confint = _compute_confidence_interval(
         n_positive, n_total, conf_level, confint_type, sides
@@ -114,7 +115,7 @@ def compute_confidence_interval(
     if confint.sides == ConfidenceIntervalSides.LeftSided.value:
         confint.upper_bound = 1
     elif confint.sides == ConfidenceIntervalSides.RightSided.value:
-        confint.lower_bound = -1
+        confint.lower_bound = 0
 
     return confint
 
@@ -138,15 +139,18 @@ def _compute_confidence_interval(
     n_total: int,
     conf_level: float = 0.95,
     confint_type: str = "wilson",
-    sides: str = "two-sided",
+    sides: Union[str, int] = "two-sided",
 ) -> ConfidenceInterval:
     """ """
 
     if sides != "two-sided":
         z = qnorm(conf_level)
+        margin = 1 - conf_level
+        _conf_level = 1 - 2 * margin
     else:
         z = qnorm((1 + conf_level) / 2)
-    margin = 0.5 * (1 - conf_level)
+        margin = 0.5 * (1 - conf_level)
+        _conf_level = conf_level
     n_negative = n_total - n_positive
     ratio = n_positive / n_total
     neg_ratio = 1 - ratio
@@ -158,6 +162,7 @@ def _compute_confidence_interval(
             ratio,
             conf_level,
             confint_type.lower(),
+            str(sides),
         )
     elif confint_type.lower() in ["wilson-cc", "newcombe-cc"]:
         e = 2 * n_total * ratio + z**2
@@ -170,6 +175,7 @@ def _compute_confidence_interval(
             ratio,
             conf_level,
             confint_type.lower(),
+            str(sides),
         )
     elif confint_type.lower() in ["wald", "wald-cc"]:
         item = z * np.sqrt(ratio * neg_ratio / n_total)
@@ -181,6 +187,7 @@ def _compute_confidence_interval(
             ratio,
             conf_level,
             confint_type.lower(),
+            str(sides),
         )
     elif confint_type.lower() == "agresti-coull":
         ratio_tilde = (n_positive + 0.5 * z**2) / (n_total + z**2)
@@ -191,8 +198,10 @@ def _compute_confidence_interval(
             ratio_tilde,
             conf_level,
             confint_type.lower(),
+            str(sides),
         )
     elif confint_type.lower() == "jeffreys":
+        print(margin, sides)
         return ConfidenceInterval(
             qbeta(margin, n_positive + 0.5, n_negative + 0.5) if n_positive > 0 else 0,
             qbeta(1 - margin, n_positive + 0.5, n_negative + 0.5)
@@ -201,6 +210,7 @@ def _compute_confidence_interval(
             ratio,
             conf_level,
             confint_type.lower(),
+            str(sides),
         )
     elif confint_type.lower() == "clopper-pearson":
         return ConfidenceInterval(
@@ -209,6 +219,7 @@ def _compute_confidence_interval(
             ratio,
             conf_level,
             confint_type.lower(),
+            str(sides),
         )
     elif confint_type.lower() == "arcsine":
         ratio_tilde = (n_positive + 0.375) / (n_total + 0.75)
@@ -218,6 +229,7 @@ def _compute_confidence_interval(
             ratio_tilde,
             conf_level,
             confint_type.lower(),
+            str(sides),
         )
     elif confint_type.lower() == "logit":
         lambda_hat = np.log(ratio / neg_ratio)
@@ -230,15 +242,17 @@ def _compute_confidence_interval(
             ratio,
             conf_level,
             confint_type.lower(),
+            str(sides),
         )
     elif confint_type.lower() == "pratt":
         if n_positive == 0:
             return ConfidenceInterval(
                 0,
-                1 - np.power(1 - conf_level, 1 / n_total),
+                1 - np.power(1 - _conf_level, 1 / n_total),
                 ratio,
                 conf_level,
                 confint_type.lower(),
+                str(sides),
             )
         elif n_positive == 1:
             return ConfidenceInterval(
@@ -247,6 +261,7 @@ def _compute_confidence_interval(
                 ratio,
                 conf_level,
                 confint_type.lower(),
+                str(sides),
             )
         elif n_negative == 1:
             return ConfidenceInterval(
@@ -254,14 +269,16 @@ def _compute_confidence_interval(
                 np.power(1 - margin, 1 / n_total),
                 conf_level,
                 confint_type.lower(),
+                str(sides),
             )
         elif n_negative == 0:
             return ConfidenceInterval(
-                np.power(1 - conf_level, 1 / n_total),
+                np.power(1 - _conf_level, 1 / n_total),
                 1,
                 ratio,
                 conf_level,
                 confint_type.lower(),
+                str(sides),
             )
         else:
             a = ((n_positive + 1) / n_negative) ** 2
@@ -291,25 +308,26 @@ def _compute_confidence_interval(
             d = 81 * n_positive**2 - 9 * n_positive * (2 + z**2) + 1
             lower = 1 / (1 + a * ((b + c) / d) ** 3)
             return ConfidenceInterval(
-                lower, upper, ratio, conf_level, confint_type.lower()
+                lower, upper, ratio, conf_level, confint_type.lower(), str(sides)
             )
     elif confint_type.lower() == "witting":
         # stochastic, checked by seeting n_pos_tilde = n_positive
         # n_pos_tilde = n_positive
         n_pos_tilde = n_positive + RNG.uniform(0, 1)
         return ConfidenceInterval(
-            _qbinom_abscont(conf_level, n_total, n_pos_tilde),
-            _qbinom_abscont(1 - conf_level, n_total, n_pos_tilde),
+            _qbinom_abscont(_conf_level, n_total, n_pos_tilde),
+            _qbinom_abscont(1 - _conf_level, n_total, n_pos_tilde),
             ratio,
             conf_level,
             confint_type.lower(),
+            str(sides),
         )
     elif confint_type.lower() == "mid-p":
         if n_positive == 0:
             lower = 0
         else:
             lower = uniroot(
-                lambda pi: _f_low(pi, n_positive, n_total, conf_level),
+                lambda pi: _f_low(pi, n_positive, n_total, _conf_level),
                 0,
                 ratio,
                 full_output=False,
@@ -318,12 +336,14 @@ def _compute_confidence_interval(
             upper = 1
         else:
             upper = uniroot(
-                lambda pi: _f_up(pi, n_positive, n_total, conf_level),
+                lambda pi: _f_up(pi, n_positive, n_total, _conf_level),
                 ratio,
                 1,
                 full_output=False,
             )
-        return ConfidenceInterval(lower, upper, ratio, conf_level, confint_type.lower())
+        return ConfidenceInterval(
+            lower, upper, ratio, conf_level, confint_type.lower(), str(sides)
+        )
     elif confint_type.lower() == "lik":
         tol = 1e-5
         lower, upper = 0, 1
@@ -372,20 +392,24 @@ def _compute_confidence_interval(
                     1 - tol,
                     full_output=False,
                 )
-        return ConfidenceInterval(lower, upper, ratio, conf_level, confint_type.lower())
+        return ConfidenceInterval(
+            lower, upper, ratio, conf_level, confint_type.lower(), str(sides)
+        )
     elif confint_type.lower() == "blaker":
         # tol = np.sqrt(np.finfo(float).eps)
         tol = 1e-5
         lower, upper = 0, 1
         if n_positive > 0:
             lower = qbeta(margin, n_positive, n_negative + 1)
-            while _acceptbin(n_positive, n_total, lower + tol) < 1 - conf_level:
+            while _acceptbin(n_positive, n_total, lower + tol) < 1 - _conf_level:
                 lower += tol
         if n_negative > 0:
             upper = qbeta(1 - margin, n_positive + 1, n_negative)
-            while _acceptbin(n_positive, n_total, upper - tol) < 1 - conf_level:
+            while _acceptbin(n_positive, n_total, upper - tol) < 1 - _conf_level:
                 upper -= tol
-        return ConfidenceInterval(lower, upper, ratio, conf_level, confint_type.lower())
+        return ConfidenceInterval(
+            lower, upper, ratio, conf_level, confint_type.lower(), str(sides)
+        )
     elif confint_type.lower() in ["modified-wilson", "modified-newcombe"]:
         term1 = (n_positive + 0.5 * z**2) / (n_total + z**2)
         term2 = (
@@ -406,7 +430,9 @@ def _compute_confidence_interval(
             upper = 0.5 * qchisq(margin, 2 * n_negative, 0) / n_total
         else:
             upper = min(1, term1 + term2)
-        return ConfidenceInterval(lower, upper, ratio, conf_level, confint_type.lower())
+        return ConfidenceInterval(
+            lower, upper, ratio, conf_level, confint_type.lower(), str(sides)
+        )
     elif confint_type.lower() == "modified-jeffreys":
         if n_negative == 0:
             lower = np.power(margin, 1 / n_total)
@@ -420,7 +446,9 @@ def _compute_confidence_interval(
             upper = 1
         else:
             upper = qbeta(1 - margin, n_positive + 0.5, n_negative + 0.5)
-        return ConfidenceInterval(lower, upper, ratio, conf_level, confint_type.lower())
+        return ConfidenceInterval(
+            lower, upper, ratio, conf_level, confint_type.lower(), str(sides)
+        )
     else:
         newline = "\n"
         raise ValueError(

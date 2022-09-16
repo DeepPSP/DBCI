@@ -24,6 +24,13 @@ _SIDE_NAME_MAP = {
     "2_sided": ConfidenceIntervalSides.TwoSided.value,
     "ts": ConfidenceIntervalSides.TwoSided.value,
     "t": ConfidenceIntervalSides.TwoSided.value,
+    "2-sides": ConfidenceIntervalSides.TwoSided.value,
+    "two_sides": ConfidenceIntervalSides.TwoSided.value,
+    "two-sides": ConfidenceIntervalSides.TwoSided.value,
+    "2_sides": ConfidenceIntervalSides.TwoSided.value,
+    "two": ConfidenceIntervalSides.TwoSided.value,
+    "2": ConfidenceIntervalSides.TwoSided.value,
+    2: ConfidenceIntervalSides.TwoSided.value,
     "left-sided": ConfidenceIntervalSides.LeftSided.value,
     "left_sided": ConfidenceIntervalSides.LeftSided.value,
     "left": ConfidenceIntervalSides.LeftSided.value,
@@ -54,7 +61,7 @@ class ConfidenceInterval:
         type (computation method) of the confidence interval.
     sides: str, default "two-sided",
         the sides of the confidence interval, should be one of
-        "two-sided" (aliases "2-sided", "two_sided", "2_sided", "ts", "t"),
+        "two-sided" (aliases "2-sided", "two_sided", "2_sided", "2-sides", "two_sides", "two-sides", "2_sides", "ts", "t", "two", "2"),
         "left-sided" (aliases "left_sided", "left", "ls", "l"),
         "right-sided" (aliases "right_sided", "right", "rs", "r"),
         case insensitive.
