@@ -124,7 +124,7 @@ The correct computation of `Mee`, `Miettinen-Nurminen` are given in the **code b
 
 [Test data](test/test-data/) are
 
-1. taken from [Reference 1](#ref1) for automatic test of the correctness of the implementation of the algorithms.
+1. taken (with slight modification, e.g. the `upper_bound` of `miettinen-nurminen-brown-li` method in the [edge case file](test/test-data/example-10-10-vs-0-20.csv)) from [Reference 1](#ref1) for automatic test of the correctness of the implementation of the algorithms.
 2. generated using [DescTools.StatsAndCIs](#ref6) via
 
     ```R

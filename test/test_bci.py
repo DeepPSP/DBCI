@@ -80,6 +80,7 @@ def test_confidence_interval():
     max_length = max([len(x) for x in _supported_methods]) + 1
     error_bound = 1e-4
 
+    print("Testing 2-sided confidence interval")
     for confint_method in _supported_methods:
         if confint_method in _stochastic_methods:
             continue
@@ -93,6 +94,46 @@ def test_confidence_interval():
         assert lower == approx(
             row["lower_bound"], abs=error_bound
         ), f"for {confint_method}, lower bound should be {row['lower_bound']:.2%}, but got {lower:.2%}"
+        assert upper == approx(
+            row["upper_bound"], abs=error_bound
+        ), f"for {confint_method}, upper bound should be {row['upper_bound']:.2%}, but got {upper:.2%}"
+
+    print("Testing left-sided confidence interval")
+    for confint_method in _supported_methods:
+        if confint_method in _stochastic_methods:
+            continue
+        lower, upper = compute_confidence_interval(
+            n_positive,
+            n_total,
+            conf_level=0.975,
+            method=confint_method,
+            sides="left",
+        ).astuple()
+        print(f"{confint_method.ljust(max_length)}: [{lower:.2%}, {upper:.2%}]")
+        row = df_data[df_data["method"] == confint_method].iloc[0]
+        assert lower == approx(
+            row["lower_bound"], abs=error_bound
+        ), f"for {confint_method}, lower bound should be {row['lower_bound']:.2%}, but got {lower:.2%}"
+        assert (
+            upper == 1
+        ), f"for {confint_method}, upper bound should be {1.0:.2%}, but got {upper:.2%}"
+
+    print("Testing right-sided confidence interval")
+    for confint_method in _supported_methods:
+        if confint_method in _stochastic_methods:
+            continue
+        lower, upper = compute_confidence_interval(
+            n_positive,
+            n_total,
+            conf_level=0.975,
+            method=confint_method,
+            sides="right",
+        ).astuple()
+        print(f"{confint_method.ljust(max_length)}: [{lower:.2%}, {upper:.2%}]")
+        row = df_data[df_data["method"] == confint_method].iloc[0]
+        assert (
+            lower == 0
+        ), f"for {confint_method}, lower bound should be {0.0:.2%}, but got {lower:.2%}"
         assert upper == approx(
             row["upper_bound"], abs=error_bound
         ), f"for {confint_method}, upper bound should be {row['upper_bound']:.2%}, but got {upper:.2%}"
