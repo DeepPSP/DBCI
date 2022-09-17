@@ -65,6 +65,20 @@ def load_test_data() -> List[pd.DataFrame]:
     return test_data
 
 
+def load_newcombee_data() -> pd.DataFrame:
+    """ """
+    df_newcombee_data = pd.read_csv(
+        _TEST_DATA_DIR / "newcombee.csv", index_col=0, header=[0, 1]
+    )
+    return df_newcombee_data
+
+
+def test_newcombee_data():
+    """ """
+    # df_test_data = load_newcombee_data()
+    pass  # TODO: implement this function
+
+
 def test_difference_confidence_interval():
     """
     A CASE STUDY: EXAMPLE FROM AN HIV CLINICAL TRIAL
@@ -243,5 +257,6 @@ def test_difference_confidence_interval_edge_case():
 
 if __name__ == "__main__":
     load_test_data()
+    test_newcombee_data()
     test_difference_confidence_interval()
     test_difference_confidence_interval_edge_case()
