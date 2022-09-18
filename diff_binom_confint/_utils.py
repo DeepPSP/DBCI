@@ -2,12 +2,24 @@
 """
 
 import re
-from typing import Callable, Optional, Union, List
+import warnings
+from typing import Callable, Optional, Union, List, NoReturn
+
+try:
+    from numba import njit
+except ModuleNotFoundError:
+    njit = None
+# try:
+#     from taichi import kernel as ti_kernel, init as ti_init
+#     ti_init()
+# except ModuleNotFoundError:
+#     ti_kernel = None
 
 
 __all__ = [
     "add_docstring",
     "remove_parameters_returns_from_docstring",
+    "accelerator",
 ]
 
 
@@ -135,3 +147,47 @@ def remove_parameters_returns_from_docstring(
         [line for idx, line in enumerate(new_doc) if idx not in indices2remove]
     )
     return new_doc
+
+
+def dummy_accelerator(func: callable) -> callable:
+    return func
+
+
+if njit is None:
+    njit = dummy_accelerator
+
+# if ti_kernel is None:
+#     ti_kernel = dummy_accelerator
+
+
+class Accelerator(object):
+    """ """
+
+    def __init__(self) -> NoReturn:
+        if njit is not dummy_accelerator:
+            self.accelerator = njit
+        # elif ti_kernel is not dummy_accelerator:
+        #     self.accelerator = ti_kernel
+        else:
+            self.accelerator = dummy_accelerator
+
+    def set_accelerator(self, name: Optional[str]) -> NoReturn:
+        if name is None:
+            self.accelerator = dummy_accelerator
+        elif name.lower() == "numba":
+            if njit is dummy_accelerator:
+                warnings.warn(
+                    "`numba` is not installed, dummy accelerator is used instead"
+                )
+            self.accelerator = njit
+        # elif name.lower() == "taichi":
+        #     if ti_kernel is dummy_accelerator:
+        #         warnings.warn(
+        #             "`taichi` is not installed, dummy accelerator is used instead"
+        #         )
+        #     self.accelerator = ti_kernel
+        else:
+            raise ValueError(f"Accelerator {name} is not supported")
+
+
+accelerator = Accelerator()
