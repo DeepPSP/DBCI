@@ -575,8 +575,14 @@ def _true_profile_lower_upper_bounds(
         tmp_b = b / 3 / a
         tmp_c = c / 3 / a
         v = tmp_b**3 - tmp_b * tmp_c * 3 / 2 + d / 2 / a
-        u = np.sign(v) * np.sqrt(tmp_b**2 - tmp_c)
-        w = (np.pi + np.arccos(v / u**3)) / 3
+        # https://github.com/AndriSignorell/DescTools/blob/de9731c7d5640deff425e08e63e3aed2c5dc65aa/R/StatsAndCIs.r#L2509
+        # u = np.sign(v) * np.sqrt(tmp_b**2 - tmp_c)
+        if np.abs(v) < np.finfo(np.float64).eps:
+            v = 0
+        u = np.sqrt(tmp_b**2 - tmp_c)
+        if v < 0:
+            u = -u
+        w = (np.pi + np.arccos(v / (np.finfo(np.float64).eps + u**3))) / 3
         ratio_mle = 2 * u * np.cos(w) - tmp_b
         ref_ratio_mle = ratio_mle - j
         var = (
