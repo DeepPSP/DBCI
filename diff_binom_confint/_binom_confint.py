@@ -170,8 +170,11 @@ def _compute_confidence_interval(
         g = 4 * ratio - 2
         h = 2 * (n_total + z**2)
         return ConfidenceInterval(
-            (e - (z * np.sqrt(f + g) + 1)) / h,
-            (e + (z * np.sqrt(f - g) + 1)) / h,
+            # (e - (z * np.sqrt(f + g) + 1)) / h,
+            # (e + (z * np.sqrt(f - g) + 1)) / h,
+            # should be clipped ?
+            (e - (z * np.sqrt(f + g) + 1)) / h if n_positive != 0 else 0,
+            (e + (z * np.sqrt(f - g) + 1)) / h if n_negative != 0 else 1,
             ratio,
             conf_level,
             confint_type.lower(),
