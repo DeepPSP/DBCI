@@ -6,6 +6,7 @@ from typing import Union
 
 import numpy as np
 from scipy.stats import norm
+from scipy.optimize import brentq
 from deprecate_kwargs import deprecate_kwargs
 from deprecated import deprecated
 
@@ -21,6 +22,8 @@ __all__ = [
 
 # alias of statistical functions
 qnorm = norm.ppf
+pnorm = norm.cdf
+uniroot = brentq
 
 
 @deprecate_kwargs([["method", "confint_type"]])
@@ -159,10 +162,10 @@ def _compute_difference_confidence_interval(
 
     if sides != "two-sided":
         z = qnorm(conf_level)
-        # _conf_level = 2 * conf_level - 1
+        _conf_level = 2 * conf_level - 1
     else:
         z = qnorm((1 + conf_level) / 2)
-        # _conf_level = conf_level
+        _conf_level = conf_level
     n_negative = n_total - n_positive
     ref_negative = ref_total - ref_positive
     ratio = n_positive / n_total
@@ -192,14 +195,20 @@ def _compute_difference_confidence_interval(
         f = z**2 - 1 / n_total + 4 * n_total * ratio * neg_ratio
         g = 4 * ratio - 2
         h = 2 * (n_total + z**2)
-        lower1 = (e - (z * np.sqrt(f + g) + 1)) / h
-        upper1 = (e + (z * np.sqrt(f - g) + 1)) / h
+        # lower1 = (e - (z * np.sqrt(f + g) + 1)) / h
+        # upper1 = (e + (z * np.sqrt(f - g) + 1)) / h
+        # should be clipped ?
+        lower1 = (e - (z * np.sqrt(f + g) + 1)) / h if n_positive != 0 else 0
+        upper1 = (e + (z * np.sqrt(f - g) + 1)) / h if n_negative != 0 else 1
         e = 2 * ref_total * ref_ratio + z**2
         f = z**2 - 1 / ref_total + 4 * ref_total * ref_ratio * ref_neg_ratio
         g = 4 * ref_ratio - 2
         h = 2 * (ref_total + z**2)
-        lower2 = (e - (z * np.sqrt(f + g) + 1)) / h
-        upper2 = (e + (z * np.sqrt(f - g) + 1)) / h
+        # lower2 = (e - (z * np.sqrt(f + g) + 1)) / h
+        # upper2 = (e + (z * np.sqrt(f - g) + 1)) / h
+        # should be clipped ?
+        lower2 = (e - (z * np.sqrt(f + g) + 1)) / h if ref_positive != 0 else 0
+        upper2 = (e + (z * np.sqrt(f - g) + 1)) / h if ref_negative != 0 else 1
         return ConfidenceInterval(
             delta_ratio - np.sqrt((ratio - lower1) ** 2 + (upper2 - ref_ratio) ** 2),
             delta_ratio + np.sqrt((ref_ratio - lower2) ** 2 + (upper1 - ratio) ** 2),
@@ -259,46 +268,71 @@ def _compute_difference_confidence_interval(
             str(sides),
         )
     elif confint_type.lower() in ["mee", "miettinen-nurminen"]:
-        theta = ref_total / n_total
-        a = 1 + theta
-        increment = 1e-5
-        itv = []
-        flag = None
-        for j in np.arange(-1, 1 + increment, increment):
-            b = -(1 + theta + ratio + theta * ref_ratio + j * (theta + 2))
-            c = j * (j + 2 * ratio + theta + 1) + ratio + theta * ref_ratio
-            d = -ratio * j * (1 + j)
-            tmp_b = b / 3 / a
-            tmp_c = c / 3 / a
-            v = tmp_b**3 - tmp_b * tmp_c * 3 / 2 + d / 2 / a
-            u = np.sign(v) * np.sqrt(tmp_b**2 - tmp_c)
-            w = (np.pi + np.arccos(v / u**3)) / 3
-            ratio_mle = 2 * u * np.cos(w) - tmp_b
-            ref_ratio_mle = ratio_mle - j
-            if confint_type.lower() == "mee":
-                lamb = 1
-            else:  # "miettinen-nurminen"
-                lamb = (n_total + ref_total) / (n_total + ref_total - 1)
-            var = np.sqrt(
-                lamb
-                * (
-                    ratio_mle * (1 - ratio_mle) / n_total
-                    + ref_ratio_mle * (1 - ref_ratio_mle) / ref_total
+        if n_positive == ref_positive == 0:
+            # R implementation from https://github.com/AndriSignorell/DescTools/blob/master/R/StatsAndCIs.r
+            # `uniroot` unstable for some cases (e.g. 10/10 vs 0/20)
+            tol = 1e-6
+            lower = uniroot(
+                lambda j: _mee_mn_score_func(
+                    j, ratio, ref_ratio, n_total, ref_total, confint_type.lower()
                 )
+                - (1 - _conf_level),
+                -1 + tol,
+                delta_ratio - tol,
+                full_output=False,
             )
-            var = (delta_ratio - j) / var
-            if -z < var < z:
-                flag = True
-                itv.append(j)
-            elif flag:
-                break
+            upper = uniroot(
+                lambda j: _mee_mn_score_func(
+                    j, ratio, ref_ratio, n_total, ref_total, confint_type.lower()
+                )
+                - (1 - _conf_level),
+                delta_ratio + tol,
+                1 - tol,
+                full_output=False,
+            )
+        else:  # failed in the case of n_positive == ref_positive == 0
+            theta = ref_total / n_total
+            a = 1 + theta
+            increment = 1e-5
+            itv = []
+            flag = None
+            for j in np.arange(-1, 1 + increment, increment):
+                b = -(1 + theta + ratio + theta * ref_ratio + j * (theta + 2))
+                c = j * (j + 2 * ratio + theta + 1) + ratio + theta * ref_ratio
+                d = -ratio * j * (1 + j)
+                tmp_b = b / 3 / a
+                tmp_c = c / 3 / a
+                v = tmp_b**3 - tmp_b * tmp_c * 3 / 2 + d / 2 / a
+                # https://github.com/AndriSignorell/DescTools/blob/de9731c7d5640deff425e08e63e3aed2c5dc65aa/R/StatsAndCIs.r#L2509
+                # u = np.sign(v) * np.sqrt(tmp_b**2 - tmp_c)
+                if np.abs(v) < np.finfo(np.float64).eps:
+                    v = 0
+                u = np.sqrt(tmp_b**2 - tmp_c)
+                if v < 0:
+                    u = -u
+                w = (np.pi + np.arccos(v / u**3)) / 3
+                ratio_mle = 2 * u * np.cos(w) - tmp_b
+                ref_ratio_mle = ratio_mle - j
+                if confint_type.lower() == "mee":
+                    lamb = 1
+                else:  # "miettinen-nurminen"
+                    lamb = (n_total + ref_total) / (n_total + ref_total - 1)
+                var = np.sqrt(
+                    lamb
+                    * (
+                        ratio_mle * (1 - ratio_mle) / n_total
+                        + ref_ratio_mle * (1 - ref_ratio_mle) / ref_total
+                    )
+                )
+                var = (delta_ratio - j) / var
+                if -z < var < z:
+                    flag = True
+                    itv.append(j)
+                elif flag:
+                    break
+            lower, upper = np.min(itv), np.max(itv)
         return ConfidenceInterval(
-            np.min(itv),
-            np.max(itv),
-            delta_ratio,
-            conf_level,
-            confint_type.lower(),
-            str(sides),
+            lower, upper, delta_ratio, conf_level, confint_type.lower(), str(sides)
         )
     elif confint_type.lower() == "true-profile":
         theta = ref_total / n_total
@@ -476,3 +510,45 @@ def list_difference_confidence_interval_methods() -> None:
     """ """
 
     print("\n".join(_supported_types))
+
+
+def _mee_mn_score_func(
+    j: float,
+    ratio: float,
+    ref_ratio: float,
+    n_total: int,
+    ref_total: int,
+    method: str,
+) -> float:
+    theta = ref_total / n_total
+    delta_ratio = ratio - ref_ratio
+    a = a = 1 + theta
+    b = -(1 + theta + ratio + theta * ref_ratio + j * (theta + 2))
+    c = j * (j + 2 * ratio + theta + 1) + ratio + theta * ref_ratio
+    d = -ratio * j * (1 + j)
+    tmp_b = b / 3 / a
+    tmp_c = c / 3 / a
+    v = tmp_b**3 - tmp_b * tmp_c * 3 / 2 + d / 2 / a
+    # https://github.com/AndriSignorell/DescTools/blob/de9731c7d5640deff425e08e63e3aed2c5dc65aa/R/StatsAndCIs.r#L2509
+    # u = np.sign(v) * np.sqrt(tmp_b**2 - tmp_c)
+    if np.abs(v) < np.finfo(np.float64).eps:
+        v = 0
+    u = np.sqrt(tmp_b**2 - tmp_c)
+    if v < 0:
+        u = -u
+    w = (np.pi + np.arccos(v / u**3)) / 3
+    ratio_mle = 2 * u * np.cos(w) - tmp_b
+    ref_ratio_mle = ratio_mle - j
+    if method.lower() == "mee":
+        lamb = 1
+    else:  # "miettinen-nurminen"
+        lamb = (n_total + ref_total) / (n_total + ref_total - 1)
+    var = np.sqrt(
+        lamb
+        * (
+            ratio_mle * (1 - ratio_mle) / n_total
+            + ref_ratio_mle * (1 - ref_ratio_mle) / ref_total
+        )
+    )
+    var = (delta_ratio - j) / var
+    return 2 * min(pnorm(var), 1 - pnorm(var))
