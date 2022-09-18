@@ -530,7 +530,11 @@ def _mee_mn_lower_upper_bounds(
         u = np.sqrt(tmp_b**2 - tmp_c)
         if v < 0:
             u = -u
-        w = (np.pi + np.arccos(v / (np.finfo(np.float64).eps + u**3))) / 3
+        u3 = u**3
+        if u3 == 0:
+            u3 = np.finfo(np.float64).eps
+            continue  # python >= 3.7 would cause ZeroDivisionError
+        w = (np.pi + np.arccos(v / u3)) / 3
         ratio_mle = 2 * u * np.cos(w) - tmp_b
         ref_ratio_mle = ratio_mle - j
         var = np.sqrt(
@@ -582,7 +586,11 @@ def _true_profile_lower_upper_bounds(
         u = np.sqrt(tmp_b**2 - tmp_c)
         if v < 0:
             u = -u
-        w = (np.pi + np.arccos(v / (np.finfo(np.float64).eps + u**3))) / 3
+        u3 = u**3
+        if u3 == 0:
+            u3 = np.finfo(np.float64).eps
+            continue  # python >= 3.7 would cause ZeroDivisionError
+        w = (np.pi + np.arccos(v / u3)) / 3
         ratio_mle = 2 * u * np.cos(w) - tmp_b
         ref_ratio_mle = ratio_mle - j
         var = (
