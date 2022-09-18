@@ -165,16 +165,15 @@ def _compute_confidence_interval(
             str(sides),
         )
     elif confint_type.lower() in ["wilson-cc", "newcombe-cc"]:
+        # https://corplingstats.wordpress.com/2019/04/27/correcting-for-continuity/
+        # equation (6) and (6')
         e = 2 * n_total * ratio + z**2
         f = z**2 - 1 / n_total + 4 * n_total * ratio * neg_ratio
         g = 4 * ratio - 2
         h = 2 * (n_total + z**2)
         return ConfidenceInterval(
-            # (e - (z * np.sqrt(f + g) + 1)) / h,
-            # (e + (z * np.sqrt(f - g) + 1)) / h,
-            # should be clipped ?
-            (e - (z * np.sqrt(f + g) + 1)) / h if n_positive != 0 else 0,
-            (e + (z * np.sqrt(f - g) + 1)) / h if n_negative != 0 else 1,
+            (e - (z * np.sqrt(f + g) + 1)) / h,
+            (e + (z * np.sqrt(f - g) + 1)) / h,
             ratio,
             conf_level,
             confint_type.lower(),

@@ -197,7 +197,7 @@ def _compute_difference_confidence_interval(
         h = 2 * (n_total + z**2)
         # lower1 = (e - (z * np.sqrt(f + g) + 1)) / h
         # upper1 = (e + (z * np.sqrt(f - g) + 1)) / h
-        # should be clipped ?
+        # should always be clipped ?
         lower1 = (e - (z * np.sqrt(f + g) + 1)) / h if n_positive != 0 else 0
         upper1 = (e + (z * np.sqrt(f - g) + 1)) / h if n_negative != 0 else 1
         e = 2 * ref_total * ref_ratio + z**2
@@ -206,7 +206,7 @@ def _compute_difference_confidence_interval(
         h = 2 * (ref_total + z**2)
         # lower2 = (e - (z * np.sqrt(f + g) + 1)) / h
         # upper2 = (e + (z * np.sqrt(f - g) + 1)) / h
-        # should be clipped ?
+        # should always be clipped ?
         lower2 = (e - (z * np.sqrt(f + g) + 1)) / h if ref_positive != 0 else 0
         upper2 = (e + (z * np.sqrt(f - g) + 1)) / h if ref_negative != 0 else 1
         return ConfidenceInterval(
