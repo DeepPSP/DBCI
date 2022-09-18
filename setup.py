@@ -19,7 +19,8 @@ extras["test"] = [
     "pytest",
     "pytest-xdist",
 ]
-extras["dev"] = extras["test"]
+extras["acc"] = ["numba"]
+extras["dev"] = extras["test"] + extras["acc"]
 
 
 setuptools.setup(
