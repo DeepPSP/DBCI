@@ -28,6 +28,14 @@ cd DBCI
 python -m pip install .
 ```
 
+## `Numba` accelerated version
+
+Install using
+
+```bash
+python -m pip install diff-binom-confint[acc]
+```
+
 ## Usage examples
 
 ```python
@@ -157,3 +165,7 @@ The filenames has the following pattern:
 ```
 
 Note that the out-of-range values (e.g. `> 1`) are left as empty values in the `.csv` files.
+
+## Known Issues
+
+1. Edge cases incorrect for the method `true-profile`.
