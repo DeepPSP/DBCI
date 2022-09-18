@@ -11,7 +11,7 @@ from deprecate_kwargs import deprecate_kwargs
 from deprecated import deprecated
 
 from ._confint import ConfidenceInterval, _SIDE_NAME_MAP, ConfidenceIntervalSides
-from ._utils import add_docstring, remove_parameters_returns_from_docstring
+from ._utils import add_docstring, remove_parameters_returns_from_docstring, accelerator
 
 
 __all__ = [
@@ -268,13 +268,17 @@ def _compute_difference_confidence_interval(
             str(sides),
         )
     elif confint_type.lower() in ["mee", "miettinen-nurminen"]:
+        if confint_type.lower() == "mee":
+            lamb = 1
+        else:  # "miettinen-nurminen"
+            lamb = (n_total + ref_total) / (n_total + ref_total - 1)
         if n_positive == ref_positive == 0:
             # R implementation from https://github.com/AndriSignorell/DescTools/blob/master/R/StatsAndCIs.r
             # `uniroot` unstable for some cases (e.g. 10/10 vs 0/20)
             tol = 1e-6
             lower = uniroot(
                 lambda j: _mee_mn_score_func(
-                    j, ratio, ref_ratio, n_total, ref_total, confint_type.lower()
+                    j, ratio, ref_ratio, n_total, ref_total, lamb
                 )
                 - (1 - _conf_level),
                 -1 + tol,
@@ -283,7 +287,7 @@ def _compute_difference_confidence_interval(
             )
             upper = uniroot(
                 lambda j: _mee_mn_score_func(
-                    j, ratio, ref_ratio, n_total, ref_total, confint_type.lower()
+                    j, ratio, ref_ratio, n_total, ref_total, lamb
                 )
                 - (1 - _conf_level),
                 delta_ratio + tol,
@@ -291,77 +295,17 @@ def _compute_difference_confidence_interval(
                 full_output=False,
             )
         else:  # failed in the case of n_positive == ref_positive == 0
-            theta = ref_total / n_total
-            a = 1 + theta
-            increment = 1e-5
-            itv = []
-            flag = None
-            for j in np.arange(-1, 1 + increment, increment):
-                b = -(1 + theta + ratio + theta * ref_ratio + j * (theta + 2))
-                c = j * (j + 2 * ratio + theta + 1) + ratio + theta * ref_ratio
-                d = -ratio * j * (1 + j)
-                tmp_b = b / 3 / a
-                tmp_c = c / 3 / a
-                v = tmp_b**3 - tmp_b * tmp_c * 3 / 2 + d / 2 / a
-                # https://github.com/AndriSignorell/DescTools/blob/de9731c7d5640deff425e08e63e3aed2c5dc65aa/R/StatsAndCIs.r#L2509
-                # u = np.sign(v) * np.sqrt(tmp_b**2 - tmp_c)
-                if np.abs(v) < np.finfo(np.float64).eps:
-                    v = 0
-                u = np.sqrt(tmp_b**2 - tmp_c)
-                if v < 0:
-                    u = -u
-                w = (np.pi + np.arccos(v / u**3)) / 3
-                ratio_mle = 2 * u * np.cos(w) - tmp_b
-                ref_ratio_mle = ratio_mle - j
-                if confint_type.lower() == "mee":
-                    lamb = 1
-                else:  # "miettinen-nurminen"
-                    lamb = (n_total + ref_total) / (n_total + ref_total - 1)
-                var = np.sqrt(
-                    lamb
-                    * (
-                        ratio_mle * (1 - ratio_mle) / n_total
-                        + ref_ratio_mle * (1 - ref_ratio_mle) / ref_total
-                    )
-                )
-                var = (delta_ratio - j) / var
-                if -z < var < z:
-                    flag = True
-                    itv.append(j)
-                elif flag:
-                    break
+            itv = _mee_mn_lower_upper_bounds(
+                ratio, ref_ratio, n_total, ref_total, lamb, z
+            )
             lower, upper = np.min(itv), np.max(itv)
         return ConfidenceInterval(
             lower, upper, delta_ratio, conf_level, confint_type.lower(), str(sides)
         )
     elif confint_type.lower() == "true-profile":
-        theta = ref_total / n_total
-        a = 1 + theta
-        increment = 1e-5
-        itv = []
-        flag = None
-        for j in np.arange(-1, 1 + increment, increment):
-            b = -(1 + theta + ratio + theta * ref_ratio + j * (theta + 2))
-            c = j * (j + 2 * ratio + theta + 1) + ratio + theta * ref_ratio
-            d = -ratio * j * (1 + j)
-            tmp_b = b / 3 / a
-            tmp_c = c / 3 / a
-            v = tmp_b**3 - tmp_b * tmp_c * 3 / 2 + d / 2 / a
-            u = np.sign(v) * np.sqrt(tmp_b**2 - tmp_c)
-            w = (np.pi + np.arccos(v / u**3)) / 3
-            ratio_mle = 2 * u * np.cos(w) - tmp_b
-            ref_ratio_mle = ratio_mle - j
-            var = (
-                n_positive * np.log(ratio_mle / ratio)
-                + ref_positive * np.log(ref_ratio_mle / ref_ratio)
-                + n_negative * np.log((1 - ratio_mle) / neg_ratio)
-                + ref_negative * np.log((1 - ref_ratio_mle) / ref_neg_ratio)
-            )
-            if var >= -(z**2) / 2:
-                flag = True
-                itv.append(j)
-            elif flag:
-                break
+        itv = _true_profile_lower_upper_bounds(
+            n_positive, n_total, ref_positive, ref_total, z
+        )
         return ConfidenceInterval(
             np.min(itv),
             np.max(itv),
@@ -518,7 +462,14 @@ def _mee_mn_score_func(
     ref_ratio: float,
     n_total: int,
     ref_total: int,
-    method: str,
+    lamb: float,
+) -> float:
+    var = _mee_mn_var_func(j, ratio, ref_ratio, n_total, ref_total, lamb)
+    return 2 * min(pnorm(var), 1 - pnorm(var))
+
+
+def _mee_mn_var_func(
+    j: float, ratio: float, ref_ratio: float, n_total: int, ref_total: int, lamb: float
 ) -> float:
     theta = ref_total / n_total
     delta_ratio = ratio - ref_ratio
@@ -539,10 +490,6 @@ def _mee_mn_score_func(
     w = (np.pi + np.arccos(v / u**3)) / 3
     ratio_mle = 2 * u * np.cos(w) - tmp_b
     ref_ratio_mle = ratio_mle - j
-    if method.lower() == "mee":
-        lamb = 1
-    else:  # "miettinen-nurminen"
-        lamb = (n_total + ref_total) / (n_total + ref_total - 1)
     var = np.sqrt(
         lamb
         * (
@@ -551,4 +498,96 @@ def _mee_mn_score_func(
         )
     )
     var = (delta_ratio - j) / var
-    return 2 * min(pnorm(var), 1 - pnorm(var))
+    return var
+
+
+@accelerator.accelerator
+def _mee_mn_lower_upper_bounds(
+    ratio: float,
+    ref_ratio: float,
+    n_total: int,
+    ref_total: int,
+    lamb: float,
+    z: float,
+) -> np.ndarray:
+    theta = ref_total / n_total
+    delta_ratio = ratio - ref_ratio
+    a = 1 + theta
+    increment = 1e-5
+    itv = []
+    # flag = None
+    for j in np.arange(-1, 1 + increment, increment):
+        b = -(1 + theta + ratio + theta * ref_ratio + j * (theta + 2))
+        c = j * (j + 2 * ratio + theta + 1) + ratio + theta * ref_ratio
+        d = -ratio * j * (1 + j)
+        tmp_b = b / 3 / a
+        tmp_c = c / 3 / a
+        v = tmp_b**3 - tmp_b * tmp_c * 3 / 2 + d / 2 / a
+        # https://github.com/AndriSignorell/DescTools/blob/de9731c7d5640deff425e08e63e3aed2c5dc65aa/R/StatsAndCIs.r#L2509
+        # u = np.sign(v) * np.sqrt(tmp_b**2 - tmp_c)
+        if np.abs(v) < np.finfo(np.float64).eps:
+            v = 0
+        u = np.sqrt(tmp_b**2 - tmp_c)
+        if v < 0:
+            u = -u
+        w = (np.pi + np.arccos(v / (np.finfo(np.float64).eps + u**3))) / 3
+        ratio_mle = 2 * u * np.cos(w) - tmp_b
+        ref_ratio_mle = ratio_mle - j
+        var = np.sqrt(
+            lamb
+            * (
+                ratio_mle * (1 - ratio_mle) / n_total
+                + ref_ratio_mle * (1 - ref_ratio_mle) / ref_total
+            )
+        )
+        var = (delta_ratio - j) / var
+        if -z < var < z:
+            # flag = True
+            itv.append(j)
+        # elif flag:
+        #     break
+    return np.array(itv)
+
+
+@accelerator.accelerator
+def _true_profile_lower_upper_bounds(
+    n_positive: int,
+    n_total: int,
+    ref_positive: int,
+    ref_total: int,
+    z: float,
+) -> np.ndarray:
+    theta = ref_total / n_total
+    ratio = n_positive / n_total
+    ref_ratio = ref_positive / ref_total
+    ref_neg_ratio = 1 - ref_ratio
+    neg_ratio = 1 - ratio
+    n_negative = n_total - n_positive
+    ref_negative = ref_total - ref_positive
+    a = 1 + theta
+    increment = 1e-5
+    itv = []
+    # flag = None
+    for j in np.arange(-1, 1 + increment, increment):
+        b = -(1 + theta + ratio + theta * ref_ratio + j * (theta + 2))
+        c = j * (j + 2 * ratio + theta + 1) + ratio + theta * ref_ratio
+        d = -ratio * j * (1 + j)
+        tmp_b = b / 3 / a
+        tmp_c = c / 3 / a
+        v = tmp_b**3 - tmp_b * tmp_c * 3 / 2 + d / 2 / a
+        u = np.sign(v) * np.sqrt(tmp_b**2 - tmp_c)
+        w = (np.pi + np.arccos(v / u**3)) / 3
+        ratio_mle = 2 * u * np.cos(w) - tmp_b
+        ref_ratio_mle = ratio_mle - j
+        var = (
+            n_positive * np.log(ratio_mle / ratio)
+            + ref_positive * np.log(ref_ratio_mle / ref_ratio)
+            + n_negative * np.log((1 - ratio_mle) / neg_ratio)
+            + ref_negative * np.log((1 - ref_ratio_mle) / ref_neg_ratio)
+        )
+        if var >= -(z**2) / 2:
+            # flag = True
+            itv.append(j)
+        # elif flag:
+        #     break
+    return np.array(itv)
