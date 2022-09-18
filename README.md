@@ -113,6 +113,7 @@ confint = compute_difference_confidence_interval(
 4. <a name="ref4"></a> [scipy.stats._binomtest](https://github.com/scipy/scipy/blob/main/scipy/stats/_binomtest.py)
 5. <a name="ref5"></a> [corplingstats](https://corplingstats.wordpress.com/2019/04/27/correcting-for-continuity/)
 6. <a name="ref6"></a> [DescTools.StatsAndCIs](https://github.com/AndriSignorell/DescTools/blob/master/R/StatsAndCIs.r)
+7. <a name="ref7"></a> [Newcombee](https://onlinelibrary.wiley.com/doi/10.1002/(SICI)1097-0258(19980430)17:8%3C873::AID-SIM779%3E3.0.CO;2-I)
 
 ## NOTE
 
@@ -143,6 +144,8 @@ The correct computation of `Mee`, `Miettinen-Nurminen` are given in the **code b
     fwrite(results, "./test/test-data/example-84-101.csv")  # with manual slight adjustment of method names
     ```
 
+3. taken from [Reference 7](#ref7) (Table II).
+
 The filenames has the following pattern:
 
 ```python
@@ -152,3 +155,5 @@ The filenames has the following pattern:
 # for computing confidence interval for binomial proportions
 "example-(?P<n_positive>[\\d]+)-(?P<n_total>[\\d]+)\\.csv"
 ```
+
+Note that the out-of-range values (e.g. `> 1`) are left as empty values in the `.csv` files.
