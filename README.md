@@ -97,7 +97,7 @@ confint = compute_difference_confidence_interval(
 | jeffreys-perks              | :heavy_check_mark: |
 | mee                         | :heavy_check_mark: |
 | miettinen-nurminen          | :heavy_check_mark: |
-| true-profile                | :heavy_check_mark: |
+| true-profile                | Partially[^1]      |
 | hauck-anderson              | :heavy_check_mark: |
 | agresti-caffo               | :heavy_check_mark: |
 | brown-li                    | :heavy_check_mark: |
@@ -110,6 +110,8 @@ confint = compute_difference_confidence_interval(
 | agresti-min                 | :x:                |
 | wang                        | :x:                |
 | pradhan-banerjee            | :x:                |
+
+[^1]: Supports only cases where all 4 cells are non-empty, i.e. both the two binomial proportions are not 0 or 1.
 
 </details>
 

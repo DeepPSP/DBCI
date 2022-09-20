@@ -113,12 +113,19 @@ def test_newcombee_data():
         matched = re.match(example_name_pattern, k)
         n_positive = int(matched["n_positive"])
         n_total = int(matched["n_total"])
+        n_negative = n_total - n_positive
         ref_positive = int(matched["ref_positive"])
         ref_total = int(matched["ref_total"])
+        ref_negative = ref_total - ref_positive
         for method, confint in v.items():
             if method not in _supported_methods or method in _stochastic_methods:
                 continue
-            if method in ["true-profile"] and 0 in [n_positive, ref_positive]:
+            if method in ["true-profile"] and 0 in [
+                n_positive,
+                ref_positive,
+                n_negative,
+                ref_negative,
+            ]:
                 # TODO: fix this
                 continue
             lower, upper = compute_difference_confidence_interval(

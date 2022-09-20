@@ -303,6 +303,14 @@ def _compute_difference_confidence_interval(
             lower, upper, delta_ratio, conf_level, confint_type.lower(), str(sides)
         )
     elif confint_type.lower() == "true-profile":
+        # TODO: omitting any terms corresponding to empty cells
+        # cells: n_positive, n_negative, ref_positive, ref_negative
+        assert 0 not in [
+            n_positive,
+            ref_positive,
+            n_negative,
+            ref_negative,
+        ], "True profile method currently supports only cases where cells are all non-empty."
         itv = _true_profile_lower_upper_bounds(
             n_positive, n_total, ref_positive, ref_total, z
         )
