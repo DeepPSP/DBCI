@@ -3,7 +3,7 @@
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import NoReturn, Tuple
+from typing import Tuple
 
 from deprecate_kwargs import deprecate_kwargs
 
@@ -75,7 +75,7 @@ class ConfidenceInterval:
     type: str
     sides: str = "two-sided"
 
-    def __post_init__(self) -> NoReturn:
+    def __post_init__(self) -> None:
         assert 0 < self.level < 1
         assert self.sides.lower() in _SIDE_NAME_MAP
         self.sides = _SIDE_NAME_MAP[self.sides.lower()]

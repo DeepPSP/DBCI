@@ -3,7 +3,7 @@
 
 import re
 import warnings
-from typing import Callable, Optional, Union, List, NoReturn
+from typing import Callable, Optional, Union, List
 
 try:
     from numba import njit
@@ -163,7 +163,7 @@ if njit is None:
 class Accelerator(object):
     """ """
 
-    def __init__(self) -> NoReturn:
+    def __init__(self) -> None:
         if njit is not dummy_accelerator:
             self.accelerator = njit
         # elif ti_kernel is not dummy_accelerator:
@@ -171,7 +171,7 @@ class Accelerator(object):
         else:
             self.accelerator = dummy_accelerator
 
-    def set_accelerator(self, name: Optional[str]) -> NoReturn:
+    def set_accelerator(self, name: Optional[str]) -> None:
         if name is None:
             self.accelerator = dummy_accelerator
         elif name.lower() == "numba":

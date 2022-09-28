@@ -1,7 +1,7 @@
 """
 """
 
-from typing import NoReturn, Union
+from typing import Union
 
 import numpy as np
 from scipy.stats import norm, beta, binom, ncx2
@@ -498,13 +498,13 @@ _method_aliases = _type_aliases
 
 
 @deprecated(version="0.0.4", reason="Use `list_confidence_interval_methods` instead.")
-def list_confidence_interval_types() -> NoReturn:
+def list_confidence_interval_types() -> None:
     """ """
 
     print("\n".join(_supported_types))
 
 
-def list_confidence_interval_methods() -> NoReturn:
+def list_confidence_interval_methods() -> None:
     """ """
 
     print("\n".join(_supported_types))
