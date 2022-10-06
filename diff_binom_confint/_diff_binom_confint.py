@@ -303,14 +303,6 @@ def _compute_difference_confidence_interval(
             lower, upper, delta_ratio, conf_level, confint_type.lower(), str(sides)
         )
     elif confint_type.lower() == "true-profile":
-        # TODO: omitting any terms corresponding to empty cells
-        # cells: n_positive, n_negative, ref_positive, ref_negative
-        assert 0 not in [
-            n_positive,
-            ref_positive,
-            n_negative,
-            ref_negative,
-        ], "True profile method currently supports only cases where cells are all non-empty."
         itv = _true_profile_lower_upper_bounds(
             n_positive, n_total, ref_positive, ref_total, z
         )
@@ -601,12 +593,15 @@ def _true_profile_lower_upper_bounds(
         w = (np.pi + np.arccos(v / u3)) / 3
         ratio_mle = 2 * u * np.cos(w) - tmp_b
         ref_ratio_mle = ratio_mle - j
-        var = (
-            n_positive * np.log(ratio_mle / ratio)
-            + ref_positive * np.log(ref_ratio_mle / ref_ratio)
-            + n_negative * np.log((1 - ratio_mle) / neg_ratio)
-            + ref_negative * np.log((1 - ref_ratio_mle) / ref_neg_ratio)
-        )
+        var = 0
+        for (num, r_m_, r_) in [
+            (n_positive, ratio_mle, ratio),
+            (ref_positive, ref_ratio_mle, ref_ratio),
+            (n_negative, 1 - ratio_mle, neg_ratio),
+            (ref_negative, 1 - ref_ratio_mle, ref_neg_ratio),
+        ]:
+            if num > 0:  # omitting any terms corresponding to empty cells
+                var += num * np.log(r_m_ / r_)
         if var >= -(z**2) / 2:
             # flag = True
             itv.append(j)
