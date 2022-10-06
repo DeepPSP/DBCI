@@ -31,4 +31,4 @@ jobs:
     - name: Check code format with black and flake8
       run: |
         black . --check -v
-        flake8 . --count --ignore="E501 W503" --show-source --statistics --exclude=./.*,build,dist
+        flake8 . --count --ignore="E501 W503 E203" --show-source --statistics --exclude=./.*,build,dist
