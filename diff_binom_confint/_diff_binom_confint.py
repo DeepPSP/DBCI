@@ -327,12 +327,16 @@ def _compute_difference_confidence_interval(
             confint_type.lower(),
             str(sides),
         )
-    elif confint_type.lower() == "agresti-caffo":
+    elif confint_type.lower() in ["agresti-caffo", "carlin-louis"]:
         ratio_1 = (n_positive + 1) / (n_total + 2)
         ratio_2 = (ref_positive + 1) / (ref_total + 2)
+        denom_add = {
+            "agresti-caffo": 2,
+            "carlin-louis": 3,
+        }
         item = z * np.sqrt(
-            (ratio_1 * (1 - ratio_1) / (n_total + 2))
-            + (ratio_2 * (1 - ratio_2) / (ref_total + 2))
+            (ratio_1 * (1 - ratio_1) / (n_total + denom_add[confint_type.lower()]))
+            + (ratio_2 * (1 - ratio_2) / (ref_total + denom_add[confint_type.lower()]))
         )
         return ConfidenceInterval(
             ratio_1 - ratio_2 - item,
@@ -413,6 +417,7 @@ _supported_types = [
     "true-profile",
     "hauck-anderson",
     "agresti-caffo",
+    "carlin-louis",
     "brown-li",
     "brown-li-jeffrey",
     "miettinen-nurminen-brown-li",
