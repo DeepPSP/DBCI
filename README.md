@@ -100,6 +100,7 @@ confint = compute_difference_confidence_interval(
 | true-profile                | :heavy_check_mark: |
 | hauck-anderson              | :heavy_check_mark: |
 | agresti-caffo               | :heavy_check_mark: |
+| carlin-louis                | :heavy_check_mark: |
 | brown-li                    | :heavy_check_mark: |
 | brown-li-jeffrey            | :heavy_check_mark: |
 | miettinen-nurminen-brown-li | :heavy_check_mark: |
