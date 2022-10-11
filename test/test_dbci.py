@@ -174,7 +174,7 @@ def test_difference_confidence_interval():
     # assert set(_supported_methods) <= set(
     #     df_data["method"].values
     # ), f"""methods {set(_supported_methods) - set(df_data["method"].values)} has no test data"""
-    no_test_data_methods = set(_supported_methods) - set(df_data["method"].values)
+    no_test_data_methods = list(set(_supported_methods) - set(df_data["method"].values))
     if len(no_test_data_methods) > 0:
         warnings.warn(
             f"""methods {no_test_data_methods} has no test data""",
@@ -186,7 +186,7 @@ def test_difference_confidence_interval():
 
     print("Testing 2-sided confidence interval")
     for confint_method in _supported_methods:
-        if confint_method in _stochastic_methods:
+        if confint_method in _stochastic_methods + no_test_data_methods:
             continue
         lower, upper = compute_difference_confidence_interval(
             n_positive,
@@ -206,7 +206,7 @@ def test_difference_confidence_interval():
 
     print("Testing left-sided confidence interval")
     for confint_method in _supported_methods:
-        if confint_method in _stochastic_methods:
+        if confint_method in _stochastic_methods + no_test_data_methods:
             continue
         lower, upper = compute_difference_confidence_interval(
             n_positive,
@@ -228,7 +228,7 @@ def test_difference_confidence_interval():
 
     print("Testing right-sided confidence interval")
     for confint_method in _supported_methods:
-        if confint_method in _stochastic_methods:
+        if confint_method in _stochastic_methods + no_test_data_methods:
             continue
         lower, upper = compute_difference_confidence_interval(
             n_positive,
@@ -268,7 +268,7 @@ def test_difference_confidence_interval_edge_case():
     # assert set(_supported_methods) <= set(
     #     df_data["method"].values
     # ), f"""methods {set(_supported_methods) - set(df_data["method"].values)} has no test data"""
-    no_test_data_methods = set(_supported_methods) - set(df_data["method"].values)
+    no_test_data_methods = list(set(_supported_methods) - set(df_data["method"].values))
     if len(no_test_data_methods) > 0:
         warnings.warn(
             f"""methods {no_test_data_methods} has no test data""",
@@ -279,7 +279,7 @@ def test_difference_confidence_interval_edge_case():
     error_bound = 1e-4
 
     for confint_method in _supported_methods:
-        if confint_method in _stochastic_methods:
+        if confint_method in _stochastic_methods + no_test_data_methods:
             continue
         lower_clip, upper_clip = compute_difference_confidence_interval(
             n_positive,

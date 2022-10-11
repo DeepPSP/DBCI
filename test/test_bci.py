@@ -77,7 +77,7 @@ def test_confidence_interval():
     # assert set(_supported_methods) <= set(
     #     df_data["method"].values
     # ), f"""methods {set(_supported_methods) - set(df_data["method"].values)} has no test data"""
-    no_test_data_methods = set(_supported_methods) - set(df_data["method"].values)
+    no_test_data_methods = list(set(_supported_methods) - set(df_data["method"].values))
     if len(no_test_data_methods) > 0:
         warnings.warn(
             f"""methods `{no_test_data_methods}` has no test data""",
@@ -89,7 +89,7 @@ def test_confidence_interval():
 
     print("Testing 2-sided confidence interval")
     for confint_method in _supported_methods:
-        if confint_method in _stochastic_methods:
+        if confint_method in _stochastic_methods + no_test_data_methods:
             continue
         lower, upper = compute_confidence_interval(
             n_positive,
