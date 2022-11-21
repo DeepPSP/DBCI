@@ -28,6 +28,7 @@ jobs:
         python -m pip install --upgrade pip setuptools wheel
         python -m pip install -r requirements.txt
         python -m pip install pytest pytest-xdist pytest-cov pandas numba # Testing packages
+        python -m pip install .
         python -m pip freeze
     - name: Run test with pytest and collect coverage
       run: |
