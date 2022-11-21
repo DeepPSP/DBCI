@@ -11,31 +11,19 @@ import numpy as np
 import pandas as pd
 from pytest import approx, raises
 
-try:
-    from diff_binom_confint import compute_difference_confidence_interval
-    from diff_binom_confint._diff_binom_confint import (
-        _supported_methods,
-        _method_aliases,
-        _stochastic_methods,
-    )
-    from diff_binom_confint._confint import ConfidenceInterval
-except ImportError:
-    import sys
-
-    sys.path.insert(0, str(Path(__file__).parents[1]))
-    from diff_binom_confint import compute_difference_confidence_interval
-    from diff_binom_confint._diff_binom_confint import (
-        _supported_methods,
-        _method_aliases,
-        _stochastic_methods,
-    )
-    from diff_binom_confint._confint import ConfidenceInterval
+from diff_binom_confint import compute_difference_confidence_interval
+from diff_binom_confint._diff_binom_confint import (
+    _supported_methods,
+    _method_aliases,
+    _stochastic_methods,
+)
+from diff_binom_confint._confint import ConfidenceInterval
 
 
 _TEST_DATA_DIR = Path(__file__).parent / "test-data"
 
 
-def load_test_data() -> List[pd.DataFrame]:
+def test_load_data() -> List[pd.DataFrame]:
     test_file_pattern = "example-(?P<n_positive>[\\d]+)-(?P<n_total>[\\d]+)-vs-(?P<ref_positive>[\\d]+)-(?P<ref_total>[\\d]+)\\.csv"
     test_files = Path(_TEST_DATA_DIR).glob("*.csv")
     test_data = []
@@ -351,11 +339,3 @@ def test_errors():
         compute_difference_confidence_interval(1, 2, 0, 0)
     with raises(ValueError, match="sides should be one of"):
         compute_difference_confidence_interval(1, 2, 1, 2, sides="3-sided")
-
-
-if __name__ == "__main__":
-    load_test_data()
-    test_newcombee_data()
-    test_difference_confidence_interval()
-    test_difference_confidence_interval_edge_case()
-    test_errors()

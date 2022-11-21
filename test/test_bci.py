@@ -9,23 +9,12 @@ from typing import List
 import pandas as pd
 from pytest import approx, raises
 
-try:
-    from diff_binom_confint import compute_confidence_interval
-    from diff_binom_confint._binom_confint import (
-        _supported_methods,
-        _method_aliases,
-        _stochastic_methods,
-    )
-except ImportError:
-    import sys
-
-    sys.path.insert(0, str(Path(__file__).parents[1]))
-    from diff_binom_confint import compute_confidence_interval
-    from diff_binom_confint._binom_confint import (
-        _supported_methods,
-        _method_aliases,
-        _stochastic_methods,
-    )
+from diff_binom_confint import compute_confidence_interval
+from diff_binom_confint._binom_confint import (
+    _supported_methods,
+    _method_aliases,
+    _stochastic_methods,
+)
 
 
 _TEST_DATA_DIR = Path(__file__).parent / "test-data"
@@ -163,9 +152,3 @@ def test_errors():
         compute_confidence_interval(0, 0)
     with raises(ValueError, match="sides should be one of"):
         compute_confidence_interval(1, 2, sides="3-sided")
-
-
-if __name__ == "__main__":
-    load_test_data()
-    test_confidence_interval()
-    test_errors()

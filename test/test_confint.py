@@ -1,14 +1,7 @@
 """
 """
 
-try:
-    from diff_binom_confint._confint import ConfidenceInterval
-except ImportError:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).parents[1]))
-    from diff_binom_confint._confint import ConfidenceInterval
+from diff_binom_confint._confint import ConfidenceInterval
 
 
 def test_confidence_interval():
@@ -32,7 +25,3 @@ def test_confidence_interval():
 
     assert str(confint_1) == str(confint_2) == "(0.80601, 0.98226)"
     assert confint_1 != confint_2
-
-
-if __name__ == "__main__":
-    test_confidence_interval()
