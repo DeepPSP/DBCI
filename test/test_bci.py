@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import List
 
 import pandas as pd
-from pytest import approx
+from pytest import approx, raises
 
 try:
     from diff_binom_confint import compute_confidence_interval
@@ -148,6 +148,24 @@ def test_confidence_interval():
     print("test_confidence_interval passed")
 
 
+def test_errors():
+    with raises(ValueError, match="confint_type should be one of"):
+        compute_confidence_interval(1, 2, method="not-supported")
+    with raises(
+        ValueError, match="conf_level should be inside the interval \\(0, 1\\)"
+    ):
+        compute_confidence_interval(1, 2, conf_level=0)
+    with raises(ValueError, match="n_positive should be less than or equal to n_total"):
+        compute_confidence_interval(2, 1)
+    with raises(ValueError, match="n_positive should be non-negative"):
+        compute_confidence_interval(-1, 1)
+    with raises(ValueError, match="n_total should be positive"):
+        compute_confidence_interval(0, 0)
+    with raises(ValueError, match="sides should be one of"):
+        compute_confidence_interval(1, 2, sides="3-sided")
+
+
 if __name__ == "__main__":
     load_test_data()
     test_confidence_interval()
+    test_errors()
