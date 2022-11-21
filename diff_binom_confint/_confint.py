@@ -5,8 +5,6 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Tuple
 
-from deprecate_kwargs import deprecate_kwargs
-
 
 __all__ = ["ConfidenceInterval"]
 
@@ -43,7 +41,6 @@ _SIDE_NAME_MAP = {
 }
 
 
-@deprecate_kwargs([["method", "type"]])
 @dataclass
 class ConfidenceInterval:
     """
@@ -57,8 +54,8 @@ class ConfidenceInterval:
         estimate of (the difference of) the binomial proportion.
     level: float,
         confidence level, should be inside the interval (0, 1).
-    type: str,
-        type (computation method) of the confidence interval.
+    method: str,
+        computation method of the confidence interval.
     sides: str, default "two-sided",
         the sides of the confidence interval, should be one of
         "two-sided" (aliases "2-sided", "two_sided", "2_sided", "2-sides", "two_sides", "two-sides", "2_sides", "ts", "t", "two", "2"),
@@ -72,25 +69,18 @@ class ConfidenceInterval:
     upper_bound: float
     estimate: float
     level: float
-    type: str
+    method: str
     sides: str = "two-sided"
 
     def __post_init__(self) -> None:
         assert 0 < self.level < 1
         assert self.sides.lower() in _SIDE_NAME_MAP
         self.sides = _SIDE_NAME_MAP[self.sides.lower()]
-        # replace field `type` with `method`
-        method_fld = self.__dataclass_fields__.pop("type", None)
-        if method_fld is not None:
-            method_fld.name = "method"
-            self.__dataclass_fields__["method"] = method_fld
-        self.method = self.type
-        del self.type
 
     def astuple(self) -> Tuple[float, float]:
         return (self.lower_bound, self.upper_bound)
 
     def __repr__(self) -> str:
-        return f"({self.lower_bound}, {self.upper_bound})"
+        return f"({round(self.lower_bound, 5):.5f}, {round(self.upper_bound, 5):.5f})"
 
     __str__ = __repr__
