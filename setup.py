@@ -18,6 +18,7 @@ extras["test"] = [
     "flake8",
     "pytest",
     "pytest-xdist",
+    "pytest-cov",
 ]
 extras["acc"] = ["numba"]
 extras["dev"] = extras["test"] + extras["acc"]
