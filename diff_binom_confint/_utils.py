@@ -187,7 +187,7 @@ class Accelerator(object):
         #         )
         #     self.accelerator = ti_kernel
         else:
-            raise ValueError(f"Accelerator {name} is not supported")
+            raise ValueError(f"Accelerator `{name}` is not supported")
 
 
 accelerator = Accelerator()

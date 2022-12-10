@@ -4,7 +4,12 @@
 import random
 import time
 
-from numba import njit
+import pytest
+
+try:
+    from numba import njit
+except ModuleNotFoundError:
+    njit = None
 
 from diff_binom_confint._utils import (
     add_docstring,
@@ -93,7 +98,7 @@ def test_accelerator():
     assert acc.accelerator == dummy_accelerator
 
     acc.set_accelerator("numba")
-    assert acc.accelerator == njit
+    assert acc.accelerator == (njit or dummy_accelerator)
 
     # call `monte_carlo_pi_acc` one time
     # to allow `numba` to compile the function
@@ -109,4 +114,8 @@ def test_accelerator():
     monte_carlo_pi(nsamples)
     no_acc_time = time.time() - start
 
-    assert acc_time < no_acc_time / 5
+    if njit is not None:
+        assert acc_time < no_acc_time / 5
+
+    with pytest.raises(ValueError, match="Accelerator `taichi` is not supported"):
+        acc.set_accelerator("taichi")
