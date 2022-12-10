@@ -270,6 +270,7 @@ def _compute_confidence_interval(
             return ConfidenceInterval(
                 np.power(margin, 1 / n_total),
                 np.power(1 - margin, 1 / n_total),
+                ratio,
                 conf_level,
                 confint_type.lower(),
                 str(sides),

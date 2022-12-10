@@ -9,7 +9,7 @@ from typing import List
 
 import numpy as np
 import pandas as pd
-from pytest import approx, raises
+from pytest import approx, raises, warns
 
 from diff_binom_confint import compute_difference_confidence_interval
 from diff_binom_confint._diff_binom_confint import (
@@ -17,6 +17,8 @@ from diff_binom_confint._diff_binom_confint import (
     _method_aliases,
     _stochastic_methods,
     _compute_difference_confidence_interval,
+    list_difference_confidence_interval_types,
+    list_difference_confidence_interval_methods,
 )
 from diff_binom_confint._confint import ConfidenceInterval
 
@@ -324,6 +326,13 @@ def test_difference_confidence_interval_edge_case():
             ), f"For method {confint_method}, upper bound should be {row['upper_bound']:.2%}, but got {upper_noclip:.2%}"
 
     print("test_difference_confidence_interval_edge_case passed")
+
+
+def test_list_difference_confidence_interval_methods():
+    assert list_difference_confidence_interval_methods() is None  # print to stdout
+
+    with warns(DeprecationWarning):
+        assert list_difference_confidence_interval_types() is None  # print to stdout
 
 
 def test_errors():

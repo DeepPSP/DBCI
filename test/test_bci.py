@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import List
 
 import pandas as pd
-from pytest import approx, raises
+from pytest import approx, raises, warns
 
 from diff_binom_confint import compute_confidence_interval
 from diff_binom_confint._binom_confint import (
@@ -15,6 +15,8 @@ from diff_binom_confint._binom_confint import (
     _method_aliases,
     _stochastic_methods,
     _compute_confidence_interval,
+    list_confidence_interval_types,
+    list_confidence_interval_methods,
 )
 
 
@@ -157,7 +159,41 @@ def test_confidence_interval():
         lower == 0
     ), f"for `witting`, lower bound should be {0.0:.2%}, but got {lower:.2%}"
 
+    # several edge cases are not covered in the loop
+    # TODO add assertions for these edge cases
+    for n_positive, n_total in [[0, 1], [1, 1], [2, 2], [2, 3]]:
+        compute_confidence_interval(
+            n_positive=n_positive,
+            n_total=n_total,
+            method="pratt",
+        )
+    for n_positive, n_total in [[0, 1], [1, 1]]:
+        compute_confidence_interval(
+            n_positive=n_positive,
+            n_total=n_total,
+            method="mid-p",
+        )
+    for n_positive, n_total in [[1, 50], [49, 50]]:
+        compute_confidence_interval(
+            n_positive=n_positive,
+            n_total=n_total,
+            method="modified-wilson",
+        )
+    for n_positive, n_total in [[1, 1], [1, 2]]:
+        compute_confidence_interval(
+            n_positive=n_positive,
+            n_total=n_total,
+            method="modified-jeffreys",
+        )
+
     print("test_confidence_interval passed")
+
+
+def test_list_confidence_interval_methods():
+    assert list_confidence_interval_methods() is None  # print to stdout
+
+    with warns(DeprecationWarning):
+        assert list_confidence_interval_types() is None  # print to stdout
 
 
 def test_errors():
