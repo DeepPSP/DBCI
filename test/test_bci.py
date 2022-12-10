@@ -20,7 +20,7 @@ from diff_binom_confint._binom_confint import (
 _TEST_DATA_DIR = Path(__file__).parent / "test-data"
 
 
-def load_test_data() -> List[pd.DataFrame]:
+def test_load_data() -> List[pd.DataFrame]:
     test_file_pattern = "example-(?P<n_positive>[\\d]+)-(?P<n_total>[\\d]+)\\.csv"
     test_files = Path(_TEST_DATA_DIR).glob("*.csv")
     test_data = []
