@@ -14,6 +14,7 @@ from diff_binom_confint._binom_confint import (
     _supported_methods,
     _method_aliases,
     _stochastic_methods,
+    _compute_confidence_interval,
 )
 
 
@@ -134,21 +135,47 @@ def test_confidence_interval():
             row["upper_bound"], abs=error_bound
         ), f"for {confint_method}, upper bound should be {row['upper_bound']:.2%}, but got {upper:.2%}"
 
+    # "witting" is not tested in the above, since no test data is available
+    lower, upper = compute_confidence_interval(
+        n_positive,
+        n_total,
+        conf_level=0.975,
+        method="witting",
+        sides="left",
+    ).astuple()
+    assert (
+        upper == 1
+    ), f"for `witting`, upper bound should be {1.0:.2%}, but got {upper:.2%}"
+    lower, upper = compute_confidence_interval(
+        n_positive,
+        n_total,
+        conf_level=0.975,
+        method="witting",
+        sides="right",
+    ).astuple()
+    assert (
+        lower == 0
+    ), f"for `witting`, lower bound should be {0.0:.2%}, but got {lower:.2%}"
+
     print("test_confidence_interval passed")
 
 
 def test_errors():
-    with raises(ValueError, match="confint_type should be one of"):
+    with raises(ValueError, match="`method` should be one of"):
         compute_confidence_interval(1, 2, method="not-supported")
     with raises(
-        ValueError, match="conf_level should be inside the interval \\(0, 1\\)"
+        ValueError, match="`conf_level` should be inside the interval \\(0, 1\\)"
     ):
         compute_confidence_interval(1, 2, conf_level=0)
-    with raises(ValueError, match="n_positive should be less than or equal to n_total"):
+    with raises(
+        ValueError, match="`n_positive` should be less than or equal to `n_total`"
+    ):
         compute_confidence_interval(2, 1)
-    with raises(ValueError, match="n_positive should be non-negative"):
+    with raises(ValueError, match="`n_positive` should be non-negative"):
         compute_confidence_interval(-1, 1)
-    with raises(ValueError, match="n_total should be positive"):
+    with raises(ValueError, match="`n_total` should be positive"):
         compute_confidence_interval(0, 0)
-    with raises(ValueError, match="sides should be one of"):
+    with raises(ValueError, match="`sides` should be one of"):
         compute_confidence_interval(1, 2, sides="3-sided")
+    with raises(ValueError, match="`method` `not-supported` is not supported"):
+        _compute_confidence_interval(1, 2, confint_type="not-supported")

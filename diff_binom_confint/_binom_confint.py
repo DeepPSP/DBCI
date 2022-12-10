@@ -59,9 +59,10 @@ def compute_confidence_interval(
         whether to clip the confidence interval to the interval (0, 1).
     sides: str or int, default "two-sided",
         the sides of the confidence interval, should be one of
-        "two-sided" (aliases "2-sided", "two_sided", "2_sided", "2-sides", "two_sides", "two-sides", "2_sides", "ts", "t", "two", "2", 2),
-        "left-sided" (aliases "left_sided", "left", "ls", "l"),
-        "right-sided" (aliases "right_sided", "right", "rs", "r"),
+        - "two-sided" (aliases "2-sided", "two_sided", "2_sided", "2-sides",
+            "two_sides", "two-sides", "2_sides", "ts", "t", "two", "2", 2),
+        - "left-sided" (aliases "left_sided", "left", "ls", "l"),
+        - "right-sided" (aliases "right_sided", "right", "rs", "r"),
         case insensitive.
 
     Returns
@@ -73,33 +74,33 @@ def compute_confidence_interval(
 
     if confint_type not in _supported_types:
         raise ValueError(
-            f"confint_type should be one of {_supported_types}, "
-            f"but got {confint_type}"
+            f"`method` should be one of `{_supported_types}`, "
+            f"but got `{confint_type}`"
         )
 
     if conf_level <= 0 or conf_level >= 1:
         raise ValueError(
-            f"conf_level should be inside the interval (0, 1), " f"but got {conf_level}"
+            f"`conf_level` should be inside the interval (0, 1), but got `{conf_level}`"
         )
 
     if n_positive > n_total:
         raise ValueError(
-            f"n_positive should be less than or equal to n_total, "
-            f"but got n_positive={n_positive} and n_total={n_total}"
+            f"`n_positive` should be less than or equal to `n_total`, "
+            f"but got `n_positive={n_positive}` and `n_total={n_total}`"
         )
 
     if n_positive < 0:
         raise ValueError(
-            f"n_positive should be non-negative, but got n_positive={n_positive}"
+            f"`n_positive` should be non-negative, but got `n_positive={n_positive}`"
         )
 
     if n_total <= 0:
-        raise ValueError(f"n_total should be positive, but got n_total={n_total}")
+        raise ValueError(f"`n_total` should be positive, but got `n_total={n_total}`")
 
     sides = str(sides).lower()
     if sides not in _SIDE_NAME_MAP:
         raise ValueError(
-            f"sides should be one of {list(_SIDE_NAME_MAP)}, but got {sides}"
+            f"`sides` should be one of `{list(_SIDE_NAME_MAP)}`, but got `{sides}`"
         )
     else:
         sides = _SIDE_NAME_MAP[sides]
@@ -454,7 +455,7 @@ def _compute_confidence_interval(
     else:
         newline = "\n"
         raise ValueError(
-            f"""{confint_type} is not supported, """
+            f"""`method` `{confint_type}` is not supported, """
             f"""choose one from {newline}{newline.join(_supported_types)}"""
         )
 

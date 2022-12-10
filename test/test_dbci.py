@@ -16,6 +16,7 @@ from diff_binom_confint._diff_binom_confint import (
     _supported_methods,
     _method_aliases,
     _stochastic_methods,
+    _compute_difference_confidence_interval,
 )
 from diff_binom_confint._confint import ConfidenceInterval
 
@@ -24,7 +25,10 @@ _TEST_DATA_DIR = Path(__file__).parent / "test-data"
 
 
 def test_load_data() -> List[pd.DataFrame]:
-    test_file_pattern = "example-(?P<n_positive>[\\d]+)-(?P<n_total>[\\d]+)-vs-(?P<ref_positive>[\\d]+)-(?P<ref_total>[\\d]+)\\.csv"
+    test_file_pattern = (
+        "example-(?P<n_positive>[\\d]+)-(?P<n_total>[\\d]+)-vs-"
+        "(?P<ref_positive>[\\d]+)-(?P<ref_total>[\\d]+)\\.csv"
+    )
     test_files = Path(_TEST_DATA_DIR).glob("*.csv")
     test_data = []
     for file in test_files:
@@ -71,7 +75,10 @@ def load_newcombee_data() -> dict:
             else:
                 examples[example][method] = {bound: value}
     examples = dict(examples)
-    example_name_pattern = "(?P<n_positive>[\\d]+)/(?P<n_total>[\\d]+)-(?P<ref_positive>[\\d]+)/(?P<ref_total>[\\d]+)"
+    example_name_pattern = (
+        "(?P<n_positive>[\\d]+)/(?P<n_total>[\\d]+)-"
+        "(?P<ref_positive>[\\d]+)/(?P<ref_total>[\\d]+)"
+    )
 
     for k, v in examples.items():
         matched = re.match(example_name_pattern, k)
@@ -95,7 +102,10 @@ def test_newcombee_data():
     """ """
     error_bound = 1e-4
     newcombee_data = load_newcombee_data()
-    example_name_pattern = "(?P<n_positive>[\\d]+)/(?P<n_total>[\\d]+)-(?P<ref_positive>[\\d]+)/(?P<ref_total>[\\d]+)"
+    example_name_pattern = (
+        "(?P<n_positive>[\\d]+)/(?P<n_total>[\\d]+)-"
+        "(?P<ref_positive>[\\d]+)/(?P<ref_total>[\\d]+)"
+    )
     for k, v in newcombee_data.items():
         print(f"Testing Newcombee data, example -- {k}")
         max_length = max([len(x) for x in v]) + 1
@@ -317,25 +327,46 @@ def test_difference_confidence_interval_edge_case():
 
 
 def test_errors():
-    with raises(ValueError, match="confint_type should be one of"):
+    with raises(ValueError, match="`method` should be one of"):
         compute_difference_confidence_interval(1, 2, 1, 2, method="not-supported")
     with raises(
-        ValueError, match="conf_level should be inside the interval \\(0, 1\\)"
+        ValueError, match="`conf_level` should be inside the interval \\(0, 1\\)"
     ):
         compute_difference_confidence_interval(1, 2, 1, 2, conf_level=0)
-    with raises(ValueError, match="n_positive should be less than or equal to n_total"):
+    with raises(
+        ValueError, match="`n_positive` should be less than or equal to `n_total`"
+    ):
         compute_difference_confidence_interval(2, 1, 1, 2)
     with raises(
-        ValueError, match="ref_positive should be less than or equal to ref_total"
+        ValueError, match="`ref_positive` should be less than or equal to `ref_total`"
     ):
         compute_difference_confidence_interval(1, 2, 2, 1)
-    with raises(ValueError, match="n_positive should be non-negative"):
+    with raises(ValueError, match="`n_positive` should be non-negative"):
         compute_difference_confidence_interval(-1, 2, 1, 2)
-    with raises(ValueError, match="n_total should be positive"):
+    with raises(ValueError, match="`n_total` should be positive"):
         compute_difference_confidence_interval(0, 0, 1, 2)
-    with raises(ValueError, match="ref_positive should be non-negative"):
+    with raises(ValueError, match="`ref_positive` should be non-negative"):
         compute_difference_confidence_interval(1, 2, -1, 2)
-    with raises(ValueError, match="ref_total should be positive"):
+    with raises(ValueError, match="`ref_total` should be positive"):
         compute_difference_confidence_interval(1, 2, 0, 0)
-    with raises(ValueError, match="sides should be one of"):
+    with raises(ValueError, match="`sides` should be one of"):
         compute_difference_confidence_interval(1, 2, 1, 2, sides="3-sided")
+
+    for method in [
+        "exact",
+        "mid-p",
+        "santner-snell",
+        "chan-zhang",
+        "agresti-min",
+        "wang",
+        "pradhan-banerjee",
+    ]:
+        with raises(
+            NotImplementedError, match=f"`method` `{method}` is not implemented yet"
+        ):
+            _compute_difference_confidence_interval(1, 2, 1, 2, confint_type=method)
+
+    with raises(ValueError, match="`method` `not-supported` is not supported"):
+        _compute_difference_confidence_interval(
+            1, 2, 1, 2, confint_type="not-supported"
+        )
