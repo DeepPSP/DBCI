@@ -1,7 +1,6 @@
 """
 """
 
-import os
 import re
 import warnings
 from pathlib import Path
@@ -17,10 +16,6 @@ from diff_binom_confint._binom_confint import (
     _stochastic_methods,
     _compute_confidence_interval,
 )
-
-
-# disable numba JIT for testing and coverage
-os.environ["NUMBA_DISABLE_JIT"] = "1"
 
 
 _TEST_DATA_DIR = Path(__file__).parent / "test-data"

@@ -34,7 +34,7 @@ jobs:
         python -m pip freeze
     - name: Run test with pytest and collect coverage
       run: |
-        pytest -v test
+        pytest --cov -v test
         python -m pip uninstall numba --yes
         pytest --cov -v test
     - name: Upload coverage to Codecov
