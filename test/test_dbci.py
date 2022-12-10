@@ -1,6 +1,7 @@
 """
 """
 
+import os
 import re
 import warnings
 from collections import defaultdict
@@ -19,6 +20,10 @@ from diff_binom_confint._diff_binom_confint import (
     _compute_difference_confidence_interval,
 )
 from diff_binom_confint._confint import ConfidenceInterval
+
+
+# disable numba JIT for testing and coverage
+os.environ["NUMBA_DISABLE_JIT"] = "1"
 
 
 _TEST_DATA_DIR = Path(__file__).parent / "test-data"
