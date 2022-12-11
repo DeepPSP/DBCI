@@ -179,7 +179,7 @@ def test_confidence_interval():
             n_total=n_total,
             method="modified-wilson",
         )
-    for n_positive, n_total in [[1, 1], [1, 2]]:
+    for n_positive, n_total in [[1, 1], [1, 2], [0, 1]]:
         compute_confidence_interval(
             n_positive=n_positive,
             n_total=n_total,
