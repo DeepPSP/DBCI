@@ -27,6 +27,7 @@ def test_add_docstring():
         return a + b
 
     assert func.__doc__ == "This is a new docstring."
+    func(1, 2)
 
     @add_docstring("Leading docstring.", mode="prepend")
     def func(a, b):
@@ -34,6 +35,7 @@ def test_add_docstring():
         return a + b
 
     assert func.__doc__ == "Leading docstring.\nThis is a docstring."
+    func(1, 2)
 
     @add_docstring("Trailing docstring.", mode="append")
     def func(a, b):
@@ -41,6 +43,14 @@ def test_add_docstring():
         return a + b
 
     assert func.__doc__ == "This is a docstring.\nTrailing docstring."
+    func(1, 2)
+
+    with pytest.raises(ValueError, match="`mode` \042.+\042 is not supported"):
+
+        @add_docstring("Trailing docstring.", mode="not-supported")
+        def func(a, b):
+            """This is a docstring."""
+            return a + b
 
 
 def test_remove_parameters_returns_from_docstring():
@@ -68,6 +78,11 @@ def test_remove_parameters_returns_from_docstring():
     -------
     """
     )
+
+    new_docstring = remove_parameters_returns_from_docstring(
+        remove_parameters_returns_from_docstring.__doc__,
+    )
+    assert new_docstring == remove_parameters_returns_from_docstring.__doc__
 
 
 @accelerator.accelerator

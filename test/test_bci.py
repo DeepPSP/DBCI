@@ -2,7 +2,6 @@
 """
 
 import re
-import warnings
 from pathlib import Path
 from typing import List
 
@@ -70,11 +69,11 @@ def test_confidence_interval():
     #     df_data["method"].values
     # ), f"""methods {set(_supported_methods) - set(df_data["method"].values)} has no test data"""
     no_test_data_methods = list(set(_supported_methods) - set(df_data["method"].values))
-    if len(no_test_data_methods) > 0:
-        warnings.warn(
-            f"""methods `{no_test_data_methods}` has no test data""",
-            RuntimeWarning,
-        )
+    # if len(no_test_data_methods) > 0:
+    #     warnings.warn(
+    #         f"""methods `{no_test_data_methods}` has no test data""",
+    #         RuntimeWarning,
+    #     )
 
     max_length = max([len(x) for x in _supported_methods]) + 1
     error_bound = 1e-4

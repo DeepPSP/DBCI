@@ -59,7 +59,7 @@ def add_docstring(doc: str, mode: str = "replace") -> Callable:
             new_lines = max(0, new_lines) * "\n"
             func_or_cls.__doc__ = doc + new_lines + func_or_cls.__doc__
         else:
-            raise ValueError(f"mode {mode} is not supported")
+            raise ValueError(f"`mode` \042{mode}\042 is not supported")
         return func_or_cls
 
     return decorator
