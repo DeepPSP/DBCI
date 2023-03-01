@@ -172,13 +172,15 @@ confidence intervals for the difference of binomial proportions.
 References
 ^^^^^^^^^^
 
-1. `SAS <https://www.lexjansen.com/wuss/2016/127_Final_Paper_PDF.pdf>`_
-2. `PASS <https://ncss-wpengine.netdna-ssl.com/wp-content/themes/ncss/pdf/Procedures/PASS/Confidence_Intervals_for_the_Difference_Between_Two_Proportions.pdf>`_
+1. `SAS <https://github.com/DeepPSP/DBCI/blob/master/references/Constructing%20Confidence%20Intervals%20for%20the%20Differences%20of%20Binomial%20Proportions%20in%20SAS.pdf>`_
+2. `PASS <https://github.com/DeepPSP/DBCI/blob/master/references/Confidence%20Intervals%20for%20the%20Difference%20Between%20Two%20Proportions%20-%20PASS.pdf>`_
 3. `statsmodels.stats.proportion <https://www.statsmodels.org/devel/_modules/statsmodels/stats/proportion.html>`_
 4. `scipy.stats._binomtest <https://github.com/scipy/scipy/blob/main/scipy/stats/_binomtest.py>`_
 5. `corplingstats <https://corplingstats.wordpress.com/2019/04/27/correcting-for-continuity/>`_
 6. `DescTools.StatsAndCIs <https://github.com/AndriSignorell/DescTools/blob/master/R/StatsAndCIs.r>`_
-7. `Newcombee <https://onlinelibrary.wiley.com/doi/10.1002/(SICI)1097-0258(19980430)17:8%3C873::AID-SIM779%3E3.0.CO;2-I>`_
+
+..
+   7. `Newcombee <https://onlinelibrary.wiley.com/doi/10.1002/(SICI)1097-0258(19980430)17:8%3C873::AID-SIM779%3E3.0.CO;2-I>`_
 
 Indices and tables
 ==================
