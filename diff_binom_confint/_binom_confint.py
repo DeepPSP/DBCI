@@ -42,33 +42,34 @@ def compute_confidence_interval(
     clip: bool = True,
     sides: Union[str, int] = "two-sided",
 ) -> ConfidenceInterval:
-    """
-    Compute the confidence interval for a binomial proportion.
+    """Compute the confidence interval for a binomial proportion.
 
     Parameters
     ----------
-    n_positive: int,
-        number of positive samples.
-    n_total: int,
-        total number of samples.
-    conf_level: float, default 0.95,
-        confidence level, should be inside the interval (0, 1).
-    confint_type: str, default "wilson",
-        type (computation method) of the confidence interval.
-    clip: bool, default True,
-        whether to clip the confidence interval to the interval (0, 1).
-    sides: str or int, default "two-sided",
-        the sides of the confidence interval, should be one of
-        - "two-sided" (aliases "2-sided", "two_sided", "2_sided", "2-sides",
-            "two_sides", "two-sides", "2_sides", "ts", "t", "two", "2", 2),
-        - "left-sided" (aliases "left_sided", "left", "ls", "l"),
-        - "right-sided" (aliases "right_sided", "right", "rs", "r"),
+    n_positive : int
+        Number of positive samples.
+    n_total : int
+        Total number of samples.
+    conf_level : float, default 0.95
+        Confidence level, should be inside the interval ``(0, 1)``.
+    confint_type : str, default "wilson"
+        Type (computation method) of the confidence interval.
+    clip : bool, default True
+        Whether to clip the confidence interval to the interval ``(0, 1)``.
+    sides : str or int, default "two-sided"
+        Sides of the confidence interval, should be one of
+
+            - "two-sided" (aliases "2-sided", "two_sided", "2_sided", "2-sides",
+              "two_sides", "two-sides", "2_sides", "ts", "t", "two", "2", 2),
+            - "left-sided" (aliases "left_sided", "left", "ls", "l"),
+            - "right-sided" (aliases "right_sided", "right", "rs", "r"),
+
         case insensitive.
 
     Returns
     -------
-    confint: ConfidenceInterval,
-        the confidence interval
+    confint : ConfidenceInterval
+        The confidence interval.
 
     """
 
@@ -125,7 +126,7 @@ def compute_confidence_interval(
     """
     NOTE
     ----
-    the lower bound and upper bound are not adjusted w.r.t. `sides`.
+    The lower bound and upper bound are not adjusted w.r.t. `sides`.
 
     """,
     "append",
@@ -142,8 +143,6 @@ def _compute_confidence_interval(
     confint_type: str = "wilson",
     sides: Union[str, int] = "two-sided",
 ) -> ConfidenceInterval:
-    """ """
-
     if sides != "two-sided":
         z = qnorm(conf_level)
         margin = 1 - conf_level
@@ -501,20 +500,16 @@ _method_aliases = _type_aliases
 
 @deprecated(version="0.0.4", reason="Use `list_confidence_interval_methods` instead.")
 def list_confidence_interval_types() -> None:
-    """ """
-
+    """List all supported confidence interval types."""
     print("\n".join(_supported_types))
 
 
 def list_confidence_interval_methods() -> None:
-    """ """
-
+    """List all supported confidence interval types."""
     print("\n".join(_supported_types))
 
 
 def _acceptbin(n_positive: int, n_total: int, prob: int) -> float:
-    """ """
-
     p1 = 1 - pbinom(n_positive - 1, n_total, prob)
     p2 = pbinom(n_positive, n_total, prob)
 
@@ -527,7 +522,7 @@ def _acceptbin(n_positive: int, n_total: int, prob: int) -> float:
 def _bin_dev(
     y: float, x: int, mu: float, wt: int, bound: float = 0.0, tol: float = 1e-5
 ) -> float:
-    """binomial deviance for y, x, wt"""
+    """Binomial deviance for `y`, `x`, `wt`."""
     ll_y = 0 if y in [0, 1] else dbinom_log(x, wt, y)
     ll_mu = 0 if mu in [0, 1] else dbinom_log(x, wt, mu)
     res = 0 if np.abs(y - mu) < tol else np.sign(y - mu) * np.sqrt(-2 * (ll_y - ll_mu))
@@ -535,17 +530,16 @@ def _bin_dev(
 
 
 def _f_low(pi: float, x: int, n: int, conf_level: float) -> float:
-    """function to find root of for the lower bound of the CI"""
+    """Function to find root of for the lower bound of the CI."""
     return 0.5 * dbinom(x, n, pi) + 1 - pbinom(x, n, pi) - 0.5 * (1 - conf_level)
 
 
 def _f_up(pi: float, x: int, n: int, conf_level: float) -> float:
-    """function to find root of for the upper bound of the CI"""
+    """Function to find root of for the upper bound of the CI."""
     return 0.5 * dbinom(x, n, pi) + pbinom(x - 1, n, pi) - 0.5 * (1 - conf_level)
 
 
 def _pbinom_abscont(q: float, size: int, prob: float) -> float:
-    """ """
     v = np.trunc(q)
     term1 = pbinom(v - 1, size, prob)
     term2 = (q - v) * dbinom(v, size, prob)
@@ -553,7 +547,6 @@ def _pbinom_abscont(q: float, size: int, prob: float) -> float:
 
 
 def _qbinom_abscont(p: float, size: int, x: int) -> float:
-    """ """
     return uniroot(
         lambda prob: _pbinom_abscont(x, size, prob) - p, 0, 1, full_output=False
     )

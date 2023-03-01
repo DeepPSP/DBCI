@@ -37,37 +37,39 @@ def compute_difference_confidence_interval(
     clip: bool = True,
     sides: Union[str, int] = "two-sided",
 ) -> ConfidenceInterval:
-    """
-    Compute the confidence interval of the difference between two binomial proportions.
+    """Compute the confidence interval of the difference
+    between two binomial proportions.
 
     Parameters
     ----------
-    n_positive: int,
-        number of positive samples.
-    n_total: int,
-        total number of samples.
-    ref_positive: int,
-        number of positive samples of the reference.
-    ref_total: int,
-        total number of samples of the reference.
-    conf_level: float, default 0.95,
-        confidence level, should be inside the interval (0, 1).
-    confint_type: str, default "wilson",
-        type (computation method) of the confidence interval.
-    clip: bool, default True,
-        whether to clip the confidence interval to the interval (-1, 1).
-    sides: str or int, default "two-sided",
+    n_positive : int
+        Number of positive samples.
+    n_total : int
+        Total number of samples.
+    ref_positive : int
+        Number of positive samples of the reference.
+    ref_total : int
+        Total number of samples of the reference.
+    conf_level : float, default 0.95
+        Confidence level, should be inside the interval ``(0, 1)``.
+    confint_type : str, default "wilson"
+        Type (computation method) of the confidence interval.
+    clip : bool, default True
+        Whether to clip the confidence interval to the interval ``(-1, 1)``.
+    sides : str or int, default "two-sided"
         the sides of the confidence interval, should be one of
-        - "two-sided" (aliases "2-sided", "two_sided", "2_sided", "2-sides",
-            "two_sides", "two-sides", "2_sides", "ts", "t", "two", "2", 2),
-        - "left-sided" (aliases "left_sided", "left", "ls", "l"),
-        - "right-sided" (aliases "right_sided", "right", "rs", "r"),
+
+            - "two-sided" (aliases "2-sided", "two_sided", "2_sided", "2-sides",
+              "two_sides", "two-sides", "2_sides", "ts", "t", "two", "2", 2),
+            - "left-sided" (aliases "left_sided", "left", "ls", "l"),
+            - "right-sided" (aliases "right_sided", "right", "rs", "r"),
+
         case insensitive.
 
     Returns
     -------
-    confint: ConfidenceInterval,
-        the confidence interval
+    confint : ConfidenceInterval
+        The confidence interval.
 
     """
 
@@ -159,8 +161,6 @@ def _compute_difference_confidence_interval(
     confint_type: str = "wilson",
     sides: Union[str, int] = "two-sided",
 ) -> ConfidenceInterval:
-    """ """
-
     warnings.simplefilter(action="ignore", category=RuntimeWarning)
 
     if sides != "two-sided":
@@ -453,14 +453,11 @@ _method_aliases = _type_aliases
     version="0.0.4", reason="Use `list_difference_confidence_interval_methods` instead."
 )
 def list_difference_confidence_interval_types() -> None:
-    """ """
-
     print("\n".join(_supported_types))
 
 
 def list_difference_confidence_interval_methods() -> None:
-    """ """
-
+    """List all supported methods for computing difference confidence intervals."""
     print("\n".join(_supported_types))
 
 

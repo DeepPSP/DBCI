@@ -43,24 +43,29 @@ _SIDE_NAME_MAP = {
 
 @dataclass
 class ConfidenceInterval:
-    """
+    """Dataclass for holding meta information of a confidence interval.
+
     Attributes
     ----------
-    lower_bound: float,
-        the lower bound of the confidence interval.
-    upper_bound: float,
-        the upper bound of the confidence interval.
-    estimate: float,
-        estimate of (the difference of) the binomial proportion.
-    level: float,
-        confidence level, should be inside the interval (0, 1).
-    method: str,
-        computation method of the confidence interval.
-    sides: str, default "two-sided",
-        the sides of the confidence interval, should be one of
-        "two-sided" (aliases "2-sided", "two_sided", "2_sided", "2-sides", "two_sides", "two-sides", "2_sides", "ts", "t", "two", "2"),
-        "left-sided" (aliases "left_sided", "left", "ls", "l"),
-        "right-sided" (aliases "right_sided", "right", "rs", "r"),
+    lower_bound : float
+        The lower bound of the confidence interval.
+    upper_bound : float
+        The upper bound of the confidence interval.
+    estimate : float
+        Estimate of (the difference of) the binomial proportion.
+    level : float
+        Confidence level, should be inside the interval (0, 1).
+    method : str
+        Computation method of the confidence interval.
+    sides : str, default "two-sided"
+        Sides of the confidence interval, should be one of
+
+            - "two-sided" (aliases "2-sided", "two_sided", "2_sided",
+              "2-sides", "two_sides", "two-sides", "2_sides", "ts",
+              "t", "two", "2"),
+            - "left-sided" (aliases "left_sided", "left", "ls", "l"),
+            - "right-sided" (aliases "right_sided", "right", "rs", "r"),
+
         case insensitive.
 
     """
