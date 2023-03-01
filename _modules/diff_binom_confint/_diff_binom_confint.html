@@ -1,0 +1,873 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>diff_binom_confint._diff_binom_confint &mdash; DBCI 0.0.12 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="DBCI 0.0.12 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> DBCI
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">compute_confidence_interval</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/diff_binom_confint.compute_confidence_interval.html">diff_binom_confint.compute_confidence_interval</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/diff_binom_confint.compute_confidence_interval.html#diff_binom_confint.compute_confidence_interval"><code class="docutils literal notranslate"><span class="pre">compute_confidence_interval()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/diff_binom_confint.list_confidence_interval_methods.html">diff_binom_confint.list_confidence_interval_methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/diff_binom_confint.list_confidence_interval_methods.html#diff_binom_confint.list_confidence_interval_methods"><code class="docutils literal notranslate"><span class="pre">list_confidence_interval_methods()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html#compute-difference-confidence-interval">compute_difference_confidence_interval</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/diff_binom_confint.compute_difference_confidence_interval.html">diff_binom_confint.compute_difference_confidence_interval</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/diff_binom_confint.compute_difference_confidence_interval.html#diff_binom_confint.compute_difference_confidence_interval"><code class="docutils literal notranslate"><span class="pre">compute_difference_confidence_interval()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/diff_binom_confint.list_difference_confidence_interval_methods.html">diff_binom_confint.list_difference_confidence_interval_methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/diff_binom_confint.list_difference_confidence_interval_methods.html#diff_binom_confint.list_difference_confidence_interval_methods"><code class="docutils literal notranslate"><span class="pre">list_difference_confidence_interval_methods()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html#confidenceinterval">ConfidenceInterval</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/diff_binom_confint.ConfidenceInterval.html">diff_binom_confint.ConfidenceInterval</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/diff_binom_confint.ConfidenceInterval.html#diff_binom_confint.ConfidenceInterval"><code class="docutils literal notranslate"><span class="pre">ConfidenceInterval</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/diff_binom_confint.ConfidenceInterval.html#diff_binom_confint.ConfidenceInterval.lower_bound"><code class="docutils literal notranslate"><span class="pre">ConfidenceInterval.lower_bound</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/diff_binom_confint.ConfidenceInterval.html#diff_binom_confint.ConfidenceInterval.upper_bound"><code class="docutils literal notranslate"><span class="pre">ConfidenceInterval.upper_bound</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/diff_binom_confint.ConfidenceInterval.html#diff_binom_confint.ConfidenceInterval.estimate"><code class="docutils literal notranslate"><span class="pre">ConfidenceInterval.estimate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/diff_binom_confint.ConfidenceInterval.html#diff_binom_confint.ConfidenceInterval.level"><code class="docutils literal notranslate"><span class="pre">ConfidenceInterval.level</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/diff_binom_confint.ConfidenceInterval.html#diff_binom_confint.ConfidenceInterval.method"><code class="docutils literal notranslate"><span class="pre">ConfidenceInterval.method</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/diff_binom_confint.ConfidenceInterval.html#diff_binom_confint.ConfidenceInterval.sides"><code class="docutils literal notranslate"><span class="pre">ConfidenceInterval.sides</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/diff_binom_confint.ConfidenceInterval.html#diff_binom_confint.ConfidenceInterval.__init__"><code class="docutils literal notranslate"><span class="pre">ConfidenceInterval.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DBCI</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>diff_binom_confint._diff_binom_confint</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/DeepPSP/DBCI/blob/master/docs/source/_modules/diff_binom_confint/_diff_binom_confint" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for diff_binom_confint._diff_binom_confint</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">brentq</span>
+<span class="kn">from</span> <span class="nn">deprecate_kwargs</span> <span class="kn">import</span> <span class="n">deprecate_kwargs</span>
+<span class="kn">from</span> <span class="nn">deprecated</span> <span class="kn">import</span> <span class="n">deprecated</span>
+
+<span class="kn">from</span> <span class="nn">._confint</span> <span class="kn">import</span> <span class="n">ConfidenceInterval</span><span class="p">,</span> <span class="n">_SIDE_NAME_MAP</span><span class="p">,</span> <span class="n">ConfidenceIntervalSides</span>
+<span class="kn">from</span> <span class="nn">._utils</span> <span class="kn">import</span> <span class="n">add_docstring</span><span class="p">,</span> <span class="n">remove_parameters_returns_from_docstring</span><span class="p">,</span> <span class="n">accelerator</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;compute_difference_confidence_interval&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;list_difference_confidence_interval_methods&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="c1"># alias of statistical functions</span>
+<span class="n">qnorm</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">ppf</span>
+<span class="n">pnorm</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span>
+<span class="n">uniroot</span> <span class="o">=</span> <span class="n">brentq</span>
+
+
+<div class="viewcode-block" id="compute_difference_confidence_interval"><a class="viewcode-back" href="../../generated/diff_binom_confint.compute_difference_confidence_interval.html#diff_binom_confint.compute_difference_confidence_interval">[docs]</a><span class="nd">@deprecate_kwargs</span><span class="p">([[</span><span class="s2">&quot;method&quot;</span><span class="p">,</span> <span class="s2">&quot;confint_type&quot;</span><span class="p">]])</span>
+<span class="k">def</span> <span class="nf">compute_difference_confidence_interval</span><span class="p">(</span>
+    <span class="n">n_positive</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">n_total</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">ref_positive</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">ref_total</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">conf_level</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+    <span class="n">confint_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;wilson&quot;</span><span class="p">,</span>
+    <span class="n">clip</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">sides</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;two-sided&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConfidenceInterval</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the confidence interval of the difference</span>
+<span class="sd">    between two binomial proportions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_positive : int</span>
+<span class="sd">        Number of positive samples.</span>
+<span class="sd">    n_total : int</span>
+<span class="sd">        Total number of samples.</span>
+<span class="sd">    ref_positive : int</span>
+<span class="sd">        Number of positive samples of the reference.</span>
+<span class="sd">    ref_total : int</span>
+<span class="sd">        Total number of samples of the reference.</span>
+<span class="sd">    conf_level : float, default 0.95</span>
+<span class="sd">        Confidence level, should be inside the interval ``(0, 1)``.</span>
+<span class="sd">    confint_type : str, default &quot;wilson&quot;</span>
+<span class="sd">        Type (computation method) of the confidence interval.</span>
+<span class="sd">    clip : bool, default True</span>
+<span class="sd">        Whether to clip the confidence interval to the interval ``(-1, 1)``.</span>
+<span class="sd">    sides : str or int, default &quot;two-sided&quot;</span>
+<span class="sd">        the sides of the confidence interval, should be one of</span>
+
+<span class="sd">            - &quot;two-sided&quot; (aliases &quot;2-sided&quot;, &quot;two_sided&quot;, &quot;2_sided&quot;, &quot;2-sides&quot;,</span>
+<span class="sd">              &quot;two_sides&quot;, &quot;two-sides&quot;, &quot;2_sides&quot;, &quot;ts&quot;, &quot;t&quot;, &quot;two&quot;, &quot;2&quot;, 2),</span>
+<span class="sd">            - &quot;left-sided&quot; (aliases &quot;left_sided&quot;, &quot;left&quot;, &quot;ls&quot;, &quot;l&quot;),</span>
+<span class="sd">            - &quot;right-sided&quot; (aliases &quot;right_sided&quot;, &quot;right&quot;, &quot;rs&quot;, &quot;r&quot;),</span>
+
+<span class="sd">        case insensitive.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    confint : ConfidenceInterval</span>
+<span class="sd">        The confidence interval.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">confint_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_supported_types</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;`method` should be one of `</span><span class="si">{</span><span class="n">_supported_types</span><span class="si">}</span><span class="s2">`, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;but got `</span><span class="si">{</span><span class="n">confint_type</span><span class="si">}</span><span class="s2">`&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">conf_level</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">conf_level</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;`conf_level` should be inside the interval (0, 1), but got `</span><span class="si">{</span><span class="n">conf_level</span><span class="si">}</span><span class="s2">`&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">n_positive</span> <span class="o">&gt;</span> <span class="n">n_total</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;`n_positive` should be less than or equal to `n_total`, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;but got `n_positive=</span><span class="si">{</span><span class="n">n_positive</span><span class="si">}</span><span class="s2">` and `n_total=</span><span class="si">{</span><span class="n">n_total</span><span class="si">}</span><span class="s2">`&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ref_positive</span> <span class="o">&gt;</span> <span class="n">ref_total</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;`ref_positive` should be less than or equal to `ref_total`, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;but got `ref_positive=</span><span class="si">{</span><span class="n">ref_positive</span><span class="si">}</span><span class="s2">` and `ref_total=</span><span class="si">{</span><span class="n">ref_total</span><span class="si">}</span><span class="s2">`&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">n_positive</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;`n_positive` should be non-negative, but got `n_positive=</span><span class="si">{</span><span class="n">n_positive</span><span class="si">}</span><span class="s2">`&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">n_total</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`n_total` should be positive, but got `n_total=</span><span class="si">{</span><span class="n">n_total</span><span class="si">}</span><span class="s2">`&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ref_positive</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;`ref_positive` should be non-negative, but got `ref_positive=</span><span class="si">{</span><span class="n">ref_positive</span><span class="si">}</span><span class="s2">`&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ref_total</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;`ref_total` should be positive, but got `ref_total=</span><span class="si">{</span><span class="n">ref_total</span><span class="si">}</span><span class="s2">`&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">sides</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sides</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">sides</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_SIDE_NAME_MAP</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;`sides` should be one of `</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">_SIDE_NAME_MAP</span><span class="p">)</span><span class="si">}</span><span class="s2">`, but got `</span><span class="si">{</span><span class="n">sides</span><span class="si">}</span><span class="s2">`&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sides</span> <span class="o">=</span> <span class="n">_SIDE_NAME_MAP</span><span class="p">[</span><span class="n">sides</span><span class="p">]</span>
+
+    <span class="n">confint</span> <span class="o">=</span> <span class="n">_compute_difference_confidence_interval</span><span class="p">(</span>
+        <span class="n">n_positive</span><span class="p">,</span> <span class="n">n_total</span><span class="p">,</span> <span class="n">ref_positive</span><span class="p">,</span> <span class="n">ref_total</span><span class="p">,</span> <span class="n">conf_level</span><span class="p">,</span> <span class="n">confint_type</span><span class="p">,</span> <span class="n">sides</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">clip</span><span class="p">:</span>
+        <span class="n">confint</span><span class="o">.</span><span class="n">lower_bound</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">confint</span><span class="o">.</span><span class="n">lower_bound</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">confint</span><span class="o">.</span><span class="n">upper_bound</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">confint</span><span class="o">.</span><span class="n">upper_bound</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">confint</span><span class="o">.</span><span class="n">sides</span> <span class="o">==</span> <span class="n">ConfidenceIntervalSides</span><span class="o">.</span><span class="n">LeftSided</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+        <span class="n">confint</span><span class="o">.</span><span class="n">upper_bound</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">confint</span><span class="o">.</span><span class="n">sides</span> <span class="o">==</span> <span class="n">ConfidenceIntervalSides</span><span class="o">.</span><span class="n">RightSided</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+        <span class="n">confint</span><span class="o">.</span><span class="n">lower_bound</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">confint</span></div>
+
+
+<span class="nd">@add_docstring</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    NOTE</span>
+<span class="sd">    ----</span>
+<span class="sd">    the lower bound and upper bound are not adjusted w.r.t. `sides`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;append&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nd">@add_docstring</span><span class="p">(</span>
+    <span class="n">remove_parameters_returns_from_docstring</span><span class="p">(</span>
+        <span class="n">compute_difference_confidence_interval</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="s2">&quot;clip&quot;</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">_compute_difference_confidence_interval</span><span class="p">(</span>
+    <span class="n">n_positive</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">n_total</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">ref_positive</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">ref_total</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">conf_level</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+    <span class="n">confint_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;wilson&quot;</span><span class="p">,</span>
+    <span class="n">sides</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;two-sided&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConfidenceInterval</span><span class="p">:</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">RuntimeWarning</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">sides</span> <span class="o">!=</span> <span class="s2">&quot;two-sided&quot;</span><span class="p">:</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">qnorm</span><span class="p">(</span><span class="n">conf_level</span><span class="p">)</span>
+        <span class="n">_conf_level</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">conf_level</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">qnorm</span><span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="n">conf_level</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">_conf_level</span> <span class="o">=</span> <span class="n">conf_level</span>
+    <span class="n">n_negative</span> <span class="o">=</span> <span class="n">n_total</span> <span class="o">-</span> <span class="n">n_positive</span>
+    <span class="n">ref_negative</span> <span class="o">=</span> <span class="n">ref_total</span> <span class="o">-</span> <span class="n">ref_positive</span>
+    <span class="n">ratio</span> <span class="o">=</span> <span class="n">n_positive</span> <span class="o">/</span> <span class="n">n_total</span>
+    <span class="n">neg_ratio</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">ratio</span>
+    <span class="n">ref_ratio</span> <span class="o">=</span> <span class="n">ref_positive</span> <span class="o">/</span> <span class="n">ref_total</span>
+    <span class="n">ref_neg_ratio</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">ref_ratio</span>
+    <span class="n">delta_ratio</span> <span class="o">=</span> <span class="n">ratio</span> <span class="o">-</span> <span class="n">ref_ratio</span>
+    <span class="k">if</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;wilson&quot;</span><span class="p">,</span> <span class="s2">&quot;newcombe&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">]:</span>
+        <span class="n">item1</span> <span class="o">=</span> <span class="n">z</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">n_total</span> <span class="o">*</span> <span class="n">ratio</span> <span class="o">*</span> <span class="n">neg_ratio</span> <span class="o">+</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">lower1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n_total</span> <span class="o">*</span> <span class="n">ratio</span> <span class="o">+</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">item1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_total</span> <span class="o">+</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">upper1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n_total</span> <span class="o">*</span> <span class="n">ratio</span> <span class="o">+</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">item1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_total</span> <span class="o">+</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">item2</span> <span class="o">=</span> <span class="n">z</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">ref_total</span> <span class="o">*</span> <span class="n">ref_ratio</span> <span class="o">*</span> <span class="n">ref_neg_ratio</span> <span class="o">+</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">lower2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ref_total</span> <span class="o">*</span> <span class="n">ref_ratio</span> <span class="o">+</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">item2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">ref_total</span> <span class="o">+</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">upper2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ref_total</span> <span class="o">*</span> <span class="n">ref_ratio</span> <span class="o">+</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">item2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">ref_total</span> <span class="o">+</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ConfidenceInterval</span><span class="p">(</span>
+            <span class="n">delta_ratio</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">ratio</span> <span class="o">-</span> <span class="n">lower1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">upper2</span> <span class="o">-</span> <span class="n">ref_ratio</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="n">delta_ratio</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">ref_ratio</span> <span class="o">-</span> <span class="n">lower2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">upper1</span> <span class="o">-</span> <span class="n">ratio</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="n">delta_ratio</span><span class="p">,</span>
+            <span class="n">conf_level</span><span class="p">,</span>
+            <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">sides</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;wilson-cc&quot;</span><span class="p">,</span> <span class="s2">&quot;newcombe-cc&quot;</span><span class="p">,</span> <span class="s2">&quot;score-cc&quot;</span><span class="p">]:</span>
+        <span class="c1"># https://corplingstats.wordpress.com/2019/04/27/correcting-for-continuity/</span>
+        <span class="c1"># equation (6) and (6&#39;)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_total</span> <span class="o">*</span> <span class="n">ratio</span> <span class="o">+</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">n_total</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">n_total</span> <span class="o">*</span> <span class="n">ratio</span> <span class="o">*</span> <span class="n">neg_ratio</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">ratio</span> <span class="o">-</span> <span class="mi">2</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_total</span> <span class="o">+</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="c1"># lower1 = (e - (z * np.sqrt(f + g) + 1)) / h</span>
+        <span class="c1"># upper1 = (e + (z * np.sqrt(f - g) + 1)) / h</span>
+        <span class="c1"># should always be clipped ?</span>
+        <span class="n">lower1</span> <span class="o">=</span> <span class="p">(</span><span class="n">e</span> <span class="o">-</span> <span class="p">(</span><span class="n">z</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">f</span> <span class="o">+</span> <span class="n">g</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="n">h</span> <span class="k">if</span> <span class="n">n_positive</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">upper1</span> <span class="o">=</span> <span class="p">(</span><span class="n">e</span> <span class="o">+</span> <span class="p">(</span><span class="n">z</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">f</span> <span class="o">-</span> <span class="n">g</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="n">h</span> <span class="k">if</span> <span class="n">n_negative</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">ref_total</span> <span class="o">*</span> <span class="n">ref_ratio</span> <span class="o">+</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">ref_total</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">ref_total</span> <span class="o">*</span> <span class="n">ref_ratio</span> <span class="o">*</span> <span class="n">ref_neg_ratio</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">ref_ratio</span> <span class="o">-</span> <span class="mi">2</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">ref_total</span> <span class="o">+</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="c1"># lower2 = (e - (z * np.sqrt(f + g) + 1)) / h</span>
+        <span class="c1"># upper2 = (e + (z * np.sqrt(f - g) + 1)) / h</span>
+        <span class="c1"># should always be clipped ?</span>
+        <span class="n">lower2</span> <span class="o">=</span> <span class="p">(</span><span class="n">e</span> <span class="o">-</span> <span class="p">(</span><span class="n">z</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">f</span> <span class="o">+</span> <span class="n">g</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="n">h</span> <span class="k">if</span> <span class="n">ref_positive</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">upper2</span> <span class="o">=</span> <span class="p">(</span><span class="n">e</span> <span class="o">+</span> <span class="p">(</span><span class="n">z</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">f</span> <span class="o">-</span> <span class="n">g</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="n">h</span> <span class="k">if</span> <span class="n">ref_negative</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">ConfidenceInterval</span><span class="p">(</span>
+            <span class="n">delta_ratio</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">ratio</span> <span class="o">-</span> <span class="n">lower1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">upper2</span> <span class="o">-</span> <span class="n">ref_ratio</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="n">delta_ratio</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">ref_ratio</span> <span class="o">-</span> <span class="n">lower2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">upper1</span> <span class="o">-</span> <span class="n">ratio</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="n">delta_ratio</span><span class="p">,</span>
+            <span class="n">conf_level</span><span class="p">,</span>
+            <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">sides</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;wald&quot;</span><span class="p">,</span> <span class="s2">&quot;wald-cc&quot;</span><span class="p">]:</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="n">z</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+            <span class="n">ratio</span> <span class="o">*</span> <span class="n">neg_ratio</span> <span class="o">/</span> <span class="n">n_total</span> <span class="o">+</span> <span class="n">ref_ratio</span> <span class="o">*</span> <span class="n">ref_neg_ratio</span> <span class="o">/</span> <span class="n">ref_total</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;wald-cc&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ConfidenceInterval</span><span class="p">(</span>
+                <span class="n">delta_ratio</span> <span class="o">-</span> <span class="n">item</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">/</span> <span class="n">n_total</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">/</span> <span class="n">ref_total</span><span class="p">,</span>
+                <span class="n">delta_ratio</span> <span class="o">+</span> <span class="n">item</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">/</span> <span class="n">n_total</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">/</span> <span class="n">ref_total</span><span class="p">,</span>
+                <span class="n">delta_ratio</span><span class="p">,</span>
+                <span class="n">conf_level</span><span class="p">,</span>
+                <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">sides</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ConfidenceInterval</span><span class="p">(</span>
+            <span class="n">delta_ratio</span> <span class="o">-</span> <span class="n">item</span><span class="p">,</span>
+            <span class="n">delta_ratio</span> <span class="o">+</span> <span class="n">item</span><span class="p">,</span>
+            <span class="n">delta_ratio</span><span class="p">,</span>
+            <span class="n">conf_level</span><span class="p">,</span>
+            <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">sides</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;haldane&quot;</span><span class="p">,</span> <span class="s2">&quot;jeffreys-perks&quot;</span><span class="p">]:</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">/</span> <span class="n">n_total</span> <span class="o">-</span> <span class="mf">0.25</span> <span class="o">/</span> <span class="n">ref_total</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">v</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">/</span> <span class="n">ref_total</span>
+        <span class="k">if</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;haldane&quot;</span><span class="p">:</span>
+            <span class="n">psi</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">ratio</span> <span class="o">+</span> <span class="n">ref_ratio</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># &quot;jeffreys-perks&quot;</span>
+            <span class="n">psi</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">n_positive</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_total</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="o">+</span> <span class="p">(</span><span class="n">ref_positive</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">ref_total</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+                <span class="n">u</span> <span class="o">*</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">psi</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">psi</span><span class="p">)</span> <span class="o">-</span> <span class="n">delta_ratio</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">psi</span><span class="p">)</span> <span class="o">*</span> <span class="n">delta_ratio</span>
+                <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">((</span><span class="n">z</span> <span class="o">*</span> <span class="n">u</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">psi</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">psi</span><span class="p">)</span>
+                <span class="o">+</span> <span class="p">(</span><span class="n">z</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">psi</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="p">)</span>
+            <span class="o">*</span> <span class="n">z</span>
+            <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">u</span> <span class="o">*</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">theta_star</span> <span class="o">=</span> <span class="p">(</span><span class="n">delta_ratio</span> <span class="o">+</span> <span class="n">v</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">psi</span><span class="p">)</span> <span class="o">*</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">u</span> <span class="o">*</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ConfidenceInterval</span><span class="p">(</span>
+            <span class="n">theta_star</span> <span class="o">-</span> <span class="n">w</span><span class="p">,</span>
+            <span class="n">theta_star</span> <span class="o">+</span> <span class="n">w</span><span class="p">,</span>
+            <span class="n">delta_ratio</span><span class="p">,</span>
+            <span class="n">conf_level</span><span class="p">,</span>
+            <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">sides</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;mee&quot;</span><span class="p">,</span> <span class="s2">&quot;miettinen-nurminen&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;mee&quot;</span><span class="p">:</span>
+            <span class="n">lamb</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># &quot;miettinen-nurminen&quot;</span>
+            <span class="n">lamb</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_total</span> <span class="o">+</span> <span class="n">ref_total</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_total</span> <span class="o">+</span> <span class="n">ref_total</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_positive</span> <span class="o">==</span> <span class="n">ref_positive</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># R implementation from https://github.com/AndriSignorell/DescTools/blob/master/R/StatsAndCIs.r</span>
+            <span class="c1"># `uniroot` unstable for some cases (e.g. 10/10 vs 0/20)</span>
+            <span class="n">tol</span> <span class="o">=</span> <span class="mf">1e-6</span>
+            <span class="n">lower</span> <span class="o">=</span> <span class="n">uniroot</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">j</span><span class="p">:</span> <span class="n">_mee_mn_score_func</span><span class="p">(</span>
+                    <span class="n">j</span><span class="p">,</span> <span class="n">ratio</span><span class="p">,</span> <span class="n">ref_ratio</span><span class="p">,</span> <span class="n">n_total</span><span class="p">,</span> <span class="n">ref_total</span><span class="p">,</span> <span class="n">lamb</span>
+                <span class="p">)</span>
+                <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">_conf_level</span><span class="p">),</span>
+                <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">tol</span><span class="p">,</span>
+                <span class="n">delta_ratio</span> <span class="o">-</span> <span class="n">tol</span><span class="p">,</span>
+                <span class="n">full_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">upper</span> <span class="o">=</span> <span class="n">uniroot</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">j</span><span class="p">:</span> <span class="n">_mee_mn_score_func</span><span class="p">(</span>
+                    <span class="n">j</span><span class="p">,</span> <span class="n">ratio</span><span class="p">,</span> <span class="n">ref_ratio</span><span class="p">,</span> <span class="n">n_total</span><span class="p">,</span> <span class="n">ref_total</span><span class="p">,</span> <span class="n">lamb</span>
+                <span class="p">)</span>
+                <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">_conf_level</span><span class="p">),</span>
+                <span class="n">delta_ratio</span> <span class="o">+</span> <span class="n">tol</span><span class="p">,</span>
+                <span class="mi">1</span> <span class="o">-</span> <span class="n">tol</span><span class="p">,</span>
+                <span class="n">full_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># failed in the case of n_positive == ref_positive == 0</span>
+            <span class="n">itv</span> <span class="o">=</span> <span class="n">_mee_mn_lower_upper_bounds</span><span class="p">(</span>
+                <span class="n">ratio</span><span class="p">,</span> <span class="n">ref_ratio</span><span class="p">,</span> <span class="n">n_total</span><span class="p">,</span> <span class="n">ref_total</span><span class="p">,</span> <span class="n">lamb</span><span class="p">,</span> <span class="n">z</span>
+            <span class="p">)</span>
+            <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">itv</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">itv</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ConfidenceInterval</span><span class="p">(</span>
+            <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">delta_ratio</span><span class="p">,</span> <span class="n">conf_level</span><span class="p">,</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="nb">str</span><span class="p">(</span><span class="n">sides</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;true-profile&quot;</span><span class="p">:</span>
+        <span class="n">itv</span> <span class="o">=</span> <span class="n">_true_profile_lower_upper_bounds</span><span class="p">(</span>
+            <span class="n">n_positive</span><span class="p">,</span> <span class="n">n_total</span><span class="p">,</span> <span class="n">ref_positive</span><span class="p">,</span> <span class="n">ref_total</span><span class="p">,</span> <span class="n">z</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ConfidenceInterval</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">itv</span><span class="p">),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">itv</span><span class="p">),</span>
+            <span class="n">delta_ratio</span><span class="p">,</span>
+            <span class="n">conf_level</span><span class="p">,</span>
+            <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">sides</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;hauck-anderson&quot;</span><span class="p">:</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">/</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_total</span><span class="p">,</span> <span class="n">ref_total</span><span class="p">)</span> <span class="o">+</span> <span class="n">z</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+            <span class="n">ratio</span> <span class="o">*</span> <span class="n">neg_ratio</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_total</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="o">+</span> <span class="n">ref_ratio</span> <span class="o">*</span> <span class="n">ref_neg_ratio</span> <span class="o">/</span> <span class="p">(</span><span class="n">ref_total</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ConfidenceInterval</span><span class="p">(</span>
+            <span class="n">delta_ratio</span> <span class="o">-</span> <span class="n">item</span><span class="p">,</span>
+            <span class="n">delta_ratio</span> <span class="o">+</span> <span class="n">item</span><span class="p">,</span>
+            <span class="n">delta_ratio</span><span class="p">,</span>
+            <span class="n">conf_level</span><span class="p">,</span>
+            <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">sides</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;agresti-caffo&quot;</span><span class="p">,</span> <span class="s2">&quot;carlin-louis&quot;</span><span class="p">]:</span>
+        <span class="n">ratio_1</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_positive</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_total</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">ratio_2</span> <span class="o">=</span> <span class="p">(</span><span class="n">ref_positive</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">ref_total</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">denom_add</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;agresti-caffo&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;carlin-louis&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="n">z</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">ratio_1</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ratio_1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_total</span> <span class="o">+</span> <span class="n">denom_add</span><span class="p">[</span><span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()]))</span>
+            <span class="o">+</span> <span class="p">(</span><span class="n">ratio_2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ratio_2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">ref_total</span> <span class="o">+</span> <span class="n">denom_add</span><span class="p">[</span><span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()]))</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ConfidenceInterval</span><span class="p">(</span>
+            <span class="n">ratio_1</span> <span class="o">-</span> <span class="n">ratio_2</span> <span class="o">-</span> <span class="n">item</span><span class="p">,</span>
+            <span class="n">ratio_1</span> <span class="o">-</span> <span class="n">ratio_2</span> <span class="o">+</span> <span class="n">item</span><span class="p">,</span>
+            <span class="n">delta_ratio</span><span class="p">,</span>
+            <span class="n">conf_level</span><span class="p">,</span>
+            <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">sides</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;brown-li&quot;</span><span class="p">,</span> <span class="s2">&quot;brown-li-jeffrey&quot;</span><span class="p">]:</span>
+        <span class="n">ratio_1</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_positive</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_total</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">ratio_2</span> <span class="o">=</span> <span class="p">(</span><span class="n">ref_positive</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">ref_total</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="n">z</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+            <span class="n">ratio_1</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ratio_1</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_total</span> <span class="o">+</span> <span class="n">ratio_2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ratio_2</span><span class="p">)</span> <span class="o">/</span> <span class="n">ref_total</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ConfidenceInterval</span><span class="p">(</span>
+            <span class="n">ratio_1</span> <span class="o">-</span> <span class="n">ratio_2</span> <span class="o">-</span> <span class="n">item</span><span class="p">,</span>
+            <span class="n">ratio_1</span> <span class="o">-</span> <span class="n">ratio_2</span> <span class="o">+</span> <span class="n">item</span><span class="p">,</span>
+            <span class="n">delta_ratio</span><span class="p">,</span>
+            <span class="n">conf_level</span><span class="p">,</span>
+            <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">sides</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;miettinen-nurminen-brown-li&quot;</span><span class="p">:</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span>
+        <span class="n">lower_mn</span><span class="p">,</span> <span class="n">upper_mn</span> <span class="o">=</span> <span class="n">_compute_difference_confidence_interval</span><span class="p">(</span>
+            <span class="n">n_positive</span><span class="p">,</span>
+            <span class="n">n_total</span><span class="p">,</span>
+            <span class="n">ref_positive</span><span class="p">,</span>
+            <span class="n">ref_total</span><span class="p">,</span>
+            <span class="n">conf_level</span><span class="p">,</span>
+            <span class="s2">&quot;miettinen-nurminen&quot;</span><span class="p">,</span>
+            <span class="n">sides</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">astuple</span><span class="p">()</span>
+        <span class="n">lower_bl</span><span class="p">,</span> <span class="n">upper_bl</span> <span class="o">=</span> <span class="n">_compute_difference_confidence_interval</span><span class="p">(</span>
+            <span class="n">n_positive</span><span class="p">,</span> <span class="n">n_total</span><span class="p">,</span> <span class="n">ref_positive</span><span class="p">,</span> <span class="n">ref_total</span><span class="p">,</span> <span class="n">conf_level</span><span class="p">,</span> <span class="s2">&quot;brown-li&quot;</span><span class="p">,</span> <span class="n">sides</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">astuple</span><span class="p">()</span>
+        <span class="n">lower</span> <span class="o">=</span> <span class="n">weight</span> <span class="o">*</span> <span class="n">lower_mn</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">weight</span><span class="p">)</span> <span class="o">*</span> <span class="n">lower_bl</span>
+        <span class="n">upper</span> <span class="o">=</span> <span class="n">weight</span> <span class="o">*</span> <span class="n">upper_mn</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">weight</span><span class="p">)</span> <span class="o">*</span> <span class="n">upper_bl</span>
+        <span class="k">return</span> <span class="n">ConfidenceInterval</span><span class="p">(</span>
+            <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">delta_ratio</span><span class="p">,</span> <span class="n">conf_level</span><span class="p">,</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="nb">str</span><span class="p">(</span><span class="n">sides</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;exact&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`method` `</span><span class="si">{</span><span class="n">confint_type</span><span class="si">}</span><span class="s2">` is not implemented yet&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;mid-p&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`method` `</span><span class="si">{</span><span class="n">confint_type</span><span class="si">}</span><span class="s2">` is not implemented yet&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;santner-snell&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`method` `</span><span class="si">{</span><span class="n">confint_type</span><span class="si">}</span><span class="s2">` is not implemented yet&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;chan-zhang&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`method` `</span><span class="si">{</span><span class="n">confint_type</span><span class="si">}</span><span class="s2">` is not implemented yet&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;agresti-min&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`method` `</span><span class="si">{</span><span class="n">confint_type</span><span class="si">}</span><span class="s2">` is not implemented yet&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;wang&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`method` `</span><span class="si">{</span><span class="n">confint_type</span><span class="si">}</span><span class="s2">` is not implemented yet&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">confint_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;pradhan-banerjee&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`method` `</span><span class="si">{</span><span class="n">confint_type</span><span class="si">}</span><span class="s2">` is not implemented yet&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">newline</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;&quot;&quot;`method` `</span><span class="si">{</span><span class="n">confint_type</span><span class="si">}</span><span class="s2">` is not supported, &quot;&quot;&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;&quot;&quot;choose one from </span><span class="si">{</span><span class="n">newline</span><span class="si">}{</span><span class="n">newline</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_supported_types</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;&quot;&quot;</span>
+        <span class="p">)</span>
+
+
+<span class="n">_supported_types</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;wilson&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;newcombe&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;score&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wilson-cc&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;newcombe-cc&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;score-cc&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wald&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wald-cc&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;haldane&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;jeffreys-perks&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mee&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;miettinen-nurminen&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;true-profile&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;hauck-anderson&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;agresti-caffo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;carlin-louis&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;brown-li&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;brown-li-jeffrey&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;miettinen-nurminen-brown-li&quot;</span><span class="p">,</span>
+    <span class="c1"># &quot;exact&quot;,</span>
+    <span class="c1"># &quot;mid-p&quot;,</span>
+    <span class="c1"># &quot;santner-snell&quot;,</span>
+    <span class="c1"># &quot;chan-zhang&quot;,</span>
+    <span class="c1"># &quot;agresti-min&quot;,</span>
+    <span class="c1"># &quot;wang&quot;,</span>
+    <span class="c1"># &quot;pradhan-banerjee&quot;,</span>
+<span class="p">]</span>
+<span class="n">_supported_methods</span> <span class="o">=</span> <span class="n">_supported_types</span>
+
+
+<span class="n">_stochastic_types</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">_stochastic_methods</span> <span class="o">=</span> <span class="n">_stochastic_types</span>
+
+
+<span class="n">_type_aliases</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;wilson&quot;</span><span class="p">:</span> <span class="s2">&quot;newcombe&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wilson-cc&quot;</span><span class="p">:</span> <span class="s2">&quot;newcombe-cc&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="s2">&quot;newcombe&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;score-cc&quot;</span><span class="p">:</span> <span class="s2">&quot;newcombe-cc&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;brown-li-jeffrey&quot;</span><span class="p">:</span> <span class="s2">&quot;brown-li&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">_method_aliases</span> <span class="o">=</span> <span class="n">_type_aliases</span>
+
+
+<span class="nd">@deprecated</span><span class="p">(</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.0.4&quot;</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;Use `list_difference_confidence_interval_methods` instead.&quot;</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">list_difference_confidence_interval_types</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_supported_types</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="list_difference_confidence_interval_methods"><a class="viewcode-back" href="../../generated/diff_binom_confint.list_difference_confidence_interval_methods.html#diff_binom_confint.list_difference_confidence_interval_methods">[docs]</a><span class="k">def</span> <span class="nf">list_difference_confidence_interval_methods</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;List all supported methods for computing difference confidence intervals.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_supported_types</span><span class="p">))</span></div>
+
+
+<span class="k">def</span> <span class="nf">_mee_mn_score_func</span><span class="p">(</span>
+    <span class="n">j</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">ref_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">n_total</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">ref_total</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">lamb</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="n">_mee_mn_var_func</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">ratio</span><span class="p">,</span> <span class="n">ref_ratio</span><span class="p">,</span> <span class="n">n_total</span><span class="p">,</span> <span class="n">ref_total</span><span class="p">,</span> <span class="n">lamb</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">min</span><span class="p">(</span><span class="n">pnorm</span><span class="p">(</span><span class="n">var</span><span class="p">),</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">pnorm</span><span class="p">(</span><span class="n">var</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">_mee_mn_var_func</span><span class="p">(</span>
+    <span class="n">j</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">ref_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">n_total</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ref_total</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">lamb</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">ref_total</span> <span class="o">/</span> <span class="n">n_total</span>
+    <span class="n">delta_ratio</span> <span class="o">=</span> <span class="n">ratio</span> <span class="o">-</span> <span class="n">ref_ratio</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">theta</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">theta</span> <span class="o">+</span> <span class="n">ratio</span> <span class="o">+</span> <span class="n">theta</span> <span class="o">*</span> <span class="n">ref_ratio</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="n">theta</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">ratio</span> <span class="o">+</span> <span class="n">theta</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">ratio</span> <span class="o">+</span> <span class="n">theta</span> <span class="o">*</span> <span class="n">ref_ratio</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="o">-</span><span class="n">ratio</span> <span class="o">*</span> <span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">j</span><span class="p">)</span>
+    <span class="n">tmp_b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">/</span> <span class="n">a</span>
+    <span class="n">tmp_c</span> <span class="o">=</span> <span class="n">c</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">/</span> <span class="n">a</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">tmp_b</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="n">tmp_b</span> <span class="o">*</span> <span class="n">tmp_c</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">d</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">a</span>
+    <span class="c1"># https://github.com/AndriSignorell/DescTools/blob/de9731c7d5640deff425e08e63e3aed2c5dc65aa/R/StatsAndCIs.r#L2509</span>
+    <span class="c1"># u = np.sign(v) * np.sqrt(tmp_b**2 - tmp_c)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span><span class="p">:</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tmp_b</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">tmp_c</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="o">-</span><span class="n">u</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">u</span><span class="o">**</span><span class="mi">3</span><span class="p">))</span> <span class="o">/</span> <span class="mi">3</span>
+    <span class="n">ratio_mle</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">u</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">-</span> <span class="n">tmp_b</span>
+    <span class="n">ref_ratio_mle</span> <span class="o">=</span> <span class="n">ratio_mle</span> <span class="o">-</span> <span class="n">j</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+        <span class="n">lamb</span>
+        <span class="o">*</span> <span class="p">(</span>
+            <span class="n">ratio_mle</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ratio_mle</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_total</span>
+            <span class="o">+</span> <span class="n">ref_ratio_mle</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ref_ratio_mle</span><span class="p">)</span> <span class="o">/</span> <span class="n">ref_total</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">(</span><span class="n">delta_ratio</span> <span class="o">-</span> <span class="n">j</span><span class="p">)</span> <span class="o">/</span> <span class="n">var</span>
+    <span class="k">return</span> <span class="n">var</span>
+
+
+<span class="nd">@accelerator</span><span class="o">.</span><span class="n">accelerator</span>
+<span class="k">def</span> <span class="nf">_mee_mn_lower_upper_bounds</span><span class="p">(</span>
+    <span class="n">ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">ref_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">n_total</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">ref_total</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">lamb</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">ref_total</span> <span class="o">/</span> <span class="n">n_total</span>
+    <span class="n">delta_ratio</span> <span class="o">=</span> <span class="n">ratio</span> <span class="o">-</span> <span class="n">ref_ratio</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">theta</span>
+    <span class="n">increment</span> <span class="o">=</span> <span class="mf">1e-5</span>
+    <span class="n">itv</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># flag = None</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">increment</span><span class="p">,</span> <span class="n">increment</span><span class="p">):</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">theta</span> <span class="o">+</span> <span class="n">ratio</span> <span class="o">+</span> <span class="n">theta</span> <span class="o">*</span> <span class="n">ref_ratio</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="n">theta</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">ratio</span> <span class="o">+</span> <span class="n">theta</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">ratio</span> <span class="o">+</span> <span class="n">theta</span> <span class="o">*</span> <span class="n">ref_ratio</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="o">-</span><span class="n">ratio</span> <span class="o">*</span> <span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">j</span><span class="p">)</span>
+        <span class="n">tmp_b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">/</span> <span class="n">a</span>
+        <span class="n">tmp_c</span> <span class="o">=</span> <span class="n">c</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">/</span> <span class="n">a</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">tmp_b</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="n">tmp_b</span> <span class="o">*</span> <span class="n">tmp_c</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">d</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">a</span>
+        <span class="c1"># https://github.com/AndriSignorell/DescTools/blob/de9731c7d5640deff425e08e63e3aed2c5dc65aa/R/StatsAndCIs.r#L2509</span>
+        <span class="c1"># u = np.sign(v) * np.sqrt(tmp_b**2 - tmp_c)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tmp_b</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">tmp_c</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="o">-</span><span class="n">u</span>
+        <span class="n">u3</span> <span class="o">=</span> <span class="n">u</span><span class="o">**</span><span class="mi">3</span>
+        <span class="k">if</span> <span class="n">u3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">u3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span>
+            <span class="k">continue</span>  <span class="c1"># python &gt;= 3.7 would cause ZeroDivisionError</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">u3</span><span class="p">))</span> <span class="o">/</span> <span class="mi">3</span>
+        <span class="n">ratio_mle</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">u</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">-</span> <span class="n">tmp_b</span>
+        <span class="n">ref_ratio_mle</span> <span class="o">=</span> <span class="n">ratio_mle</span> <span class="o">-</span> <span class="n">j</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+            <span class="n">lamb</span>
+            <span class="o">*</span> <span class="p">(</span>
+                <span class="n">ratio_mle</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ratio_mle</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_total</span>
+                <span class="o">+</span> <span class="n">ref_ratio_mle</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ref_ratio_mle</span><span class="p">)</span> <span class="o">/</span> <span class="n">ref_total</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">(</span><span class="n">delta_ratio</span> <span class="o">-</span> <span class="n">j</span><span class="p">)</span> <span class="o">/</span> <span class="n">var</span>
+        <span class="k">if</span> <span class="o">-</span><span class="n">z</span> <span class="o">&lt;</span> <span class="n">var</span> <span class="o">&lt;</span> <span class="n">z</span><span class="p">:</span>
+            <span class="c1"># flag = True</span>
+            <span class="n">itv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+        <span class="c1"># elif flag:</span>
+        <span class="c1">#     break</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">itv</span><span class="p">)</span>
+
+
+<span class="nd">@accelerator</span><span class="o">.</span><span class="n">accelerator</span>
+<span class="k">def</span> <span class="nf">_true_profile_lower_upper_bounds</span><span class="p">(</span>
+    <span class="n">n_positive</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">n_total</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">ref_positive</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">ref_total</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">ref_total</span> <span class="o">/</span> <span class="n">n_total</span>
+    <span class="n">ratio</span> <span class="o">=</span> <span class="n">n_positive</span> <span class="o">/</span> <span class="n">n_total</span>
+    <span class="n">ref_ratio</span> <span class="o">=</span> <span class="n">ref_positive</span> <span class="o">/</span> <span class="n">ref_total</span>
+    <span class="n">ref_neg_ratio</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">ref_ratio</span>
+    <span class="n">neg_ratio</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">ratio</span>
+    <span class="n">n_negative</span> <span class="o">=</span> <span class="n">n_total</span> <span class="o">-</span> <span class="n">n_positive</span>
+    <span class="n">ref_negative</span> <span class="o">=</span> <span class="n">ref_total</span> <span class="o">-</span> <span class="n">ref_positive</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">theta</span>
+    <span class="n">increment</span> <span class="o">=</span> <span class="mf">1e-5</span>
+    <span class="n">itv</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># flag = None</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">increment</span><span class="p">,</span> <span class="n">increment</span><span class="p">):</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">theta</span> <span class="o">+</span> <span class="n">ratio</span> <span class="o">+</span> <span class="n">theta</span> <span class="o">*</span> <span class="n">ref_ratio</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="n">theta</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">ratio</span> <span class="o">+</span> <span class="n">theta</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">ratio</span> <span class="o">+</span> <span class="n">theta</span> <span class="o">*</span> <span class="n">ref_ratio</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="o">-</span><span class="n">ratio</span> <span class="o">*</span> <span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">j</span><span class="p">)</span>
+        <span class="n">tmp_b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">/</span> <span class="n">a</span>
+        <span class="n">tmp_c</span> <span class="o">=</span> <span class="n">c</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">/</span> <span class="n">a</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">tmp_b</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="n">tmp_b</span> <span class="o">*</span> <span class="n">tmp_c</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">d</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">a</span>
+        <span class="c1"># https://github.com/AndriSignorell/DescTools/blob/de9731c7d5640deff425e08e63e3aed2c5dc65aa/R/StatsAndCIs.r#L2509</span>
+        <span class="c1"># u = np.sign(v) * np.sqrt(tmp_b**2 - tmp_c)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tmp_b</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">tmp_c</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="o">-</span><span class="n">u</span>
+        <span class="n">u3</span> <span class="o">=</span> <span class="n">u</span><span class="o">**</span><span class="mi">3</span>
+        <span class="k">if</span> <span class="n">u3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">u3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span>
+            <span class="k">continue</span>  <span class="c1"># python &gt;= 3.7 would cause ZeroDivisionError</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">u3</span><span class="p">))</span> <span class="o">/</span> <span class="mi">3</span>
+        <span class="n">ratio_mle</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">u</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">-</span> <span class="n">tmp_b</span>
+        <span class="n">ref_ratio_mle</span> <span class="o">=</span> <span class="n">ratio_mle</span> <span class="o">-</span> <span class="n">j</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">r_m_</span><span class="p">,</span> <span class="n">r_</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">n_positive</span><span class="p">,</span> <span class="n">ratio_mle</span><span class="p">,</span> <span class="n">ratio</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">ref_positive</span><span class="p">,</span> <span class="n">ref_ratio_mle</span><span class="p">,</span> <span class="n">ref_ratio</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">n_negative</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">ratio_mle</span><span class="p">,</span> <span class="n">neg_ratio</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">ref_negative</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">ref_ratio_mle</span><span class="p">,</span> <span class="n">ref_neg_ratio</span><span class="p">),</span>
+        <span class="p">]:</span>
+            <span class="k">if</span> <span class="n">num</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># omitting any terms corresponding to empty cells</span>
+                <span class="n">var</span> <span class="o">+=</span> <span class="n">num</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">r_m_</span> <span class="o">/</span> <span class="n">r_</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">var</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="p">(</span><span class="n">z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># flag = True</span>
+            <span class="n">itv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+        <span class="c1"># elif flag:</span>
+        <span class="c1">#     break</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">itv</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2023, WEN Hao.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> and ❤️  using a custom <a href="https://github.com/LinxiFan/Stanford-theme">theme</a> based on <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.0.12',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/documentation_options.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/sphinx_highlight.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

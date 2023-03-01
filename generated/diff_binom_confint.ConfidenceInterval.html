@@ -1,0 +1,390 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>diff_binom_confint.ConfidenceInterval &mdash; DBCI 0.0.12 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="DBCI 0.0.12 documentation" href="../index.html"/>
+        <link rel="up" title="compute_confidence_interval" href="../api.html"/>
+        <link rel="prev" title="diff_binom_confint.list_difference_confidence_interval_methods" href="diff_binom_confint.list_difference_confidence_interval_methods.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DBCI
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">compute_confidence_interval</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="diff_binom_confint.compute_confidence_interval.html">diff_binom_confint.compute_confidence_interval</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="diff_binom_confint.compute_confidence_interval.html#diff_binom_confint.compute_confidence_interval"><code class="docutils literal notranslate"><span class="pre">compute_confidence_interval()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="diff_binom_confint.list_confidence_interval_methods.html">diff_binom_confint.list_confidence_interval_methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="diff_binom_confint.list_confidence_interval_methods.html#diff_binom_confint.list_confidence_interval_methods"><code class="docutils literal notranslate"><span class="pre">list_confidence_interval_methods()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html#compute-difference-confidence-interval">compute_difference_confidence_interval</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="diff_binom_confint.compute_difference_confidence_interval.html">diff_binom_confint.compute_difference_confidence_interval</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="diff_binom_confint.compute_difference_confidence_interval.html#diff_binom_confint.compute_difference_confidence_interval"><code class="docutils literal notranslate"><span class="pre">compute_difference_confidence_interval()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="diff_binom_confint.list_difference_confidence_interval_methods.html">diff_binom_confint.list_difference_confidence_interval_methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="diff_binom_confint.list_difference_confidence_interval_methods.html#diff_binom_confint.list_difference_confidence_interval_methods"><code class="docutils literal notranslate"><span class="pre">list_difference_confidence_interval_methods()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html#confidenceinterval">ConfidenceInterval</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">diff_binom_confint.ConfidenceInterval</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#diff_binom_confint.ConfidenceInterval"><code class="docutils literal notranslate"><span class="pre">ConfidenceInterval</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#diff_binom_confint.ConfidenceInterval.lower_bound"><code class="docutils literal notranslate"><span class="pre">ConfidenceInterval.lower_bound</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#diff_binom_confint.ConfidenceInterval.upper_bound"><code class="docutils literal notranslate"><span class="pre">ConfidenceInterval.upper_bound</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#diff_binom_confint.ConfidenceInterval.estimate"><code class="docutils literal notranslate"><span class="pre">ConfidenceInterval.estimate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#diff_binom_confint.ConfidenceInterval.level"><code class="docutils literal notranslate"><span class="pre">ConfidenceInterval.level</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#diff_binom_confint.ConfidenceInterval.method"><code class="docutils literal notranslate"><span class="pre">ConfidenceInterval.method</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#diff_binom_confint.ConfidenceInterval.sides"><code class="docutils literal notranslate"><span class="pre">ConfidenceInterval.sides</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#diff_binom_confint.ConfidenceInterval.__init__"><code class="docutils literal notranslate"><span class="pre">ConfidenceInterval.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DBCI</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../api.html">compute_confidence_interval</a> &raquo;</li>
+        
+      <li>diff_binom_confint.ConfidenceInterval</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/DeepPSP/DBCI/blob/master/docs/source/generated/diff_binom_confint.ConfidenceInterval.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="diff-binom-confint-confidenceinterval">
+<h1>diff_binom_confint.ConfidenceInterval<a class="headerlink" href="#diff-binom-confint-confidenceinterval" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="diff_binom_confint.ConfidenceInterval">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">diff_binom_confint.</span></span><span class="sig-name descname"><span class="pre">ConfidenceInterval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">sides</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'two-sided'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diff_binom_confint/_confint.html#ConfidenceInterval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diff_binom_confint.ConfidenceInterval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dataclass for holding meta information of a confidence interval.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diff_binom_confint.ConfidenceInterval.lower_bound">
+<span class="sig-name descname"><span class="pre">lower_bound</span></span><a class="headerlink" href="#diff_binom_confint.ConfidenceInterval.lower_bound" title="Permalink to this definition">¶</a></dt>
+<dd><p>The lower bound of the confidence interval.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diff_binom_confint.ConfidenceInterval.upper_bound">
+<span class="sig-name descname"><span class="pre">upper_bound</span></span><a class="headerlink" href="#diff_binom_confint.ConfidenceInterval.upper_bound" title="Permalink to this definition">¶</a></dt>
+<dd><p>The upper bound of the confidence interval.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diff_binom_confint.ConfidenceInterval.estimate">
+<span class="sig-name descname"><span class="pre">estimate</span></span><a class="headerlink" href="#diff_binom_confint.ConfidenceInterval.estimate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate of (the difference of) the binomial proportion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diff_binom_confint.ConfidenceInterval.level">
+<span class="sig-name descname"><span class="pre">level</span></span><a class="headerlink" href="#diff_binom_confint.ConfidenceInterval.level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Confidence level, should be inside the interval (0, 1).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diff_binom_confint.ConfidenceInterval.method">
+<span class="sig-name descname"><span class="pre">method</span></span><a class="headerlink" href="#diff_binom_confint.ConfidenceInterval.method" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computation method of the confidence interval.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diff_binom_confint.ConfidenceInterval.sides">
+<span class="sig-name descname"><span class="pre">sides</span></span><a class="headerlink" href="#diff_binom_confint.ConfidenceInterval.sides" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sides of the confidence interval, should be one of</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>“two-sided” (aliases “2-sided”, “two_sided”, “2_sided”,
+“2-sides”, “two_sides”, “two-sides”, “2_sides”, “ts”,
+“t”, “two”, “2”),</p></li>
+<li><p>“left-sided” (aliases “left_sided”, “left”, “ls”, “l”),</p></li>
+<li><p>“right-sided” (aliases “right_sided”, “right”, “rs”, “r”),</p></li>
+</ul>
+</div></blockquote>
+<p>case insensitive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>, default “two-sided”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diff_binom_confint.ConfidenceInterval.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">sides</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'two-sided'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#diff_binom_confint.ConfidenceInterval.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#diff_binom_confint.ConfidenceInterval.__init__" title="diff_binom_confint.ConfidenceInterval.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(lower_bound, upper_bound, estimate, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">astuple</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#diff_binom_confint.ConfidenceInterval.sides" title="diff_binom_confint.ConfidenceInterval.sides"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sides</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#diff_binom_confint.ConfidenceInterval.lower_bound" title="diff_binom_confint.ConfidenceInterval.lower_bound"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lower_bound</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#diff_binom_confint.ConfidenceInterval.upper_bound" title="diff_binom_confint.ConfidenceInterval.upper_bound"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upper_bound</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#diff_binom_confint.ConfidenceInterval.estimate" title="diff_binom_confint.ConfidenceInterval.estimate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">estimate</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#diff_binom_confint.ConfidenceInterval.level" title="diff_binom_confint.ConfidenceInterval.level"><code class="xref py py-obj docutils literal notranslate"><span class="pre">level</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#diff_binom_confint.ConfidenceInterval.method" title="diff_binom_confint.ConfidenceInterval.method"><code class="xref py py-obj docutils literal notranslate"><span class="pre">method</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="diff_binom_confint.list_difference_confidence_interval_methods.html" class="btn btn-neutral" title="diff_binom_confint.list_difference_confidence_interval_methods" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2023, WEN Hao.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> and ❤️  using a custom <a href="https://github.com/LinxiFan/Stanford-theme">theme</a> based on <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.0.12',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/documentation_options.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/sphinx_highlight.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
