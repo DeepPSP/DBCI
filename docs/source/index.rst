@@ -1,0 +1,188 @@
+.. DBCI documentation master file, created by
+   sphinx-quickstart on Wed Mar  1 23:45:13 2023.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to DBCI's documentation!
+================================
+
+A package for computing confidence intervals for binomial proportions,
+and confidence intervals for the difference of binomial proportions.
+
+Installation instructions
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The package can be installed via `PyPI` using
+
+.. code:: bash
+
+   python -m pip install diff-binom-confint
+
+or one can install the latest version on \ `GitHub <https://github.com/DeepPSP/DBCI/>`__\  using
+
+.. code:: bash
+
+   python -m pip install git+https://github.com/DeepPSP/DBCI.git
+
+
+or clone this repository and install locally via
+
+.. code:: bash
+
+   git clone https://github.com/DeepPSP/DBCI.git
+   cd DBCI
+   python -m pip install .
+
+Numba accelerated version
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+One can install the \ `Numba <https://numba.pydata.org/>`__\  accelerated version of the package using
+
+.. code:: bash
+
+   python -m pip install diff-binom-confint[acc]
+
+Usage examples
+^^^^^^^^^^^^^^^
+
+The following example shows how to compute the confidence interval for the
+difference of two binomial proportions using the Wilson method.
+
+.. code-block:: python
+
+    from diff_binom_confint import compute_difference_confidence_interval
+
+    n_positive, n_total = 84, 101
+    ref_positive, ref_total = 89, 105
+
+    confint = compute_difference_confidence_interval(
+        n_positive,
+        n_total,
+        ref_positive,
+        ref_total,
+        conf_level=0.95,
+        method="wilson",
+    )
+
+Implemented methods
+^^^^^^^^^^^^^^^^^^^^
+
+Confidence intervals for binomial proportions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We list the implemented methods for confidence intervals
+for binomial proportions in the following table.
+
++-------------------+----------------------+
+|   Method (type)   | Implemented          |
++===================+======================+
+| wilson            | |:heavy_check_mark:| |
++-------------------+----------------------+
+| wilson-cc         | |:heavy_check_mark:| |
++-------------------+----------------------+
+| wald              | |:heavy_check_mark:| |
++-------------------+----------------------+
+| wald-cc           | |:heavy_check_mark:| |
++-------------------+----------------------+
+| agresti-coull     | |:heavy_check_mark:| |
++-------------------+----------------------+
+| jeffreys          | |:heavy_check_mark:| |
++-------------------+----------------------+
+| clopper-pearson   | |:heavy_check_mark:| |
++-------------------+----------------------+
+| arcsine           | |:heavy_check_mark:| |
++-------------------+----------------------+
+| logit             | |:heavy_check_mark:| |
++-------------------+----------------------+
+| pratt             | |:heavy_check_mark:| |
++-------------------+----------------------+
+| witting           | |:heavy_check_mark:| |
++-------------------+----------------------+
+| mid-p             | |:heavy_check_mark:| |
++-------------------+----------------------+
+| lik               | |:heavy_check_mark:| |
++-------------------+----------------------+
+| blaker            | |:heavy_check_mark:| |
++-------------------+----------------------+
+| modified-wilson   | |:heavy_check_mark:| |
++-------------------+----------------------+
+| modified-jeffreys | |:heavy_check_mark:| |
++-------------------+----------------------+
+
+Confidence intervals for difference of binomial proportions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following is the table of implemented methods for computing
+confidence intervals for the difference of binomial proportions.
+
++-----------------------------+----------------------+
+|   Method (type)             | Implemented          |
++=============================+======================+
+| wilson                      | |:heavy_check_mark:| |
++-----------------------------+----------------------+
+| wilson-cc                   | |:heavy_check_mark:| |
++-----------------------------+----------------------+
+| wald                        | |:heavy_check_mark:| |
++-----------------------------+----------------------+
+| wald-cc                     | |:heavy_check_mark:| |
++-----------------------------+----------------------+
+| haldane                     | |:heavy_check_mark:| |
++-----------------------------+----------------------+
+| jeffreys-perks              | |:heavy_check_mark:| |
++-----------------------------+----------------------+
+| mee                         | |:heavy_check_mark:| |
++-----------------------------+----------------------+
+| miettinen-nurminen          | |:heavy_check_mark:| |
++-----------------------------+----------------------+
+| true-profile                | |:heavy_check_mark:| |
++-----------------------------+----------------------+
+| hauck-anderson              | |:heavy_check_mark:| |
++-----------------------------+----------------------+
+| agresti-caffo               | |:heavy_check_mark:| |
++-----------------------------+----------------------+
+| carlin-louis                | |:heavy_check_mark:| |
++-----------------------------+----------------------+
+| brown-li                    | |:heavy_check_mark:| |
++-----------------------------+----------------------+
+| brown-li-jeffrey            | |:heavy_check_mark:| |
++-----------------------------+----------------------+
+| miettinen-nurminen-brown-li | |:heavy_check_mark:| |
++-----------------------------+----------------------+
+| exact                       | |:x:|                |
++-----------------------------+----------------------+
+| mid-p                       | |:x:|                |
++-----------------------------+----------------------+
+| santner-snell               | |:x:|                |
++-----------------------------+----------------------+
+| chan-zhang                  | |:x:|                |
++-----------------------------+----------------------+
+| agresti-min                 | |:x:|                |
++-----------------------------+----------------------+
+| wang                        | |:x:|                |
++-----------------------------+----------------------+
+| pradhan-banerjee            | |:x:|                |
++-----------------------------+----------------------+
+
+.. toctree::
+   :caption: API reference
+   :maxdepth: 1
+
+   api
+
+References
+^^^^^^^^^^
+
+1. `SAS <https://www.lexjansen.com/wuss/2016/127_Final_Paper_PDF.pdf>`_
+2. `PASS <https://ncss-wpengine.netdna-ssl.com/wp-content/themes/ncss/pdf/Procedures/PASS/Confidence_Intervals_for_the_Difference_Between_Two_Proportions.pdf>`_
+3. `statsmodels.stats.proportion <https://www.statsmodels.org/devel/_modules/statsmodels/stats/proportion.html>`_
+4. `scipy.stats._binomtest <https://github.com/scipy/scipy/blob/main/scipy/stats/_binomtest.py>`_
+5. `corplingstats <https://corplingstats.wordpress.com/2019/04/27/correcting-for-continuity/>`_
+6. `DescTools.StatsAndCIs <https://github.com/AndriSignorell/DescTools/blob/master/R/StatsAndCIs.r>`_
+7. `Newcombee <https://onlinelibrary.wiley.com/doi/10.1002/(SICI)1097-0258(19980430)17:8%3C873::AID-SIM779%3E3.0.CO;2-I>`_
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
