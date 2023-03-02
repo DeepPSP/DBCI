@@ -74,7 +74,7 @@ We list the implemented methods for confidence intervals
 for binomial proportions in the following table.
 
 +-------------------+----------------------+
-|   Method (type)   | Implemented          |
+| Method (type)     | Implemented          |
 +===================+======================+
 | wilson            | |:heavy_check_mark:| |
 +-------------------+----------------------+
@@ -116,7 +116,7 @@ The following is the table of implemented methods for computing
 confidence intervals for the difference of binomial proportions.
 
 +-----------------------------+----------------------+
-|   Method (type)             | Implemented          |
+| Method (type)               | Implemented          |
 +=============================+======================+
 | wilson                      | |:heavy_check_mark:| |
 +-----------------------------+----------------------+
@@ -168,6 +168,12 @@ confidence intervals for the difference of binomial proportions.
    :maxdepth: 1
 
    api
+
+.. toctree::
+   :caption: Advanced topics
+   :maxdepth: 1
+
+   advanced
 
 References
 ^^^^^^^^^^
