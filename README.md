@@ -3,10 +3,14 @@
 ![pytest](https://github.com/DeepPSP/DBCI/actions/workflows/run-pytest.yml/badge.svg)
 [![codecov](https://codecov.io/gh/DeepPSP/DBCI/branch/master/graph/badge.svg?token=4IQD228F7L)](https://codecov.io/gh/DeepPSP/DBCI)
 ![PyPI](https://img.shields.io/pypi/v/diff-binom-confint?style=flat-square)
+[![RTD Status](https://readthedocs.org/projects/dbci/badge/?version=latest)](https://dbci.readthedocs.io/en/latest/?badge=latest)
+![gh-page status](https://github.com/DeepPSP/DBCI/actions/workflows/docs-publish.yml/badge.svg?branch=doc)
 ![downloads](https://img.shields.io/pypi/dm/diff-binom-confint?style=flat-square)
 ![license](https://img.shields.io/github/license/DeepPSP/DBCI?style=flat-square)
 
 Computation of confidence intervals for binomial proportions and for difference of binomial proportions.
+
+\[[GitHub Pages](https://deeppsp.github.io/DBCI/)\]  \[[Read the Docs](http://dbci.readthedocs.io/)\]
 
 ## Installation
 
