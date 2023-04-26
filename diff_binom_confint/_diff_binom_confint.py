@@ -549,6 +549,9 @@ def _mee_mn_lower_upper_bounds(
                 + ref_ratio_mle * (1 - ref_ratio_mle) / ref_total
             )
         )
+        if var == 0:
+            # https://github.com/DeepPSP/DBCI/issues/1
+            var = np.finfo(np.float64).eps
         var = (delta_ratio - j) / var
         if -z < var < z:
             # flag = True
