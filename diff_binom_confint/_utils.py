@@ -150,6 +150,7 @@ def remove_parameters_returns_from_docstring(
 
 
 def dummy_accelerator(func: callable) -> callable:
+    """Dummy accelerator."""
     return func
 
 
@@ -161,7 +162,11 @@ if njit is None:
 
 
 class Accelerator(object):
-    """ """
+    """Accelerator.
+
+    If `numba` is installed, `numba` is used as the default accelerator.
+    Otherwise, a dummy accelerator (no acceleration) is used.
+    """
 
     def __init__(self) -> None:
         if njit is not dummy_accelerator:
