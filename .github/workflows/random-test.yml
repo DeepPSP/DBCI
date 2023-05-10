@@ -10,6 +10,9 @@ on:
     branches: [ dev ]
   pull_request:
     branches: [ master ]
+  schedule:
+    # runs once every week
+    - cron: '0 0 * * 0'
 
 env:
   ARTIFACTS_DIR: ${{ github.workspace }}/artifacts-${{ github.run_number }}
@@ -47,6 +50,12 @@ jobs:
     - name: Run massive random test
       run: |
         pytest -v test/test_random.py
+    - name: Upload artifacts if artifacts directory is not empty
+      # if : [ "$(ls -A $ARTIFACTS_DIR)" ]
+      uses: actions/upload-artifact@v3
+      with:
+        name: artifacts-${{ github.run_number }}
+        path: $ARTIFACTS_DIR
     - name: Fail if artifacts directory is not empty
       run: |
         if [ "$(ls -A $ARTIFACTS_DIR)" ]; then
@@ -54,8 +63,3 @@ jobs:
           echo "Errors found in massive random test."
           exit 1
         fi
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: artifacts-${{ github.run_number }}
-        path: $ARTIFACTS_DIR
