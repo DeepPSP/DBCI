@@ -1,6 +1,7 @@
 # Confidence Intervals for Difference of Binomial Proportions
 
 ![pytest](https://github.com/DeepPSP/DBCI/actions/workflows/run-pytest.yml/badge.svg)
+![random-test](https://github.com/DeepPSP/DBCI/actions/workflows/random-test.yml/badge.svg)
 [![codecov](https://codecov.io/gh/DeepPSP/DBCI/branch/master/graph/badge.svg?token=4IQD228F7L)](https://codecov.io/gh/DeepPSP/DBCI)
 ![PyPI](https://img.shields.io/pypi/v/diff-binom-confint?style=flat-square)
 [![RTD Status](https://readthedocs.org/projects/dbci/badge/?version=latest)](https://dbci.readthedocs.io/en/latest/?badge=latest)
