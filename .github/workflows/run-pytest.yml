@@ -34,8 +34,8 @@ jobs:
         python -m pip freeze
     - name: Run test with pytest and collect coverage
       run: |
-        pytest --cov=diff_binom_confint -v test
+        pytest --cov=diff_binom_confint --ignore=test/test_random.py -v test
         python -m pip uninstall numba --yes
-        pytest --cov=diff_binom_confint -v test
+        pytest --cov=diff_binom_confint --ignore=test/test_random.py -v test
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3

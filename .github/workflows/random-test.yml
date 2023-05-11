@@ -1,0 +1,65 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+# NOTE that this workflow should run with numba installed, without which the tests will take a long time to run.
+
+name: Run Massive Random Test with PyTest
+
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    # runs once every week
+    - cron: '0 0 * * 0'
+
+env:
+  ARTIFACTS_DIR: ${{ github.workspace }}/artifacts-${{ github.run_number }}
+  RANDOM_DATA_AMOUNT: 10000
+  RANDOM_DATA_RANGE: 1000000
+
+jobs:
+  build:
+
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip setuptools wheel
+        python -m pip install -r requirements.txt
+        python -m pip install pytest pytest-xdist # Testing packages
+        python -m pip uninstall diff-binom-confint --yes # Remove if already installed 
+        python setup.py install_egg_info # Workaround https://github.com/pypa/pip/issues/4537
+        python -m pip install -e .[dev]
+        python -m pip freeze
+    - name: Create artifacts directory if not exists
+      run: |
+        mkdir -p $ARTIFACTS_DIR
+        # clear artifacts directory if exists
+        rm -rf $ARTIFACTS_DIR/*
+    - name: Run massive random test
+      run: |
+        pytest -v test/test_random.py
+    - name: Upload artifacts if artifacts directory is not empty
+      # if : [ "$(ls -A $ARTIFACTS_DIR)" ]
+      uses: actions/upload-artifact@v3
+      with:
+        name: artifacts-${{ github.run_number }}
+        path: $ARTIFACTS_DIR
+    - name: Fail if artifacts directory is not empty
+      run: |
+        if [ "$(ls -A $ARTIFACTS_DIR)" ]; then
+          echo "Artifacts directory is not empty."
+          echo "Errors found in massive random test."
+          exit 1
+        fi

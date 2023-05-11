@@ -16,6 +16,7 @@ extras["test"] = [
     "pandas",
     "black==22.3.0",
     "flake8",
+    "tqdm",
     "pytest",
     "pytest-xdist",
     "pytest-cov",
