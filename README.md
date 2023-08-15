@@ -1,13 +1,13 @@
 # Confidence Intervals for Difference of Binomial Proportions
 
-![pytest](https://github.com/DeepPSP/DBCI/actions/workflows/run-pytest.yml/badge.svg)
-![random-test](https://github.com/DeepPSP/DBCI/actions/workflows/random-test.yml/badge.svg)
+[![pytest](https://github.com/DeepPSP/DBCI/actions/workflows/run-pytest.yml/badge.svg)](https://github.com/DeepPSP/DBCI/actions/workflows/run-pytest.yml)
+[![random-test](https://github.com/DeepPSP/DBCI/actions/workflows/random-test.yml/badge.svg)](https://github.com/DeepPSP/DBCI/actions/workflows/random-test.yml)
 [![codecov](https://codecov.io/gh/DeepPSP/DBCI/branch/master/graph/badge.svg?token=4IQD228F7L)](https://codecov.io/gh/DeepPSP/DBCI)
-![PyPI](https://img.shields.io/pypi/v/diff-binom-confint?style=flat-square)
+[![PyPI](https://img.shields.io/pypi/v/diff-binom-confint?style=flat-square)](https://pypi.org/project/diff-binom-confint/)
 [![RTD Status](https://readthedocs.org/projects/dbci/badge/?version=latest)](https://dbci.readthedocs.io/en/latest/?badge=latest)
-![gh-page status](https://github.com/DeepPSP/DBCI/actions/workflows/docs-publish.yml/badge.svg?branch=doc)
-![downloads](https://img.shields.io/pypi/dm/diff-binom-confint?style=flat-square)
-![license](https://img.shields.io/github/license/DeepPSP/DBCI?style=flat-square)
+[![gh-page status](https://github.com/DeepPSP/DBCI/actions/workflows/docs-publish.yml/badge.svg?branch=doc)](https://github.com/DeepPSP/DBCI/actions/workflows/docs-publish.yml)
+[![downloads](https://img.shields.io/pypi/dm/diff-binom-confint?style=flat-square)](https://pypistats.org/packages/diff-binom-confint)
+[![license](https://img.shields.io/github/license/DeepPSP/DBCI?style=flat-square)](license)
 
 Computation of confidence intervals for binomial proportions and for difference of binomial proportions.
 
