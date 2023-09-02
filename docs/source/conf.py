@@ -4,14 +4,9 @@ import sys
 from pathlib import Path
 
 import sphinx_rtd_theme
-
-try:
-    import stanford_theme
-except Exception:
-    stanford_theme = None
-
-import recommonmark  # noqa: F401
-from recommonmark.transform import AutoStructify  # noqa: F401
+import sphinx_theme
+import sphinx_book_theme
+import pydata_sphinx_theme
 
 
 project_root = Path(__file__).resolve().parents[2]
@@ -73,18 +68,45 @@ exclude_patterns = []
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-if stanford_theme:
+_theme_name = "sphinx_book_theme"  # "pydata_sphinx_theme", "stanford_theme", etc.
+
+if _theme_name == "stanford_theme":
     html_theme = "stanford_theme"
-    html_theme_path = [stanford_theme.get_html_theme_path()]
-else:
+    html_theme_path = [sphinx_theme.get_html_theme_path("stanford-theme")]
+    html_theme_options = {
+        "collapse_navigation": False,
+        "display_version": True,
+    }
+elif _theme_name == "sphinx_rtd_theme":
     html_theme = "sphinx_rtd_theme"
     html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+    html_theme_options = {
+        "collapse_navigation": False,
+        "display_version": True,
+    }
+elif _theme_name == "sphinx_book_theme":
+    html_theme = "sphinx_book_theme"
+    html_theme_path = [sphinx_book_theme.get_html_theme_path()]
+    html_theme_options = {
+        "repository_url": "https://github.com/wenh06/fl-sim",
+        "use_repository_button": True,
+        "use_issues_button": True,
+        "use_edit_page_button": True,
+        "use_download_button": True,
+        "use_fullscreen_button": True,
+        "path_to_docs": "docs/source",
+        "repository_branch": "master",
+    }
+elif _theme_name == "pydata_sphinx_theme":
+    html_theme = "pydata_sphinx_theme"
+    html_theme_path = [pydata_sphinx_theme.get_html_theme_path()]
+    html_theme_options = {
+        "collapse_navigation": False,
+        "display_version": True,
+    }
+else:
+    raise ValueError(f"Unknown theme name: {_theme_name}")
 # htmlhelp_basename = "Recommonmarkdoc"
-
-html_theme_options = {
-    "collapse_navigation": False,
-    "display_version": True,
-}
 
 html_static_path = ["_static"]
 
@@ -95,3 +117,9 @@ html_css_files = [
 ]
 
 master_doc = "index"
+
+numfig = False
+
+linkcheck_ignore = [
+    r"https://doi.org/*",  # 418 Client Error
+]
