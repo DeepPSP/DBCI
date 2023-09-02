@@ -39,7 +39,6 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.intersphinx",
     "sphinx.ext.mathjax",
-    "recommonmark",
     # 'sphinx.ext.autosectionlabel',
     "sphinx_multiversion",
     # "numpydoc",
@@ -106,7 +105,6 @@ elif _theme_name == "pydata_sphinx_theme":
     }
 else:
     raise ValueError(f"Unknown theme name: {_theme_name}")
-# htmlhelp_basename = "Recommonmarkdoc"
 
 html_static_path = ["_static"]
 
