@@ -42,6 +42,7 @@ from ._diff_binom_confint import (
     list_difference_confidence_interval_methods,
 )
 from ._confint import ConfidenceInterval
+from ._applications import make_risk_report
 from .version import __version__
 
 
@@ -51,5 +52,6 @@ __all__ = [
     "compute_difference_confidence_interval",
     "list_difference_confidence_interval_methods",
     "ConfidenceInterval",
+    "make_risk_report",
     "__version__",
 ]
