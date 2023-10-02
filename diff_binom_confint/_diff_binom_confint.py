@@ -5,14 +5,13 @@ import warnings
 from typing import Union
 
 import numpy as np
-from scipy.stats import norm
-from scipy.optimize import brentq
 from deprecate_kwargs import deprecate_kwargs
 from deprecated import deprecated
+from scipy.optimize import brentq
+from scipy.stats import norm
 
-from ._confint import ConfidenceInterval, _SIDE_NAME_MAP, ConfidenceIntervalSides
-from ._utils import add_docstring, remove_parameters_returns_from_docstring, accelerator
-
+from ._confint import _SIDE_NAME_MAP, ConfidenceInterval, ConfidenceIntervalSides
+from ._utils import accelerator, add_docstring, remove_parameters_returns_from_docstring
 
 __all__ = [
     "compute_difference_confidence_interval",
@@ -74,15 +73,10 @@ def compute_difference_confidence_interval(
     """
 
     if confint_type not in _supported_types:
-        raise ValueError(
-            f"`method` should be one of `{_supported_types}`, "
-            f"but got `{confint_type}`"
-        )
+        raise ValueError(f"`method` should be one of `{_supported_types}`, " f"but got `{confint_type}`")
 
     if conf_level <= 0 or conf_level >= 1:
-        raise ValueError(
-            f"`conf_level` should be inside the interval (0, 1), but got `{conf_level}`"
-        )
+        raise ValueError(f"`conf_level` should be inside the interval (0, 1), but got `{conf_level}`")
 
     if n_positive > n_total:
         raise ValueError(
@@ -97,28 +91,20 @@ def compute_difference_confidence_interval(
         )
 
     if n_positive < 0:
-        raise ValueError(
-            f"`n_positive` should be non-negative, but got `n_positive={n_positive}`"
-        )
+        raise ValueError(f"`n_positive` should be non-negative, but got `n_positive={n_positive}`")
 
     if n_total <= 0:
         raise ValueError(f"`n_total` should be positive, but got `n_total={n_total}`")
 
     if ref_positive < 0:
-        raise ValueError(
-            f"`ref_positive` should be non-negative, but got `ref_positive={ref_positive}`"
-        )
+        raise ValueError(f"`ref_positive` should be non-negative, but got `ref_positive={ref_positive}`")
 
     if ref_total <= 0:
-        raise ValueError(
-            f"`ref_total` should be positive, but got `ref_total={ref_total}`"
-        )
+        raise ValueError(f"`ref_total` should be positive, but got `ref_total={ref_total}`")
 
     sides = str(sides).lower()
     if sides not in _SIDE_NAME_MAP:
-        raise ValueError(
-            f"`sides` should be one of `{list(_SIDE_NAME_MAP)}`, but got `{sides}`"
-        )
+        raise ValueError(f"`sides` should be one of `{list(_SIDE_NAME_MAP)}`, but got `{sides}`")
     else:
         sides = _SIDE_NAME_MAP[sides]
 
@@ -147,11 +133,7 @@ def compute_difference_confidence_interval(
     """,
     "append",
 )
-@add_docstring(
-    remove_parameters_returns_from_docstring(
-        compute_difference_confidence_interval.__doc__, parameters="clip"
-    )
-)
+@add_docstring(remove_parameters_returns_from_docstring(compute_difference_confidence_interval.__doc__, parameters="clip"))
 def _compute_difference_confidence_interval(
     n_positive: int,
     n_total: int,
@@ -221,9 +203,7 @@ def _compute_difference_confidence_interval(
             str(sides),
         )
     elif confint_type.lower() in ["wald", "wald-cc"]:
-        item = z * np.sqrt(
-            ratio * neg_ratio / n_total + ref_ratio * ref_neg_ratio / ref_total
-        )
+        item = z * np.sqrt(ratio * neg_ratio / n_total + ref_ratio * ref_neg_ratio / ref_total)
         if confint_type.lower() == "wald-cc":
             return ConfidenceInterval(
                 delta_ratio - item - 0.5 / n_total - 0.5 / ref_total,
@@ -247,10 +227,7 @@ def _compute_difference_confidence_interval(
         if confint_type.lower() == "haldane":
             psi = 0.5 * (ratio + ref_ratio)
         else:  # "jeffreys-perks"
-            psi = 0.5 * (
-                (n_positive + 0.5) / (n_total + 1)
-                + (ref_positive + 0.5) / (ref_total + 1)
-            )
+            psi = 0.5 * ((n_positive + 0.5) / (n_total + 1) + (ref_positive + 0.5) / (ref_total + 1))
         w = (
             np.sqrt(
                 u * (4 * psi * (1 - psi) - delta_ratio**2)
@@ -280,35 +257,23 @@ def _compute_difference_confidence_interval(
             # `uniroot` unstable for some cases (e.g. 10/10 vs 0/20)
             tol = 1e-6
             lower = uniroot(
-                lambda j: _mee_mn_score_func(
-                    j, ratio, ref_ratio, n_total, ref_total, lamb
-                )
-                - (1 - _conf_level),
+                lambda j: _mee_mn_score_func(j, ratio, ref_ratio, n_total, ref_total, lamb) - (1 - _conf_level),
                 -1 + tol,
                 delta_ratio - tol,
                 full_output=False,
             )
             upper = uniroot(
-                lambda j: _mee_mn_score_func(
-                    j, ratio, ref_ratio, n_total, ref_total, lamb
-                )
-                - (1 - _conf_level),
+                lambda j: _mee_mn_score_func(j, ratio, ref_ratio, n_total, ref_total, lamb) - (1 - _conf_level),
                 delta_ratio + tol,
                 1 - tol,
                 full_output=False,
             )
         else:  # failed in the case of n_positive == ref_positive == 0
-            itv = _mee_mn_lower_upper_bounds(
-                ratio, ref_ratio, n_total, ref_total, lamb, z
-            )
+            itv = _mee_mn_lower_upper_bounds(ratio, ref_ratio, n_total, ref_total, lamb, z)
             lower, upper = np.min(itv), np.max(itv)
-        return ConfidenceInterval(
-            lower, upper, delta_ratio, conf_level, confint_type.lower(), str(sides)
-        )
+        return ConfidenceInterval(lower, upper, delta_ratio, conf_level, confint_type.lower(), str(sides))
     elif confint_type.lower() == "true-profile":
-        itv = _true_profile_lower_upper_bounds(
-            n_positive, n_total, ref_positive, ref_total, z
-        )
+        itv = _true_profile_lower_upper_bounds(n_positive, n_total, ref_positive, ref_total, z)
         return ConfidenceInterval(
             np.min(itv),
             np.max(itv),
@@ -319,8 +284,7 @@ def _compute_difference_confidence_interval(
         )
     elif confint_type.lower() == "hauck-anderson":
         item = 1 / 2 / min(n_total, ref_total) + z * np.sqrt(
-            ratio * neg_ratio / (n_total - 1)
-            + ref_ratio * ref_neg_ratio / (ref_total - 1)
+            ratio * neg_ratio / (n_total - 1) + ref_ratio * ref_neg_ratio / (ref_total - 1)
         )
         return ConfidenceInterval(
             delta_ratio - item,
@@ -352,9 +316,7 @@ def _compute_difference_confidence_interval(
     elif confint_type.lower() in ["brown-li", "brown-li-jeffrey"]:
         ratio_1 = (n_positive + 0.5) / (n_total + 1)
         ratio_2 = (ref_positive + 0.5) / (ref_total + 1)
-        item = z * np.sqrt(
-            ratio_1 * (1 - ratio_1) / n_total + ratio_2 * (1 - ratio_2) / ref_total
-        )
+        item = z * np.sqrt(ratio_1 * (1 - ratio_1) / n_total + ratio_2 * (1 - ratio_2) / ref_total)
         return ConfidenceInterval(
             ratio_1 - ratio_2 - item,
             ratio_1 - ratio_2 + item,
@@ -379,9 +341,7 @@ def _compute_difference_confidence_interval(
         ).astuple()
         lower = weight * lower_mn + (1 - weight) * lower_bl
         upper = weight * upper_mn + (1 - weight) * upper_bl
-        return ConfidenceInterval(
-            lower, upper, delta_ratio, conf_level, confint_type.lower(), str(sides)
-        )
+        return ConfidenceInterval(lower, upper, delta_ratio, conf_level, confint_type.lower(), str(sides))
     elif confint_type.lower() == "exact":
         raise NotImplementedError(f"`method` `{confint_type}` is not implemented yet")
     elif confint_type.lower() == "mid-p":
@@ -399,8 +359,7 @@ def _compute_difference_confidence_interval(
     else:
         newline = "\n"
         raise ValueError(
-            f"""`method` `{confint_type}` is not supported, """
-            f"""choose one from {newline}{newline.join(_supported_types)}"""
+            f"""`method` `{confint_type}` is not supported, """ f"""choose one from {newline}{newline.join(_supported_types)}"""
         )
 
 
@@ -449,9 +408,7 @@ _type_aliases = {
 _method_aliases = _type_aliases
 
 
-@deprecated(
-    version="0.0.4", reason="Use `list_difference_confidence_interval_methods` instead."
-)
+@deprecated(version="0.0.4", reason="Use `list_difference_confidence_interval_methods` instead.")
 def list_difference_confidence_interval_types() -> None:
     print("\n".join(_supported_types))
 
@@ -473,9 +430,7 @@ def _mee_mn_score_func(
     return 2 * min(pnorm(var), 1 - pnorm(var))
 
 
-def _mee_mn_var_func(
-    j: float, ratio: float, ref_ratio: float, n_total: int, ref_total: int, lamb: float
-) -> float:
+def _mee_mn_var_func(j: float, ratio: float, ref_ratio: float, n_total: int, ref_total: int, lamb: float) -> float:
     theta = ref_total / n_total
     delta_ratio = ratio - ref_ratio
     a = a = 1 + theta
@@ -495,13 +450,7 @@ def _mee_mn_var_func(
     w = (np.pi + np.arccos(v / u**3)) / 3
     ratio_mle = 2 * u * np.cos(w) - tmp_b
     ref_ratio_mle = ratio_mle - j
-    var = np.sqrt(
-        lamb
-        * (
-            ratio_mle * (1 - ratio_mle) / n_total
-            + ref_ratio_mle * (1 - ref_ratio_mle) / ref_total
-        )
-    )
+    var = np.sqrt(lamb * (ratio_mle * (1 - ratio_mle) / n_total + ref_ratio_mle * (1 - ref_ratio_mle) / ref_total))
     var = (delta_ratio - j) / var
     return var
 
@@ -542,13 +491,7 @@ def _mee_mn_lower_upper_bounds(
         w = (np.pi + np.arccos(v / u3)) / 3
         ratio_mle = 2 * u * np.cos(w) - tmp_b
         ref_ratio_mle = ratio_mle - j
-        var = np.sqrt(
-            lamb
-            * (
-                ratio_mle * (1 - ratio_mle) / n_total
-                + ref_ratio_mle * (1 - ref_ratio_mle) / ref_total
-            )
-        )
+        var = np.sqrt(lamb * (ratio_mle * (1 - ratio_mle) / n_total + ref_ratio_mle * (1 - ref_ratio_mle) / ref_total))
         if var == 0:
             # https://github.com/DeepPSP/DBCI/issues/1
             var = np.finfo(np.float64).eps

@@ -12,11 +12,11 @@ except ModuleNotFoundError:
     njit = None
 
 from diff_binom_confint._utils import (
-    add_docstring,
-    remove_parameters_returns_from_docstring,
     Accelerator,
-    dummy_accelerator,
     accelerator,
+    add_docstring,
+    dummy_accelerator,
+    remove_parameters_returns_from_docstring,
 )
 
 

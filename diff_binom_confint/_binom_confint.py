@@ -4,14 +4,13 @@
 from typing import Union
 
 import numpy as np
-from scipy.stats import norm, beta, binom, ncx2
-from scipy.optimize import brentq
 from deprecate_kwargs import deprecate_kwargs
 from deprecated import deprecated
+from scipy.optimize import brentq
+from scipy.stats import beta, binom, ncx2, norm
 
-from ._confint import ConfidenceInterval, _SIDE_NAME_MAP, ConfidenceIntervalSides
+from ._confint import _SIDE_NAME_MAP, ConfidenceInterval, ConfidenceIntervalSides
 from ._utils import add_docstring, remove_parameters_returns_from_docstring
-
 
 __all__ = [
     "compute_confidence_interval",
@@ -74,15 +73,10 @@ def compute_confidence_interval(
     """
 
     if confint_type not in _supported_types:
-        raise ValueError(
-            f"`method` should be one of `{_supported_types}`, "
-            f"but got `{confint_type}`"
-        )
+        raise ValueError(f"`method` should be one of `{_supported_types}`, " f"but got `{confint_type}`")
 
     if conf_level <= 0 or conf_level >= 1:
-        raise ValueError(
-            f"`conf_level` should be inside the interval (0, 1), but got `{conf_level}`"
-        )
+        raise ValueError(f"`conf_level` should be inside the interval (0, 1), but got `{conf_level}`")
 
     if n_positive > n_total:
         raise ValueError(
@@ -91,24 +85,18 @@ def compute_confidence_interval(
         )
 
     if n_positive < 0:
-        raise ValueError(
-            f"`n_positive` should be non-negative, but got `n_positive={n_positive}`"
-        )
+        raise ValueError(f"`n_positive` should be non-negative, but got `n_positive={n_positive}`")
 
     if n_total <= 0:
         raise ValueError(f"`n_total` should be positive, but got `n_total={n_total}`")
 
     sides = str(sides).lower()
     if sides not in _SIDE_NAME_MAP:
-        raise ValueError(
-            f"`sides` should be one of `{list(_SIDE_NAME_MAP)}`, but got `{sides}`"
-        )
+        raise ValueError(f"`sides` should be one of `{list(_SIDE_NAME_MAP)}`, but got `{sides}`")
     else:
         sides = _SIDE_NAME_MAP[sides]
 
-    confint = _compute_confidence_interval(
-        n_positive, n_total, conf_level, confint_type, sides
-    )
+    confint = _compute_confidence_interval(n_positive, n_total, conf_level, confint_type, sides)
 
     if clip:
         confint.lower_bound = max(0, confint.lower_bound)
@@ -131,11 +119,7 @@ def compute_confidence_interval(
     """,
     "append",
 )
-@add_docstring(
-    remove_parameters_returns_from_docstring(
-        compute_confidence_interval.__doc__, parameters="clip"
-    )
-)
+@add_docstring(remove_parameters_returns_from_docstring(compute_confidence_interval.__doc__, parameters="clip"))
 def _compute_confidence_interval(
     n_positive: int,
     n_total: int,
@@ -206,9 +190,7 @@ def _compute_confidence_interval(
         print(margin, sides)
         return ConfidenceInterval(
             qbeta(margin, n_positive + 0.5, n_negative + 0.5) if n_positive > 0 else 0,
-            qbeta(1 - margin, n_positive + 0.5, n_negative + 0.5)
-            if n_negative > 0
-            else 1,
+            qbeta(1 - margin, n_positive + 0.5, n_negative + 0.5) if n_negative > 0 else 1,
             ratio,
             conf_level,
             confint_type.lower(),
@@ -286,33 +268,15 @@ def _compute_confidence_interval(
         else:
             a = ((n_positive + 1) / n_negative) ** 2
             b = 81 * (n_positive + 1) * n_negative - 9 * n_total - 8
-            c = (
-                -3
-                * z
-                * np.sqrt(
-                    9 * (n_positive + 1) * n_negative * (9 * n_total + 5 - z**2)
-                    + n_total
-                    + 1
-                )
-            )
+            c = -3 * z * np.sqrt(9 * (n_positive + 1) * n_negative * (9 * n_total + 5 - z**2) + n_total + 1)
             d = 81 * (n_positive + 1) ** 2 - 9 * (n_positive + 1) * (2 + z**2) + 1
             upper = 1 / (1 + a * ((b + c) / d) ** 3)
             a = (n_positive / (n_negative - 1)) ** 2
             b = 81 * n_positive * (n_negative - 1) - 9 * n_total - 8
-            c = (
-                3
-                * z
-                * np.sqrt(
-                    9 * n_positive * (n_negative - 1) * (9 * n_total + 5 - z**2)
-                    + n_total
-                    + 1
-                )
-            )
+            c = 3 * z * np.sqrt(9 * n_positive * (n_negative - 1) * (9 * n_total + 5 - z**2) + n_total + 1)
             d = 81 * n_positive**2 - 9 * n_positive * (2 + z**2) + 1
             lower = 1 / (1 + a * ((b + c) / d) ** 3)
-            return ConfidenceInterval(
-                lower, upper, ratio, conf_level, confint_type.lower(), str(sides)
-            )
+            return ConfidenceInterval(lower, upper, ratio, conf_level, confint_type.lower(), str(sides))
     elif confint_type.lower() == "witting":
         # stochastic, checked by seeting n_pos_tilde = n_positive
         # n_pos_tilde = n_positive
@@ -344,17 +308,11 @@ def _compute_confidence_interval(
                 1,
                 full_output=False,
             )
-        return ConfidenceInterval(
-            lower, upper, ratio, conf_level, confint_type.lower(), str(sides)
-        )
+        return ConfidenceInterval(lower, upper, ratio, conf_level, confint_type.lower(), str(sides))
     elif confint_type.lower() == "lik":
         tol = 1e-5
         lower, upper = 0, 1
-        if (
-            n_positive != 0
-            and tol < ratio
-            and _bin_dev(tol, n_positive, ratio, n_total, -z, tol) <= 0
-        ):
+        if n_positive != 0 and tol < ratio and _bin_dev(tol, n_positive, ratio, n_total, -z, tol) <= 0:
             lower = uniroot(
                 lambda y: _bin_dev(y, n_positive, ratio, n_total, -z, tol),
                 tol,
@@ -395,9 +353,7 @@ def _compute_confidence_interval(
                     1 - tol,
                     full_output=False,
                 )
-        return ConfidenceInterval(
-            lower, upper, ratio, conf_level, confint_type.lower(), str(sides)
-        )
+        return ConfidenceInterval(lower, upper, ratio, conf_level, confint_type.lower(), str(sides))
     elif confint_type.lower() == "blaker":
         # tol = np.sqrt(np.finfo(float).eps)
         tol = 1e-5
@@ -410,32 +366,19 @@ def _compute_confidence_interval(
             upper = qbeta(1 - margin, n_positive + 1, n_negative)
             while _acceptbin(n_positive, n_total, upper - tol) < 1 - _conf_level:
                 upper -= tol
-        return ConfidenceInterval(
-            lower, upper, ratio, conf_level, confint_type.lower(), str(sides)
-        )
+        return ConfidenceInterval(lower, upper, ratio, conf_level, confint_type.lower(), str(sides))
     elif confint_type.lower() in ["modified-wilson", "modified-newcombe"]:
         term1 = (n_positive + 0.5 * z**2) / (n_total + z**2)
-        term2 = (
-            z
-            * np.sqrt(n_total)
-            * np.sqrt(ratio * neg_ratio + z**2 / (4 * n_total))
-            / (n_total + z**2)
-        )
-        if (n_total <= 50 and n_positive in [1, 2]) or (
-            n_total >= 51 and n_positive in [1, 2, 3]
-        ):
+        term2 = z * np.sqrt(n_total) * np.sqrt(ratio * neg_ratio + z**2 / (4 * n_total)) / (n_total + z**2)
+        if (n_total <= 50 and n_positive in [1, 2]) or (n_total >= 51 and n_positive in [1, 2, 3]):
             lower = 0.5 * qchisq(margin, 2 * n_positive, 0) / n_total
         else:
             lower = max(0, term1 - term2)
-        if (n_total <= 50 and n_negative in [1, 2]) or (
-            n_total >= 51 and n_negative in [1, 2, 3]
-        ):
+        if (n_total <= 50 and n_negative in [1, 2]) or (n_total >= 51 and n_negative in [1, 2, 3]):
             upper = 0.5 * qchisq(margin, 2 * n_negative, 0) / n_total
         else:
             upper = min(1, term1 + term2)
-        return ConfidenceInterval(
-            lower, upper, ratio, conf_level, confint_type.lower(), str(sides)
-        )
+        return ConfidenceInterval(lower, upper, ratio, conf_level, confint_type.lower(), str(sides))
     elif confint_type.lower() == "modified-jeffreys":
         if n_negative == 0:
             lower = np.power(margin, 1 / n_total)
@@ -449,14 +392,11 @@ def _compute_confidence_interval(
             upper = 1
         else:
             upper = qbeta(1 - margin, n_positive + 0.5, n_negative + 0.5)
-        return ConfidenceInterval(
-            lower, upper, ratio, conf_level, confint_type.lower(), str(sides)
-        )
+        return ConfidenceInterval(lower, upper, ratio, conf_level, confint_type.lower(), str(sides))
     else:
         newline = "\n"
         raise ValueError(
-            f"""`method` `{confint_type}` is not supported, """
-            f"""choose one from {newline}{newline.join(_supported_types)}"""
+            f"""`method` `{confint_type}` is not supported, """ f"""choose one from {newline}{newline.join(_supported_types)}"""
         )
 
 
@@ -519,9 +459,7 @@ def _acceptbin(n_positive: int, n_total: int, prob: int) -> float:
     return min(a1, a2)
 
 
-def _bin_dev(
-    y: float, x: int, mu: float, wt: int, bound: float = 0.0, tol: float = 1e-5
-) -> float:
+def _bin_dev(y: float, x: int, mu: float, wt: int, bound: float = 0.0, tol: float = 1e-5) -> float:
     """Binomial deviance for `y`, `x`, `wt`."""
     ll_y = 0 if y in [0, 1] else dbinom_log(x, wt, y)
     ll_mu = 0 if mu in [0, 1] else dbinom_log(x, wt, mu)
@@ -547,6 +485,4 @@ def _pbinom_abscont(q: float, size: int, prob: float) -> float:
 
 
 def _qbinom_abscont(p: float, size: int, x: int) -> float:
-    return uniroot(
-        lambda prob: _pbinom_abscont(x, size, prob) - p, 0, 1, full_output=False
-    )
+    return uniroot(lambda prob: _pbinom_abscont(x, size, prob) - p, 0, 1, full_output=False)

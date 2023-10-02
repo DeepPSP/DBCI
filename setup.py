@@ -1,11 +1,11 @@
 """
 """
 
-import setuptools
 from pathlib import Path
 
-from diff_binom_confint import __version__
+import setuptools
 
+from diff_binom_confint import __version__
 
 cwd = Path(__file__).resolve().parent
 

@@ -7,7 +7,6 @@ import pytest
 
 from diff_binom_confint import make_risk_report
 
-
 _TEST_DATA_DIR = Path(__file__).parent / "test-data"
 _TMP_DIR = Path(__file__).parent / "tmp-make-risk-report"
 
@@ -64,9 +63,7 @@ def test_make_risk_report():
             target="WHOGrading",
             positive_class="WHOIV",
         )
-    with pytest.raises(
-        ValueError, match="Unable to automatically determine the positive class"
-    ):
+    with pytest.raises(ValueError, match="Unable to automatically determine the positive class"):
         make_risk_report(
             data_source=df_test,
             risk_name="Seizure",
@@ -79,9 +76,7 @@ def test_make_risk_report():
             target="HasSeizure",
             positive_class="是",
         )
-    with pytest.raises(
-        AssertionError, match="ref_classes should contain all the features"
-    ):
+    with pytest.raises(AssertionError, match="ref_classes should contain all the features"):
         make_risk_report(
             data_source=df_test,
             risk_name="Seizure",
@@ -92,9 +87,7 @@ def test_make_risk_report():
                 "ExtentOfResection": "全切",
             },
         )
-    with pytest.raises(
-        ValueError, match="ref class `xxx` not in the feature `WHOGrading`"
-    ):
+    with pytest.raises(ValueError, match="ref class `xxx` not in the feature `WHOGrading`"):
         make_risk_report(
             data_source=df_test,
             risk_name="Seizure",
@@ -108,9 +101,7 @@ def test_make_risk_report():
         )
 
     df_test["HasSeizure"] = df_test["HasSeizure"].map({"Yes": 1, "No": 0})
-    with pytest.warns(
-        RuntimeWarning, match="positive_class is None, automatically set to 1"
-    ):
+    with pytest.warns(RuntimeWarning, match="positive_class is None, automatically set to 1"):
         make_risk_report(
             data_source=df_test,
             risk_name="Seizure",

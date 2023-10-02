@@ -12,24 +12,22 @@ import pandas as pd
 from pytest import approx, raises, warns
 
 from diff_binom_confint import compute_difference_confidence_interval
+from diff_binom_confint._confint import ConfidenceInterval
 from diff_binom_confint._diff_binom_confint import (
-    _supported_methods,
+    _compute_difference_confidence_interval,
     _method_aliases,
     _stochastic_methods,
-    _compute_difference_confidence_interval,
-    list_difference_confidence_interval_types,
+    _supported_methods,
     list_difference_confidence_interval_methods,
+    list_difference_confidence_interval_types,
 )
-from diff_binom_confint._confint import ConfidenceInterval
-
 
 _TEST_DATA_DIR = Path(__file__).parent / "test-data"
 
 
 def test_load_data() -> List[pd.DataFrame]:
     test_file_pattern = (
-        "example-(?P<n_positive>[\\d]+)-(?P<n_total>[\\d]+)-vs-"
-        "(?P<ref_positive>[\\d]+)-(?P<ref_total>[\\d]+)\\.csv"
+        "example-(?P<n_positive>[\\d]+)-(?P<n_total>[\\d]+)-vs-" "(?P<ref_positive>[\\d]+)-(?P<ref_total>[\\d]+)\\.csv"
     )
     test_files = Path(_TEST_DATA_DIR).glob("*.csv")
     test_data = []
@@ -43,13 +41,9 @@ def test_load_data() -> List[pd.DataFrame]:
             df_data = pd.read_csv(file)
             for t1, t2 in _method_aliases.items():
                 if t1 in df_data["method"].values:
-                    df_data = pd.concat(
-                        [df_data, df_data[df_data["method"] == t1].assign(method=t2)]
-                    )
+                    df_data = pd.concat([df_data, df_data[df_data["method"] == t1].assign(method=t2)])
                 elif t2 in df_data["method"].values:
-                    df_data = pd.concat(
-                        [df_data, df_data[df_data["method"] == t2].assign(method=t1)]
-                    )
+                    df_data = pd.concat([df_data, df_data[df_data["method"] == t2].assign(method=t1)])
             test_data.append(
                 {
                     "n_positive": n_positive,
@@ -65,9 +59,7 @@ def test_load_data() -> List[pd.DataFrame]:
 
 def load_newcombee_data() -> dict:
     """ """
-    df_newcombee_data = pd.read_csv(
-        _TEST_DATA_DIR / "newcombee.csv", index_col=0, header=[0, 1]
-    )
+    df_newcombee_data = pd.read_csv(_TEST_DATA_DIR / "newcombee.csv", index_col=0, header=[0, 1])
     examples = defaultdict(dict)
     for k, v in df_newcombee_data.to_dict().items():
         example, bound = k
@@ -77,16 +69,13 @@ def load_newcombee_data() -> dict:
             else:
                 examples[example][method] = {bound: value}
     examples = dict(examples)
-    example_name_pattern = (
-        "(?P<n_positive>[\\d]+)/(?P<n_total>[\\d]+)-"
-        "(?P<ref_positive>[\\d]+)/(?P<ref_total>[\\d]+)"
-    )
+    example_name_pattern = "(?P<n_positive>[\\d]+)/(?P<n_total>[\\d]+)-" "(?P<ref_positive>[\\d]+)/(?P<ref_total>[\\d]+)"
 
     for k, v in examples.items():
         matched = re.match(example_name_pattern, k)
-        ratio_diff = int(matched["n_positive"]) / int(matched["n_total"]) - int(
-            matched["ref_positive"]
-        ) / int(matched["ref_total"])
+        ratio_diff = int(matched["n_positive"]) / int(matched["n_total"]) - int(matched["ref_positive"]) / int(
+            matched["ref_total"]
+        )
         examples[k] = {
             method: ConfidenceInterval(
                 bounds["lower_bound"],
@@ -104,10 +93,7 @@ def test_newcombee_data():
     """ """
     error_bound = 1e-4
     newcombee_data = load_newcombee_data()
-    example_name_pattern = (
-        "(?P<n_positive>[\\d]+)/(?P<n_total>[\\d]+)-"
-        "(?P<ref_positive>[\\d]+)/(?P<ref_total>[\\d]+)"
-    )
+    example_name_pattern = "(?P<n_positive>[\\d]+)/(?P<n_total>[\\d]+)-" "(?P<ref_positive>[\\d]+)/(?P<ref_total>[\\d]+)"
     for k, v in newcombee_data.items():
         print(f"Testing Newcombee data, example -- {k}")
         max_length = max([len(x) for x in v]) + 1
@@ -126,17 +112,13 @@ def test_newcombee_data():
             ).astuple()
             print(f"{method.ljust(max_length)}: [{lower:.2%}, {upper:.2%}]")
             if np.isnan(confint.lower_bound):
-                assert (
-                    lower < -1
-                ), f"For method {method}, unclipped lower bound should be < -1, but got {lower}"
+                assert lower < -1, f"For method {method}, unclipped lower bound should be < -1, but got {lower}"
             else:
                 assert lower == approx(
                     confint.lower_bound, abs=error_bound
                 ), f"For method {method}, lower bound should be {confint.lower_bound}, but got {lower}"
             if np.isnan(confint.upper_bound):
-                assert (
-                    upper > 1
-                ), f"For method {method}, unclipped upper bound should be > 1, but got {upper}"
+                assert upper > 1, f"For method {method}, unclipped upper bound should be > 1, but got {upper}"
             else:
                 assert upper == approx(
                     confint.upper_bound, abs=error_bound
@@ -164,13 +146,9 @@ def test_difference_confidence_interval():
     df_data = pd.read_csv(_TEST_DATA_DIR / "example-84-101-vs-89-105.csv")
     for t1, t2 in _method_aliases.items():
         if t1 in df_data["method"].values:
-            df_data = pd.concat(
-                [df_data, df_data[df_data["method"] == t1].assign(method=t2)]
-            )
+            df_data = pd.concat([df_data, df_data[df_data["method"] == t1].assign(method=t2)])
         elif t2 in df_data["method"].values:
-            df_data = pd.concat(
-                [df_data, df_data[df_data["method"] == t2].assign(method=t1)]
-            )
+            df_data = pd.concat([df_data, df_data[df_data["method"] == t2].assign(method=t1)])
     # assert set(_supported_methods) <= set(
     #     df_data["method"].values
     # ), f"""methods {set(_supported_methods) - set(df_data["method"].values)} has no test data"""
@@ -222,9 +200,7 @@ def test_difference_confidence_interval():
         assert lower == approx(
             row["lower_bound"], abs=error_bound
         ), f"For method {confint_method}, lower bound should be {row['lower_bound']:.2%}, but got {lower:.2%}"
-        assert (
-            upper == 1
-        ), f"For method {confint_method}, upper bound should be {1.0:.2%}, but got {upper:.2%}"
+        assert upper == 1, f"For method {confint_method}, upper bound should be {1.0:.2%}, but got {upper:.2%}"
 
     print("Testing right-sided confidence interval")
     for confint_method in _supported_methods:
@@ -241,9 +217,7 @@ def test_difference_confidence_interval():
         ).astuple()
         print(f"{confint_method.ljust(max_length)}: [{lower:.2%}, {upper:.2%}]")
         row = df_data[df_data["method"] == confint_method].iloc[0]
-        assert (
-            lower == -1
-        ), f"For method {confint_method}, lower bound should be {-1.0:.2%}, but got {lower:.2%}"
+        assert lower == -1, f"For method {confint_method}, lower bound should be {-1.0:.2%}, but got {lower:.2%}"
         assert upper == approx(
             row["upper_bound"], abs=error_bound
         ), f"For method {confint_method}, upper bound should be {row['upper_bound']:.2%}, but got {upper:.2%}"
@@ -258,13 +232,9 @@ def test_difference_confidence_interval_edge_case():
     df_data = pd.read_csv(_TEST_DATA_DIR / "example-10-10-vs-0-20.csv")
     for t1, t2 in _method_aliases.items():
         if t1 in df_data["method"].values:
-            df_data = pd.concat(
-                [df_data, df_data[df_data["method"] == t1].assign(method=t2)]
-            )
+            df_data = pd.concat([df_data, df_data[df_data["method"] == t1].assign(method=t2)])
         elif t2 in df_data["method"].values:
-            df_data = pd.concat(
-                [df_data, df_data[df_data["method"] == t2].assign(method=t1)]
-            )
+            df_data = pd.concat([df_data, df_data[df_data["method"] == t2].assign(method=t1)])
     # assert set(_supported_methods) <= set(
     #     df_data["method"].values
     # ), f"""methods {set(_supported_methods) - set(df_data["method"].values)} has no test data"""
@@ -290,9 +260,7 @@ def test_difference_confidence_interval_edge_case():
             clip=True,
         ).astuple()
         l_just_len = max_length - len("[clipped] ")
-        print(
-            f"[clipped] {confint_method.ljust(l_just_len)}: [{lower_clip:.2%}, {upper_clip:.2%}]"
-        )
+        print(f"[clipped] {confint_method.ljust(l_just_len)}: [{lower_clip:.2%}, {upper_clip:.2%}]")
 
         lower_noclip, upper_noclip = compute_difference_confidence_interval(
             n_positive,
@@ -303,9 +271,7 @@ def test_difference_confidence_interval_edge_case():
             clip=False,
         ).astuple()
         l_just_len = max_length
-        print(
-            f"{confint_method.ljust(l_just_len)}: [{lower_noclip:.2%}, {upper_noclip:.2%}]"
-        )
+        print(f"{confint_method.ljust(l_just_len)}: [{lower_noclip:.2%}, {upper_noclip:.2%}]")
 
         row = df_data[df_data["method"] == confint_method].iloc[0]
         assert (
@@ -320,9 +286,7 @@ def test_difference_confidence_interval_edge_case():
             ), f"For method {confint_method}, clipped upper bound should be 1, but got {upper_clip:.2%}"
         else:
             assert (
-                upper_noclip
-                == upper_clip
-                == approx(row["upper_bound"], abs=error_bound)
+                upper_noclip == upper_clip == approx(row["upper_bound"], abs=error_bound)
             ), f"For method {confint_method}, upper bound should be {row['upper_bound']:.2%}, but got {upper_noclip:.2%}"
 
     print("test_difference_confidence_interval_edge_case passed")
@@ -338,17 +302,11 @@ def test_list_difference_confidence_interval_methods():
 def test_errors():
     with raises(ValueError, match="`method` should be one of"):
         compute_difference_confidence_interval(1, 2, 1, 2, method="not-supported")
-    with raises(
-        ValueError, match="`conf_level` should be inside the interval \\(0, 1\\)"
-    ):
+    with raises(ValueError, match="`conf_level` should be inside the interval \\(0, 1\\)"):
         compute_difference_confidence_interval(1, 2, 1, 2, conf_level=0)
-    with raises(
-        ValueError, match="`n_positive` should be less than or equal to `n_total`"
-    ):
+    with raises(ValueError, match="`n_positive` should be less than or equal to `n_total`"):
         compute_difference_confidence_interval(2, 1, 1, 2)
-    with raises(
-        ValueError, match="`ref_positive` should be less than or equal to `ref_total`"
-    ):
+    with raises(ValueError, match="`ref_positive` should be less than or equal to `ref_total`"):
         compute_difference_confidence_interval(1, 2, 2, 1)
     with raises(ValueError, match="`n_positive` should be non-negative"):
         compute_difference_confidence_interval(-1, 2, 1, 2)
@@ -370,12 +328,8 @@ def test_errors():
         "wang",
         "pradhan-banerjee",
     ]:
-        with raises(
-            NotImplementedError, match=f"`method` `{method}` is not implemented yet"
-        ):
+        with raises(NotImplementedError, match=f"`method` `{method}` is not implemented yet"):
             _compute_difference_confidence_interval(1, 2, 1, 2, confint_type=method)
 
     with raises(ValueError, match="`method` `not-supported` is not supported"):
-        _compute_difference_confidence_interval(
-            1, 2, 1, 2, confint_type="not-supported"
-        )
+        _compute_difference_confidence_interval(1, 2, 1, 2, confint_type="not-supported")

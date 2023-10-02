@@ -1,12 +1,11 @@
 import warnings
 from pathlib import Path
-from typing import Optional, Sequence, Union, Dict, Tuple
+from typing import Dict, Optional, Sequence, Tuple, Union
 
 import pandas as pd
 
 from ._binom_confint import compute_confidence_interval
 from ._diff_binom_confint import compute_difference_confidence_interval
-
 
 __all__ = [
     "make_risk_report",
@@ -103,10 +102,7 @@ def make_risk_report(
     if positive_class is None:
         positive_class = [item for item in df[target].unique() if bool(item)]
         if len(positive_class) != 1:
-            raise ValueError(
-                "Unable to automatically determine the positive class, "
-                "please specify it manually."
-            )
+            raise ValueError("Unable to automatically determine the positive class, " "please specify it manually.")
         positive_class = positive_class[0]
         warnings.warn(
             f"positive_class is None, automatically set to `{positive_class}`",
@@ -122,9 +118,7 @@ def make_risk_report(
         ref_classes = {}
         for feature in features:
             ref_classes[feature] = df[feature].value_counts().index[0]
-    assert set(ref_classes) == set(
-        features
-    ), "ref_classes should contain all the features"
+    assert set(ref_classes) == set(features), "ref_classes should contain all the features"
     for feature, ref_cls in ref_classes.items():
         if ref_cls not in df[feature].unique():
             raise ValueError(f"ref class `{ref_cls}` not in the feature `{feature}`")
@@ -178,13 +172,8 @@ def make_risk_report(
         feature_classes[col].insert(0, ref_item)
 
     for col in features:
-        n_affected = {
-            item: df[df[col] == item].shape[0] for item in feature_classes[col]
-        }
-        n_positive = {
-            item: df[(df[col] == item) & (df[target] == positive_class)].shape[0]
-            for item in feature_classes[col]
-        }
+        n_affected = {item: df[df[col] == item].shape[0] for item in feature_classes[col]}
+        n_positive = {item: df[(df[col] == item) & (df[target] == positive_class)].shape[0] for item in feature_classes[col]}
         positive_target_risk = {}
         ref_item = ref_classes[col]
         for item in feature_classes[col]:
@@ -203,8 +192,7 @@ def make_risk_report(
                 }
                 continue
             positive_target_risk_diff[item] = {
-                "risk_difference": positive_target_risk[item]["risk"]
-                - positive_target_risk[ref_item]["risk"],
+                "risk_difference": positive_target_risk[item]["risk"] - positive_target_risk[ref_item]["risk"],
                 "confidence_interval": compute_difference_confidence_interval(
                     n_positive[item],
                     n_affected[item],
@@ -245,32 +233,20 @@ def make_risk_report(
                 f"{risk_name} Risk": {
                     "n": n_positive[item],
                     "percent": positive_target_risk[item]["risk"],
-                    "confidence_interval": positive_target_risk[item][
-                        "confidence_interval"
-                    ],
+                    "confidence_interval": positive_target_risk[item]["confidence_interval"],
                 },
                 f"{risk_name} Risk Difference": {
-                    "risk_difference": positive_target_risk_diff[item][
-                        "risk_difference"
-                    ]
-                    if item != ref_item
-                    else 0,
-                    "confidence_interval": positive_target_risk_diff[item][
-                        "confidence_interval"
-                    ]
+                    "risk_difference": positive_target_risk_diff[item]["risk_difference"] if item != ref_item else 0,
+                    "confidence_interval": positive_target_risk_diff[item]["confidence_interval"]
                     if item != ref_item
                     else (0, 0),
                 },
             }
             if is_split:
                 train_affected = df_train[df_train[col] == item].shape[0]
-                train_positive = df_train[
-                    (df_train[col] == item) & (df_train[target] == positive_class)
-                ].shape[0]
+                train_positive = df_train[(df_train[col] == item) & (df_train[target] == positive_class)].shape[0]
                 rows[-1].insert(4, f"{train_affected}/{train_positive}")
-                ret_dict[col][key]["Affected"][
-                    "t/v"
-                ] = f"{train_affected}/{train_positive}"
+                ret_dict[col][key]["Affected"]["t/v"] = f"{train_affected}/{train_positive}"
 
     df_risk_table = pd.DataFrame(rows)
 
@@ -279,17 +255,12 @@ def make_risk_report(
 
     if save_path is not None:
         df_risk_table.to_csv(save_path.with_suffix(".csv"), index=False, header=False)
-        df_risk_table.to_excel(
-            save_path.with_suffix(".xlsx"), index=False, header=False
-        )
+        df_risk_table.to_excel(save_path.with_suffix(".xlsx"), index=False, header=False)
 
     if return_type.lower() == "pd":
         return df_risk_table
     elif return_type.lower() == "latex":
-        rows = [
-            line.replace("%", r"\%")
-            for line in df_risk_table.to_latex(header=False, index=False).splitlines()
-        ]
+        rows = [line.replace("%", r"\%") for line in df_risk_table.to_latex(header=False, index=False).splitlines()]
         rows[0] = r"\begin{tabular}{@{\extracolsep{6pt}}lllllll@{}}"
         rows[
             2

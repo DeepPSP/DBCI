@@ -7,7 +7,6 @@ import numpy as np
 import pandas as pd
 from tqdm.auto import tqdm
 
-
 artifact_dir = os.environ.get("ARTIFACT_DIR", None)
 random_data_amount = int(os.environ.get("RANDOM_DATA_AMOUNT", 10000))
 random_data_range = int(os.environ.get("RANDOM_DATA_RANGE", 1000000))
@@ -22,9 +21,7 @@ def test_random():
 
     rng = np.random.default_rng()
     err_triplets = []
-    with tqdm(
-        range(random_data_amount), mininterval=1.0, total=random_data_amount
-    ) as pbar:
+    with tqdm(range(random_data_amount), mininterval=1.0, total=random_data_amount) as pbar:
         for _ in pbar:
             n_total = rng.integers(1, random_data_range)
             n_positive = rng.integers(0, n_total + 1)
@@ -37,18 +34,12 @@ def test_random():
                         method=method,
                     )
                 except Exception as e:
-                    err_triplets.append(
-                        (n_total, n_positive, method, e.__class__.__name__)
-                    )
+                    err_triplets.append((n_total, n_positive, method, e.__class__.__name__))
                     pbar.set_postfix_str(f"err count: {len(err_triplets)}")
 
     if artifact_dir is not None and len(err_triplets) > 0:
-        df_err = pd.DataFrame(
-            err_triplets, columns=["n_total", "n_positive", "method", "error"]
-        )
-        df_err.to_csv(
-            os.path.join(artifact_dir, "bci_random_data_errors.csv"), index=False
-        )
+        df_err = pd.DataFrame(err_triplets, columns=["n_total", "n_positive", "method", "error"])
+        df_err.to_csv(os.path.join(artifact_dir, "bci_random_data_errors.csv"), index=False)
 
 
 def test_dbci_random():
@@ -60,9 +51,7 @@ def test_dbci_random():
 
     np.random.default_rng()
     errors = []
-    with tqdm(
-        range(random_data_amount), mininterval=1.0, total=random_data_amount
-    ) as pbar:
+    with tqdm(range(random_data_amount), mininterval=1.0, total=random_data_amount) as pbar:
         for _ in pbar:
             n_total = np.random.randint(1, random_data_range)
             n_positive = np.random.randint(0, n_total + 1)
@@ -70,9 +59,7 @@ def test_dbci_random():
             ref_positive = np.random.randint(0, ref_total + 1)
             for method in _supported_methods:
                 try:
-                    compute_difference_confidence_interval(
-                        n_positive, n_total, ref_positive, ref_total, method=method
-                    )
+                    compute_difference_confidence_interval(n_positive, n_total, ref_positive, ref_total, method=method)
                 except Exception as e:
                     errors.append(
                         (
@@ -98,6 +85,4 @@ def test_dbci_random():
                 "error",
             ],
         )
-        df_errors.to_csv(
-            os.path.join(artifact_dir, "dbci_random_data_errors.csv"), index=False
-        )
+        df_errors.to_csv(os.path.join(artifact_dir, "dbci_random_data_errors.csv"), index=False)

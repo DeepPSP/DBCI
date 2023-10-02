@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Tuple
 
-
 __all__ = ["ConfidenceInterval"]
 
 

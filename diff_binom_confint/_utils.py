@@ -3,7 +3,7 @@
 
 import re
 import warnings
-from typing import Callable, Optional, Union, List
+from typing import Callable, List, Optional, Union
 
 try:
     from numba import njit
@@ -114,25 +114,18 @@ def remove_parameters_returns_from_docstring(
             parameters_indent = " " * line.index(parameters_indicator)
         if line.strip().startswith(returns_indicator):
             returns_indent = " " * line.index(returns_indicator)
-        if parameters_indent is not None and len(line.lstrip()) == len(line) - len(
-            parameters_indent
-        ):
+        if parameters_indent is not None and len(line.lstrip()) == len(line) - len(parameters_indent):
             if any([line.lstrip().startswith(p) for p in parameters]):
                 if start_idx is not None:
                     indices2remove.extend(list(range(start_idx, idx)))
                 start_idx = idx
             elif start_idx is not None:
-                if (
-                    line.lstrip().startswith(returns_indicator)
-                    and len(new_doc[idx - 1].strip()) == 0
-                ):
+                if line.lstrip().startswith(returns_indicator) and len(new_doc[idx - 1].strip()) == 0:
                     indices2remove.extend(list(range(start_idx, idx - 1)))
                 else:
                     indices2remove.extend(list(range(start_idx, idx)))
                 start_idx = None
-        if returns_indent is not None and len(line.lstrip()) == len(line) - len(
-            returns_indent
-        ):
+        if returns_indent is not None and len(line.lstrip()) == len(line) - len(returns_indent):
             if any([line.lstrip().startswith(p) for p in returns]):
                 if start_idx is not None:
                     indices2remove.extend(list(range(start_idx, idx)))
@@ -143,9 +136,7 @@ def remove_parameters_returns_from_docstring(
     if start_idx is not None:
         indices2remove(list(range(start_idx, len(new_doc))))
         new_doc.extend(["\n", parameters_indicator or returns_indicator])
-    new_doc = "\n".join(
-        [line for idx, line in enumerate(new_doc) if idx not in indices2remove]
-    )
+    new_doc = "\n".join([line for idx, line in enumerate(new_doc) if idx not in indices2remove])
     return new_doc
 
 
@@ -181,9 +172,7 @@ class Accelerator(object):
             self.accelerator = dummy_accelerator
         elif name.lower() == "numba":
             if njit is dummy_accelerator:
-                warnings.warn(
-                    "`numba` is not installed, dummy accelerator is used instead"
-                )
+                warnings.warn("`numba` is not installed, dummy accelerator is used instead")
             self.accelerator = njit
         # elif name.lower() == "taichi":
         #     if ti_kernel is dummy_accelerator:
