@@ -1,3 +1,4 @@
+import warnings
 from pathlib import Path
 from typing import Optional, Sequence, Union, Dict, Tuple
 
@@ -94,13 +95,25 @@ def make_risk_report(
 
     # check target, it should be in the columns and be binary
     if target not in df.columns:
-        raise ValueError(f"target {target} not in the columns")
+        raise ValueError(f"target `{target}` not in the columns")
     if len(df[target].unique()) != 2:
-        raise ValueError(f"target {target} is not binary")
+        raise ValueError(f"target `{target}` is not binary")
 
     # check positive_class, it should be in df[target].unique()
+    if positive_class is None:
+        positive_class = [item for item in df[target].unique() if bool(item)]
+        if len(positive_class) != 1:
+            raise ValueError(
+                "Unable to automatically determine the positive class, "
+                "please specify it manually."
+            )
+        positive_class = positive_class[0]
+        warnings.warn(
+            f"positive_class is None, automatically set to `{positive_class}`",
+            RuntimeWarning,
+        )
     if positive_class not in df[target].unique():
-        raise ValueError(f"positive_class {positive_class} not in the target column")
+        raise ValueError(f"positive_class `{positive_class}` not in the target column")
 
     features = df.columns.drop(target)
 
@@ -114,7 +127,7 @@ def make_risk_report(
     ), "ref_classes should contain all the features"
     for feature, ref_cls in ref_classes.items():
         if ref_cls not in df[feature].unique():
-            raise ValueError(f"ref_cls {ref_cls} not in the feature {feature}")
+            raise ValueError(f"ref class `{ref_cls}` not in the feature `{feature}`")
     ref_indicator = " (Ref.)"
 
     risk_name = risk_name or f"{positive_class} {target}"
