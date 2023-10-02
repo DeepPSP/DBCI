@@ -1,6 +1,18 @@
 """
+diff_binom_confint
+====================
+
+API documentation for the diff_binom_confint package.
+
+.. contents::
+    :depth: 2
+    :local:
+    :backlinks: top
+
+.. currentmodule:: diff_binom_confint
+
 compute_confidence_interval
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------------------
 
 Compute confidence interval for binomial proportion.
 
@@ -11,7 +23,7 @@ Compute confidence interval for binomial proportion.
     list_confidence_interval_methods
 
 compute_difference_confidence_interval
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------------------
 
 Compute confidence interval for difference of binomial proportions.
 
@@ -22,7 +34,7 @@ Compute confidence interval for difference of binomial proportions.
     list_difference_confidence_interval_methods
 
 ConfidenceInterval
-~~~~~~~~~~~~~~~~~~
+---------------------------------------------
 
 Dataclass for holding meta information of a confidence interval.
 
@@ -30,6 +42,16 @@ Dataclass for holding meta information of a confidence interval.
     :toctree: generated/
 
     ConfidenceInterval
+
+High-level Functions
+---------------------------------------------
+
+High-level functions.
+
+.. autosummary::
+    :toctree: generated/
+
+    make_risk_report
 
 """
 

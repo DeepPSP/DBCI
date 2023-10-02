@@ -30,12 +30,12 @@ def make_risk_report(
 
     Parameters
     ----------
-    data_source : pd.DataFrame or tuple of two pd.DataFrame
+    data_source : pandas.DataFrame or tuple of two pandas.DataFrame
         Data source table.
         Each column should be categorical (including binary).
         Numerical columns should be discretized by the users themselves
         before passing to this function.
-        If is a tuple of two pd.DataFrame, the two tables are
+        If is a tuple of two :class:`~pandas.DataFrame` s, the two tables are
         train/validation tables, respectively.
     target : str
         Target column name.
@@ -78,7 +78,7 @@ def make_risk_report(
 
     Returns
     -------
-    Union[pd.DataFrame, dict, str]
+    Union[pandas.DataFrame, dict, str]
         Report table.
 
     """
