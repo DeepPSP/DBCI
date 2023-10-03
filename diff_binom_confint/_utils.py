@@ -74,7 +74,7 @@ def remove_parameters_returns_from_docstring(
     returns_indicator: str = "Returns",
 ) -> str:
     """Remove parameters and/or returns from docstring,
-    which is of the format of numpydoc
+    which is of the format of numpydoc.
 
     Parameters
     ----------
@@ -111,7 +111,9 @@ def remove_parameters_returns_from_docstring(
     indices2remove = []
     for idx, line in enumerate(new_doc):
         if line.strip().startswith(parameters_indicator):
-            parameters_indent = " " * line.index(parameters_indicator)
+            candidate = " " * line.index(parameters_indicator)
+            if idx < len(new_doc) - 1 and new_doc[idx + 1] == candidate + "-" * len(parameters_indicator):
+                parameters_indent = candidate
         if line.strip().startswith(returns_indicator):
             returns_indent = " " * line.index(returns_indicator)
         if parameters_indent is not None and len(line.lstrip()) == len(line) - len(parameters_indent):
@@ -136,7 +138,15 @@ def remove_parameters_returns_from_docstring(
     if start_idx is not None:
         indices2remove(list(range(start_idx, len(new_doc))))
         new_doc.extend(["\n", parameters_indicator or returns_indicator])
-    new_doc = "\n".join([line for idx, line in enumerate(new_doc) if idx not in indices2remove])
+    new_doc = [line for idx, line in enumerate(new_doc) if idx not in indices2remove]
+    # remove trailing empty lines
+    idx = max(idx for idx, line in enumerate(new_doc) if len(line.strip()) > 0)
+    new_doc = new_doc[: idx + 1]
+    if returns_indent is not None:
+        if new_doc[-1] == returns_indent + "-" * len(returns_indicator) and new_doc[-2] == returns_indent + returns_indicator:
+            new_doc.extend([returns_indent + "None"])
+    new_doc.extend(["", returns_indent])
+    new_doc = "\n".join(new_doc)
     return new_doc
 
 

@@ -48,7 +48,6 @@ def test_load_data() -> List[pd.DataFrame]:
 
 
 def test_confidence_interval():
-    """ """
     n_positive, n_total = 84, 101
     df_data = pd.read_csv(_TEST_DATA_DIR / "example-84-101.csv")
     for t1, t2 in _method_aliases.items():

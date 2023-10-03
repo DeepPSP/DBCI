@@ -61,21 +61,22 @@ def test_remove_parameters_returns_from_docstring():
     )
     assert (
         new_docstring
-        == """
-    remove parameters and/or returns from docstring,
-    which is of the format of numpydoc
+        == """Remove parameters and/or returns from docstring,
+    which is of the format of numpydoc.
 
     Parameters
     ----------
-    doc: str,
-        docstring to be processed
-    parameters: str or list of str, default None,
-        parameters to be removed
-    returns: str or list of str, default None,
-        returned values to be removed
+    doc : str
+        The docstring to be processed.
+    parameters : str or list of str, default None
+        Parameters to be removed.
+    returns : str or list of str, default None
+        Returned values to be removed.
 
     Returns
     -------
+    None
+
     """
     )
 
