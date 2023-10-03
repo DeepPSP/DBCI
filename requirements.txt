@@ -1,6 +1,7 @@
 numpy
 pandas
 openpyxl
+tabulate
 scipy
 deprecate-kwargs
 Deprecated
