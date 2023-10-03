@@ -5,5 +5,6 @@ tabulate
 scipy
 deprecate-kwargs
 Deprecated
+Jinja2
 dataclasses  # Python 3.6 only
 typing-extensions  # Python 3.6 only

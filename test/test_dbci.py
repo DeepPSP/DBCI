@@ -58,7 +58,6 @@ def test_load_data() -> List[pd.DataFrame]:
 
 
 def load_newcombee_data() -> dict:
-    """ """
     df_newcombee_data = pd.read_csv(_TEST_DATA_DIR / "newcombee.csv", index_col=0, header=[0, 1])
     examples = defaultdict(dict)
     for k, v in df_newcombee_data.to_dict().items():
@@ -90,7 +89,6 @@ def load_newcombee_data() -> dict:
 
 
 def test_newcombee_data():
-    """ """
     error_bound = 1e-4
     newcombee_data = load_newcombee_data()
     example_name_pattern = "(?P<n_positive>[\\d]+)/(?P<n_total>[\\d]+)-" "(?P<ref_positive>[\\d]+)/(?P<ref_total>[\\d]+)"
@@ -226,7 +224,6 @@ def test_difference_confidence_interval():
 
 
 def test_difference_confidence_interval_edge_case():
-    """ """
     n_positive, n_total = 10, 10
     ref_positive, ref_total = 0, 20
     df_data = pd.read_csv(_TEST_DATA_DIR / "example-10-10-vs-0-20.csv")

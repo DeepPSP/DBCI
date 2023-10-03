@@ -58,10 +58,10 @@ def compute_confidence_interval(
     sides : str or int, default "two-sided"
         Sides of the confidence interval, should be one of
 
-            - "two-sided" (aliases "2-sided", "two_sided", "2_sided", "2-sides",
-              "two_sides", "two-sides", "2_sides", "ts", "t", "two", "2", 2),
-            - "left-sided" (aliases "left_sided", "left", "ls", "l"),
-            - "right-sided" (aliases "right_sided", "right", "rs", "r"),
+        - "two-sided" (aliases "2-sided", "two_sided", "2_sided", "2-sides",
+          "two_sides", "two-sides", "2_sides", "ts", "t", "two", "2", 2),
+        - "left-sided" (aliases "left_sided", "left", "ls", "l"),
+        - "right-sided" (aliases "right_sided", "right", "rs", "r"),
 
         case insensitive.
 

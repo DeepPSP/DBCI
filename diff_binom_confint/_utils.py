@@ -24,23 +24,24 @@ __all__ = [
 
 
 def add_docstring(doc: str, mode: str = "replace") -> Callable:
-    """
-    decorator to add docstring to a function or a class
+    """Decorator to add docstring to a function or a class.
 
     Parameters
     ----------
-    doc: str,
-        the docstring to be added
-    mode: str, default "replace",
-        the mode of the docstring,
-        can be "replace", "append" or "prepend",
-        case insensitive
+    doc : str
+        The docstring to be added.
+    mode : str, default "replace"
+        The mode of the docstring,
+        can be "replace", "append" or "prepend", case insensitive.
+
+    Returns
+    -------
+    callable
+        The function or class with docstring modified.
 
     """
 
     def decorator(func_or_cls: Callable) -> Callable:
-        """ """
-
         pattern = "(\\s^\n){1,}"
         if mode.lower() == "replace":
             func_or_cls.__doc__ = doc
@@ -72,27 +73,26 @@ def remove_parameters_returns_from_docstring(
     parameters_indicator: str = "Parameters",
     returns_indicator: str = "Returns",
 ) -> str:
-    """
-    remove parameters and/or returns from docstring,
+    """Remove parameters and/or returns from docstring,
     which is of the format of numpydoc
 
     Parameters
     ----------
-    doc: str,
-        docstring to be processed
-    parameters: str or list of str, default None,
-        parameters to be removed
-    returns: str or list of str, default None,
-        returned values to be removed
-    parameters_indicator: str, default "Parameters",
-        the indicator of the parameters section
-    returns_indicator: str, default "Returns",
-        the indicator of the returns section
+    doc : str
+        The docstring to be processed.
+    parameters : str or list of str, default None
+        Parameters to be removed.
+    returns : str or list of str, default None
+        Returned values to be removed.
+    parameters_indicator : str, default "Parameters"
+        The indicator of the parameters section.
+    returns_indicator : str, default "Returns"
+        The indicator of the returns section.
 
     Returns
     -------
-    new_doc: str,
-        the processed docstring
+    new_doc : str
+        The processed docstring.
 
     """
     if parameters is None:

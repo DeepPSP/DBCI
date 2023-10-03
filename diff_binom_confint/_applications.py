@@ -102,7 +102,7 @@ def make_risk_report(
     if positive_class is None:
         positive_class = [item for item in df[target].unique() if bool(item)]
         if len(positive_class) != 1:
-            raise ValueError("Unable to automatically determine the positive class, " "please specify it manually.")
+            raise ValueError("Unable to automatically determine the positive class, please specify it manually.")
         positive_class = positive_class[0]
         warnings.warn(
             f"positive_class is None, automatically set to `{positive_class}`",
