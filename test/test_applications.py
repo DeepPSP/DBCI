@@ -101,7 +101,7 @@ def test_make_risk_report():
         )
 
     df_test["HasSeizure"] = df_test["HasSeizure"].map({"Yes": 1, "No": 0})
-    with pytest.warns(RuntimeWarning, match="positive_class is None, automatically set to 1"):
+    with pytest.warns(RuntimeWarning, match="positive_class is None, automatically set to `1`"):
         make_risk_report(
             data_source=df_test,
             risk_name="Seizure",
