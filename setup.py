@@ -14,12 +14,13 @@ long_description = (cwd / "README.md").read_text(encoding="utf-8")
 extras = {}
 extras["test"] = [
     "pandas",
-    "black==22.3.0",
+    "black==22.8.0",
     "flake8",
     "tqdm",
     "pytest",
     "pytest-xdist",
     "pytest-cov",
+    "pre-commit",
 ]
 extras["acc"] = ["numba"]
 extras["dev"] = extras["test"] + extras["acc"]
@@ -52,6 +53,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
