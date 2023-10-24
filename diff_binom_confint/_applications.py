@@ -84,14 +84,9 @@ def make_risk_report(
     """
     if isinstance(data_source, pd.DataFrame):
         df = data_source.copy()
-        # convert all cells to str
-        df = df.astype(str)
         is_split = False
     else:
         df_train, df_val = data_source
-        # convert all cells to str
-        df_train = df_train.astype(str)
-        df_val = df_val.astype(str)
         df = pd.concat(data_source, ignore_index=True)
         is_split = True
     # fillna with "NA"
@@ -102,6 +97,18 @@ def make_risk_report(
         raise ValueError(f"target `{target}` not in the columns")
     if len(df[target].unique()) != 2:
         raise ValueError(f"target `{target}` is not binary")
+
+    # convert all columns other than target to str type
+    for col in df.columns:
+        if col != target:
+            df[col] = df[col].astype(str)
+    if is_split:
+        for col in df_train.columns:
+            if col != target:
+                df_train[col] = df_train[col].astype(str)
+        for col in df_val.columns:
+            if col != target:
+                df_val[col] = df_val[col].astype(str)
 
     # check positive_class, it should be in df[target].unique()
     if positive_class is None:
