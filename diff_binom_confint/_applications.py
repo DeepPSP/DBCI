@@ -84,9 +84,14 @@ def make_risk_report(
     """
     if isinstance(data_source, pd.DataFrame):
         df = data_source.copy()
+        # convert all cells to str
+        df = df.astype(str)
         is_split = False
     else:
         df_train, df_val = data_source
+        # convert all cells to str
+        df_train = df_train.astype(str)
+        df_val = df_val.astype(str)
         df = pd.concat(data_source, ignore_index=True)
         is_split = True
     # fillna with "NA"
@@ -114,11 +119,17 @@ def make_risk_report(
     features = df.columns.drop(target)
 
     # check ref_classes
+    default_ref_classes = {}
+    for feature in features:
+        default_ref_classes[feature] = df[feature].value_counts().index[0]
     if ref_classes is None:
-        ref_classes = {}
-        for feature in features:
-            ref_classes[feature] = df[feature].value_counts().index[0]
-    assert set(ref_classes) == set(features), "ref_classes should contain all the features"
+        ref_classes = default_ref_classes
+    else:
+        _ref_classes = default_ref_classes.copy()
+        _ref_classes.update(ref_classes)
+        ref_classes = _ref_classes.copy()
+        del _ref_classes
+    assert set(ref_classes) <= set(features), "ref_classes should be a subset of features"
     for feature, ref_cls in ref_classes.items():
         if ref_cls not in df[feature].unique():
             raise ValueError(f"ref class `{ref_cls}` not in the feature `{feature}`")
@@ -224,7 +235,7 @@ def make_risk_report(
                     else "REF",
                 ]
             )
-            key = item + (ref_indicator if item == ref_item else "")
+            key = str(item) + (ref_indicator if item == ref_item else "")
             ret_dict[col][key] = {
                 "Affected": {
                     "n": n_affected[item],
