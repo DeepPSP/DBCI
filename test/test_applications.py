@@ -76,7 +76,7 @@ def test_make_risk_report():
             target="HasSeizure",
             positive_class="是",
         )
-    with pytest.raises(AssertionError, match="ref_classes should contain all the features"):
+    with pytest.raises(AssertionError, match="ref_classes should be a subset of the features"):
         make_risk_report(
             data_source=df_test,
             risk_name="Seizure",
@@ -84,7 +84,7 @@ def test_make_risk_report():
             positive_class="Yes",
             ref_classes={
                 "Sex": "Male",
-                "ExtentOfResection": "全切",
+                "xxx": "全切",
             },
         )
     with pytest.raises(ValueError, match="ref class `xxx` not in the feature `WHOGrading`"):

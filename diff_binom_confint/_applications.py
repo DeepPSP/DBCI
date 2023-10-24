@@ -129,7 +129,7 @@ def make_risk_report(
         _ref_classes.update(ref_classes)
         ref_classes = _ref_classes.copy()
         del _ref_classes
-    assert set(ref_classes) <= set(features), "ref_classes should be a subset of features"
+    assert set(ref_classes) <= set(features), "ref_classes should be a subset of the features"
     for feature, ref_cls in ref_classes.items():
         if ref_cls not in df[feature].unique():
             raise ValueError(f"ref class `{ref_cls}` not in the feature `{feature}`")
