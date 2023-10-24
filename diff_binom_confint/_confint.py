@@ -1,9 +1,11 @@
 """
 """
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from enum import Enum
-from typing import Tuple
+from typing import Optional, Tuple
+
+import pandas as pd
 
 __all__ = ["ConfidenceInterval"]
 
@@ -82,6 +84,36 @@ class ConfidenceInterval:
 
     def astuple(self) -> Tuple[float, float]:
         return (self.lower_bound, self.upper_bound)
+
+    def asdict(self) -> dict:
+        return asdict(self)
+
+    def astable(self, to: Optional[str] = None) -> str:
+        """Return the confidence interval as a pandas DataFrame."""
+        table = pd.DataFrame(
+            {
+                "Estimate": [self.estimate],
+                "Lower Bound": [self.lower_bound],
+                "Upper Bound": [self.upper_bound],
+                "Confidence Level": [self.level],
+                "Method": [self.method],
+                "Sides": [self.sides],
+            }
+        )
+        if to is None:
+            return table
+        elif to in ["latex", "latex_raw"]:
+            return table.to_latex(index=False, escape=False)
+        elif to in ["html"]:
+            return table.to_html(index=False)
+        elif to in ["markdown", "md"]:
+            return table.to_markdown(index=False)
+        elif to in ["string"]:
+            return table.to_string(index=False)
+        elif to in ["json"]:
+            return table.to_json(orient="records")
+        else:
+            raise ValueError(f"Unsupported format `{to}`")
 
     def __repr__(self) -> str:
         return f"({round(self.lower_bound, 5):.5f}, {round(self.upper_bound, 5):.5f})"
