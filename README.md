@@ -13,6 +13,8 @@ Computation of confidence intervals for binomial proportions and for difference 
 
 \[[GitHub Pages](https://deeppsp.github.io/DBCI/)\]  \[[Read the Docs](http://dbci.readthedocs.io/)\]
 
+:rocket: **NEW** :rocket: **Streamlit** support! See [here](https://diff-binom-confint.streamlit.app/) for an app deployed on [Streamlit Community Cloud](https://share.streamlit.io/).
+
 ## Installation
 
 Run
@@ -117,6 +119,27 @@ confint = compute_difference_confidence_interval(
 | agresti-min                 | :x:                |
 | wang                        | :x:                |
 | pradhan-banerjee            | :x:                |
+
+</details>
+
+## Creating report
+
+One can use the `make_risk_report` function to create a report of the confidence intervals for difference of binomial proportions.
+
+```python
+from diff_binom_confint import make_risk_report
+
+# df_train and df_test are pandas.DataFrame providing the data
+table = make_risk_report((df_train, df_test), target = "binary_target")
+# or if df_data is a pandas.DataFrame containing both training and testing data
+table = make_risk_report(df_data, target = "binary_target")
+```
+For more details, see corresponding documenation. The produced table is similar to the following:
+
+<details>
+<summary>Click to view!</summary>
+
+![risk report](docs/source/_static/images/risk-report-example.png)
 
 </details>
 
