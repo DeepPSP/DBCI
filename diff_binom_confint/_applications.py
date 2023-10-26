@@ -155,9 +155,9 @@ def make_risk_report(
                 "",
                 "Affected",
                 "",
-                f"{risk_name} Risk (95% CI)",
+                f"{risk_name} Risk ({str(int(conf_level * 100))}% CI)",
                 "",
-                f"{risk_name} Risk Difference (95% CI)",
+                f"{risk_name} Risk Difference ({str(int(conf_level * 100))}% CI)",
             ],
             ["", "", "n", "%", "n", "%", ""],
         ]
@@ -283,7 +283,7 @@ def make_risk_report(
         rows[
             2
         ] = r"\multicolumn{2}{l}{Feature} & \multicolumn{affected_cols}{l}{Affected} & \multicolumn{2}{l}{risk_name Risk ($95\%$ CI)} & risk_name Risk Difference  ($95\%$ CI) \\ \cline{1-2}\cline{3-4}\cline{5-6}\cline{7-7}"
-        rows[2].replace("risk_name", risk_name)
+        rows[2].replace("risk_name", risk_name).replace("95", str(int(conf_level * 100)))
         if is_split:
             rows[2].replace("affected_cols", "3")
         else:
