@@ -86,7 +86,7 @@ elif _theme_name == "sphinx_book_theme":
     html_theme = "sphinx_book_theme"
     html_theme_path = [sphinx_book_theme.get_html_theme_path()]
     html_theme_options = {
-        "repository_url": "https://github.com/wenh06/fl-sim",
+        "repository_url": "https://github.com/DeepPSP/DBCI",
         "use_repository_button": True,
         "use_issues_button": True,
         "use_edit_page_button": True,
