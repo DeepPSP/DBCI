@@ -28,6 +28,47 @@ def convert_df(df):
 st.title("Binomial Confidence Intervals")
 
 
+# set session states
+if "current_compute" not in st.session_state:
+    st.session_state.current_compute = None
+
+
+def do_computation():
+    if st.session_state.current_compute is None:
+        # do nothing
+        return
+
+    # compute the confidence interval
+    if st.session_state.current_compute == "ci":
+        st.markdown(
+            compute_confidence_interval(
+                n_total=st.session_state.n_total,
+                n_positive=st.session_state.n_positive,
+                method=st.session_state.method,
+                conf_level=st.session_state.conf_level,
+                sides=st.session_state.sides,
+                clip=st.session_state.clip,
+            ).astable(to="markdown")
+        )
+        return
+
+    # compute the difference confidence interval
+    if st.session_state.current_compute == "diff_ci":
+        st.markdown(
+            compute_difference_confidence_interval(
+                n_total=st.session_state.n_total,
+                n_positive=st.session_state.n_positive,
+                ref_total=st.session_state.n_total_ref,
+                ref_positive=st.session_state.n_positive_ref,
+                method=st.session_state.diff_method,
+                conf_level=st.session_state.conf_level,
+                sides=st.session_state.sides,
+                clip=st.session_state.clip,
+            ).astable(to="markdown")
+        )
+        return
+
+
 # show the version number on the sidebar
 
 st.sidebar.markdown(f"version: {__version__}")
@@ -41,12 +82,14 @@ method = st.sidebar.selectbox(
     options=_supported_methods,
     index=0,
     key="method",
+    # on_change=do_computation,
 )
 diff_method = st.sidebar.selectbox(
     label="Difference Method",
     options=_supported_diff_methods,
     index=0,
     key="diff_method",
+    # on_change=do_computation,
 )
 # set confidence level
 conf_level = st.sidebar.slider(
@@ -56,6 +99,7 @@ conf_level = st.sidebar.slider(
     value=0.95,
     step=0.001,
     key="conf_level",
+    # on_change=do_computation,
 )
 # select left- or right- or two-sided
 sides = st.sidebar.selectbox(
@@ -63,12 +107,14 @@ sides = st.sidebar.selectbox(
     options=["left", "right", "two"],
     index=2,
     key="sides",
+    # on_change=do_computation,
 )
 # toggle to clip or not
 clip = st.sidebar.toggle(
     label="Clip the confidence interval to [0, 1]",
     value=True,
     key="clip",
+    # on_change=do_computation,
 )
 
 tab_compute, tab_report = st.tabs(["🖩 Compute", "📋 Report"])
@@ -122,6 +168,7 @@ with tab_compute:
     if button:
         st.header("Output")
         st.subheader("Confidence Interval")
+        st.session_state.current_compute = "ci"
         st.markdown(
             compute_confidence_interval(
                 n_total=n_total,
@@ -135,6 +182,7 @@ with tab_compute:
     if diff_button:
         st.header("Output")
         st.subheader("Difference Confidence Interval")
+        st.session_state.current_compute = "diff_ci"
         st.markdown(
             compute_difference_confidence_interval(
                 n_total=n_total,
@@ -150,6 +198,7 @@ with tab_compute:
 
 with tab_report:
     st.header("Risk Report")
+    st.session_state.current_compute = None
     st.markdown(
         "The risk report is a summary table of the confidence intervals. "
         "The user should convert each continuous column to a categorical column themselves in the uploaded data."
