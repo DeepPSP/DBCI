@@ -134,11 +134,14 @@ with tab_compute:
         key="n_total",
     )
     # input the number of positives
+    tmp_value = st.session_state.get("n_positive", "min")
+    if isinstance(tmp_value, int) and tmp_value > n_total:
+        tmp_value = n_total
     n_positive = st.number_input(
         label="Number of positives",
         min_value=0,
         max_value=n_total,
-        value="min",
+        value=tmp_value,
         step=1,
         key="n_positive",
     )
@@ -152,11 +155,14 @@ with tab_compute:
         key="n_total_ref",
     )
     # input the number of positives for the reference group
+    tmp_value = st.session_state.get("n_positive_ref", "min")
+    if isinstance(tmp_value, int) and tmp_value > n_total_ref:
+        tmp_value = n_total_ref
     n_positive_ref = st.number_input(
         label="Number of positives for the reference group",
         min_value=0,
         max_value=n_total_ref,
-        value="min",
+        value=tmp_value,
         step=1,
         key="n_positive_ref",
     )
@@ -214,26 +220,26 @@ with tab_report:
 
     target = st.text_input(
         label="Target column name (required)",
-        value="",
+        value=str(st.session_state.get("target", "")),
         max_chars=100,
         key="target",
     )
     positive_class = st.text_input(
         label="Positive class (optional)",
-        value="",
+        value=str(st.session_state.get("positive_class", "")),
         max_chars=100,
         key="positive_class",
     )
     ref_classes = st.text_input(
         # TODO: replace with tags input
         label="Reference classes, each of the form `feature:ref_class`, separated by comma (optional)",
-        value="",
+        value=str(st.session_state.get("ref_classes", "")),
         max_chars=100,
         key="ref_classes",
     )
     risk_name = st.text_input(
         label="Risk name (optional)",
-        value="",
+        value=str(st.session_state.get("risk_name", "")),
         max_chars=100,
         key="risk_name",
     )
