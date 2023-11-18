@@ -122,56 +122,80 @@ tab_compute, tab_report = st.tabs(["🖩 Compute", "📋 Report"])
 with tab_compute:
     # input on the tab_compute page
 
+    warning_msg = ""
+
     st.header("Input")
+    with st.form(key="input_form"):
+        # input the number of trials
+        n_total = st.number_input(
+            label="Number of trials",
+            min_value=1,
+            max_value=None,
+            value=10,
+            step=1,
+            key="n_total",
+        )
+        # input the number of positives
+        tmp_value = st.session_state.get("n_positive", "min")
+        warned = False
+        if isinstance(tmp_value, int) and tmp_value > n_total:
+            warning_msg += f"Number of positives reset (from {tmp_value}) to number of trials: {n_total}\n"
+            warned = True
+            tmp_value = n_total
+        n_positive = st.number_input(
+            label="Number of positives",
+            min_value=0,
+            # max_value=n_total,
+            value=tmp_value,
+            step=1,
+            key="n_positive",
+        )
+        if n_positive > n_total:
+            if not warned:
+                warning_msg += f"Number of positives reset (from {n_positive}) to number of trials: {n_total}\n"
+            n_positive = n_total
+        # input the number of trials for the reference group
+        n_total_ref = st.number_input(
+            label="Number of trials for the reference group",
+            min_value=1,
+            max_value=None,
+            value=10,
+            step=1,
+            key="n_total_ref",
+        )
+        # input the number of positives for the reference group
+        tmp_value = st.session_state.get("n_positive_ref", "min")
+        warned = False
+        if isinstance(tmp_value, int) and tmp_value > n_total_ref:
+            warning_msg += (
+                f"Number of positives for the reference group reset (from {tmp_value}) "
+                f"to number of trials for the reference group: {n_total_ref}\n"
+            )
+            warned = True
+            tmp_value = n_total_ref
+        n_positive_ref = st.number_input(
+            label="Number of positives for the reference group",
+            min_value=0,
+            # max_value=n_total_ref,
+            value=tmp_value,
+            step=1,
+            key="n_positive_ref",
+        )
+        if n_positive_ref > n_total_ref:
+            if not warned:
+                warning_msg += (
+                    f"Number of positives for the reference group reset (from {n_positive_ref}) "
+                    f"to number of trials for the reference group: {n_total_ref}\n"
+                )
+            n_positive_ref = n_total_ref
 
-    # input the number of trials
-    n_total = st.number_input(
-        label="Number of trials",
-        min_value=1,
-        max_value=None,
-        value=10,
-        step=1,
-        key="n_total",
-    )
-    # input the number of positives
-    tmp_value = st.session_state.get("n_positive", "min")
-    if isinstance(tmp_value, int) and tmp_value > n_total:
-        tmp_value = n_total
-    n_positive = st.number_input(
-        label="Number of positives",
-        min_value=0,
-        max_value=n_total,
-        value=tmp_value,
-        step=1,
-        key="n_positive",
-    )
-    # input the number of trials for the reference group
-    n_total_ref = st.number_input(
-        label="Number of trials for the reference group",
-        min_value=1,
-        max_value=None,
-        value=10,
-        step=1,
-        key="n_total_ref",
-    )
-    # input the number of positives for the reference group
-    tmp_value = st.session_state.get("n_positive_ref", "min")
-    if isinstance(tmp_value, int) and tmp_value > n_total_ref:
-        tmp_value = n_total_ref
-    n_positive_ref = st.number_input(
-        label="Number of positives for the reference group",
-        min_value=0,
-        max_value=n_total_ref,
-        value=tmp_value,
-        step=1,
-        key="n_positive_ref",
-    )
-
-    # compute the confidence interval
-    button = st.button(label="Compute CI", key="button")
-    diff_button = st.button(label="Compute Difference CI", key="diff_button")
+        # compute the confidence interval
+        button = st.form_submit_button(label="Compute CI")
+        diff_button = st.form_submit_button(label="Compute Difference CI")
 
     if button:
+        if warning_msg != "":
+            st.warning(warning_msg)
         st.header("Output")
         st.subheader("Confidence Interval")
         st.session_state.current_compute = "ci"
@@ -186,6 +210,8 @@ with tab_compute:
             ).astable(to="markdown")
         )
     if diff_button:
+        if warning_msg != "":
+            st.warning(warning_msg)
         st.header("Output")
         st.subheader("Difference Confidence Interval")
         st.session_state.current_compute = "diff_ci"
