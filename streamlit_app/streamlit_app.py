@@ -19,10 +19,10 @@ st.set_page_config(
 )
 
 
-@st.cache_data
-def convert_df(df):
-    # IMPORTANT: Cache the conversion to prevent computation on every rerun
-    return df.to_csv().encode("utf-8")
+# @st.cache_data
+# def convert_df(df):
+#     # IMPORTANT: Cache the conversion to prevent computation on every rerun
+#     return df.to_csv().encode("utf-8")
 
 
 st.title("Binomial Confidence Intervals")
@@ -244,33 +244,34 @@ with tab_report:
         accept_multiple_files=False,
     )
 
-    target = st.text_input(
-        label="Target column name (required)",
-        value=str(st.session_state.get("target", "")),
-        max_chars=100,
-        key="target",
-    )
-    positive_class = st.text_input(
-        label="Positive class (optional)",
-        value=str(st.session_state.get("positive_class", "")),
-        max_chars=100,
-        key="positive_class",
-    )
-    ref_classes = st.text_input(
-        # TODO: replace with tags input
-        label="Reference classes, each of the form `feature:ref_class`, separated by comma (optional)",
-        value=str(st.session_state.get("ref_classes", "")),
-        max_chars=100,
-        key="ref_classes",
-    )
-    risk_name = st.text_input(
-        label="Risk name (optional)",
-        value=str(st.session_state.get("risk_name", "")),
-        max_chars=100,
-        key="risk_name",
-    )
+    with st.form(key="report_form"):
+        target = st.text_input(
+            label="Target column name (required)",
+            value=str(st.session_state.get("target", "")),
+            max_chars=100,
+            key="target",
+        )
+        positive_class = st.text_input(
+            label="Positive class (optional)",
+            value=str(st.session_state.get("positive_class", "")),
+            max_chars=100,
+            key="positive_class",
+        )
+        ref_classes = st.text_input(
+            # TODO: replace with tags input
+            label="Reference classes, each of the form `feature:ref_class`, separated by comma (optional)",
+            value=str(st.session_state.get("ref_classes", "")),
+            max_chars=100,
+            key="ref_classes",
+        )
+        risk_name = st.text_input(
+            label="Risk name (optional)",
+            value=str(st.session_state.get("risk_name", "")),
+            max_chars=100,
+            key="risk_name",
+        )
 
-    make_report_button = st.button(label="Make Report", key="make_report_button")
+        make_report_button = st.form_submit_button(label="Make Report")
 
     if make_report_button:
         if uploaded_file is None:
@@ -311,16 +312,17 @@ with tab_report:
             st.error(e)
             st.stop()
         # show the report
-        st.table(report_table)
+        # st.table(report_table)
+        st.dataframe(report_table, hide_index=True)
 
-        # provide the download link
-        csv = convert_df(report_table)
-        st.download_button(
-            label="Download the report as CSV",
-            data=csv,
-            file_name="risk_report.csv",
-            mime="text/csv",
-        )
+        # # provide the download link
+        # csv = convert_df(report_table)
+        # st.download_button(
+        #     label="Download the report as CSV",
+        #     data=csv,
+        #     file_name="risk_report.csv",
+        #     mime="text/csv",
+        # )
 
 # command to run:
 # nohup streamlit run streamlit_app.py --server.port 8502 > .logs/streamlit_app.log 2>&1 & echo $! > .logs/streamlit_app.pid
