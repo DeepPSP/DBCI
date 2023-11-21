@@ -117,7 +117,7 @@ clip = st.sidebar.toggle(
     # on_change=do_computation,
 )
 
-tab_compute, tab_report = st.tabs(["🖩 Compute", "📋 Report"])
+tab_compute, tab_report = st.tabs(["🧮 Compute", "📋 Report"])
 
 with tab_compute:
     # input on the tab_compute page
