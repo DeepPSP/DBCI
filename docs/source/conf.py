@@ -42,6 +42,7 @@ extensions = [
     "sphinx_multiversion",
     # "numpydoc",
     "sphinxemoji.sphinxemoji",
+    "sphinx_emoji_favicon",
 ]
 
 intersphinx_mapping = {
@@ -116,6 +117,8 @@ html_css_files = [
 master_doc = "index"
 
 numfig = False
+
+emoji_favicon = ":abaque:"
 
 linkcheck_ignore = [
     r"https://doi.org/*",  # 418 Client Error
