@@ -14,13 +14,11 @@ long_description = (cwd / "README.md").read_text(encoding="utf-8")
 extras = {}
 extras["test"] = [
     "pandas",
-    "black==22.8.0",
-    "flake8",
+    "pre-commit",
     "tqdm",
     "pytest",
     "pytest-xdist",
     "pytest-cov",
-    "pre-commit",
 ]
 extras["acc"] = ["numba"]
 extras["dev"] = extras["test"] + extras["acc"]
