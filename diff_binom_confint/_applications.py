@@ -26,7 +26,7 @@ def make_risk_report(
     return_type: str = "pd",
     **kwargs,
 ) -> Union[pd.DataFrame, dict, str]:
-    """Make risk report for binomial confidence interval.
+    """Make risk report for binomial confidence intervals.
 
     Parameters
     ----------
