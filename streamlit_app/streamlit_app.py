@@ -125,7 +125,7 @@ with tab_compute:
     warning_msg = ""
 
     st.header("Input")
-    with st.form(key="input_form"):
+    with st.form(key="input_form", border=False):
         # input the number of trials
         n_total = st.number_input(
             label="Number of trials",
@@ -244,7 +244,7 @@ with tab_report:
         accept_multiple_files=False,
     )
 
-    with st.form(key="report_form"):
+    with st.form(key="report_form", border=False):
         target = st.text_input(
             label="Target column name (required)",
             value=str(st.session_state.get("target", "")),
