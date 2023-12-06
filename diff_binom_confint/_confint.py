@@ -113,7 +113,7 @@ class ConfidenceInterval:
         elif to in ["json"]:
             return table.to_json(orient="records")
         else:
-            raise ValueError(f"Unsupported format `{to}`")
+            raise ValueError(f"Unsupported format {repr(to)}")
 
     def __repr__(self) -> str:
         return f"({round(self.lower_bound, 5):.5f}, {round(self.upper_bound, 5):.5f})"

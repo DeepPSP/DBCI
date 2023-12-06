@@ -325,8 +325,8 @@ def test_errors():
         "wang",
         "pradhan-banerjee",
     ]:
-        with raises(NotImplementedError, match=f"`method` `{method}` is not implemented yet"):
+        with raises(NotImplementedError, match=f"method {repr(method)} is not implemented yet"):
             _compute_difference_confidence_interval(1, 2, 1, 2, confint_type=method)
 
-    with raises(ValueError, match="`method` `not-supported` is not supported"):
+    with raises(ValueError, match=f"method {repr('not-supported')} is not supported"):
         _compute_difference_confidence_interval(1, 2, 1, 2, confint_type="not-supported")

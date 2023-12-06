@@ -190,5 +190,5 @@ def test_errors():
         compute_confidence_interval(0, 0)
     with raises(ValueError, match="`sides` should be one of"):
         compute_confidence_interval(1, 2, sides="3-sided")
-    with raises(ValueError, match="`method` `not-supported` is not supported"):
+    with raises(ValueError, match=f"method {repr('not-supported')} is not supported"):
         _compute_confidence_interval(1, 2, confint_type="not-supported")

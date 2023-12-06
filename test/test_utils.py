@@ -45,7 +45,7 @@ def test_add_docstring():
     assert func.__doc__ == "This is a docstring.\nTrailing docstring."
     func(1, 2)
 
-    with pytest.raises(ValueError, match="`mode` \042.+\042 is not supported"):
+    with pytest.raises(ValueError, match=f"mode {repr('not-supported')} is not supported"):
 
         @add_docstring("Trailing docstring.", mode="not-supported")
         def func(a, b):
@@ -133,5 +133,5 @@ def test_accelerator():
     if njit is not None:
         assert acc_time < no_acc_time / 5
 
-    with pytest.raises(ValueError, match="Accelerator `taichi` is not supported"):
+    with pytest.raises(ValueError, match=f"Accelerator {repr('taichi')} is not supported"):
         acc.set_accelerator("taichi")
