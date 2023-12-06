@@ -73,10 +73,10 @@ def compute_difference_confidence_interval(
     """
 
     if confint_type not in _supported_types:
-        raise ValueError(f"`method` should be one of `{_supported_types}`, " f"but got `{confint_type}`")
+        raise ValueError(f"`method` should be one of {repr(_supported_types)}, but got {repr(confint_type)}")
 
     if conf_level <= 0 or conf_level >= 1:
-        raise ValueError(f"`conf_level` should be inside the interval (0, 1), but got `{conf_level}`")
+        raise ValueError(f"`conf_level` should be inside the interval (0, 1), but got {repr(conf_level)}")
 
     if n_positive > n_total:
         raise ValueError(
@@ -104,7 +104,7 @@ def compute_difference_confidence_interval(
 
     sides = str(sides).lower()
     if sides not in _SIDE_NAME_MAP:
-        raise ValueError(f"`sides` should be one of `{list(_SIDE_NAME_MAP)}`, but got `{sides}`")
+        raise ValueError(f"`sides` should be one of {repr(list(_SIDE_NAME_MAP))}, but got {repr(sides)}")
     else:
         sides = _SIDE_NAME_MAP[sides]
 
@@ -343,23 +343,24 @@ def _compute_difference_confidence_interval(
         upper = weight * upper_mn + (1 - weight) * upper_bl
         return ConfidenceInterval(lower, upper, delta_ratio, conf_level, confint_type.lower(), str(sides))
     elif confint_type.lower() == "exact":
-        raise NotImplementedError(f"`method` `{confint_type}` is not implemented yet")
+        raise NotImplementedError(f"method {repr(confint_type)} is not implemented yet")
     elif confint_type.lower() == "mid-p":
-        raise NotImplementedError(f"`method` `{confint_type}` is not implemented yet")
+        raise NotImplementedError(f"method {repr(confint_type)} is not implemented yet")
     elif confint_type.lower() == "santner-snell":
-        raise NotImplementedError(f"`method` `{confint_type}` is not implemented yet")
+        raise NotImplementedError(f"method {repr(confint_type)} is not implemented yet")
     elif confint_type.lower() == "chan-zhang":
-        raise NotImplementedError(f"`method` `{confint_type}` is not implemented yet")
+        raise NotImplementedError(f"method {repr(confint_type)} is not implemented yet")
     elif confint_type.lower() == "agresti-min":
-        raise NotImplementedError(f"`method` `{confint_type}` is not implemented yet")
+        raise NotImplementedError(f"method {repr(confint_type)} is not implemented yet")
     elif confint_type.lower() == "wang":
-        raise NotImplementedError(f"`method` `{confint_type}` is not implemented yet")
+        raise NotImplementedError(f"method {repr(confint_type)} is not implemented yet")
     elif confint_type.lower() == "pradhan-banerjee":
-        raise NotImplementedError(f"`method` `{confint_type}` is not implemented yet")
+        raise NotImplementedError(f"method {repr(confint_type)} is not implemented yet")
     else:
         newline = "\n"
         raise ValueError(
-            f"""`method` `{confint_type}` is not supported, """ f"""choose one from {newline}{newline.join(_supported_types)}"""
+            f"""method {repr(confint_type)} is not supported, """
+            f"""choose one from {newline}{newline.join(_supported_types)}"""
         )
 
 

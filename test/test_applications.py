@@ -49,14 +49,14 @@ def test_make_risk_report():
         elif return_type in ("latex", "md", "markdown", "html"):
             assert isinstance(report, str)
 
-    with pytest.raises(ValueError, match="target `xxx` not in the columns"):
+    with pytest.raises(ValueError, match=f"target {repr('xxx')} not in the columns"):
         make_risk_report(
             data_source=df_test,
             risk_name="Seizure",
             target="xxx",
             positive_class="Yes",
         )
-    with pytest.raises(ValueError, match="target `WHOGrading` is not binary"):
+    with pytest.raises(ValueError, match=f"target {repr('WHOGrading')} is not binary"):
         make_risk_report(
             data_source=df_test,
             risk_name="Seizure",
@@ -69,7 +69,7 @@ def test_make_risk_report():
             risk_name="Seizure",
             target="HasSeizure",
         )
-    with pytest.raises(ValueError, match="positive_class `是` not in the target column"):
+    with pytest.raises(ValueError, match=f"positive_class {repr('是')} not in the target column"):
         make_risk_report(
             data_source=df_test,
             risk_name="Seizure",
@@ -87,7 +87,7 @@ def test_make_risk_report():
                 "xxx": "全切",
             },
         )
-    with pytest.raises(ValueError, match="ref class `xxx` not in the feature `WHOGrading`"):
+    with pytest.raises(ValueError, match=f"ref class {repr('xxx')} not in the feature {repr('WHOGrading')}"):
         make_risk_report(
             data_source=df_test,
             risk_name="Seizure",
@@ -101,7 +101,7 @@ def test_make_risk_report():
         )
 
     df_test["HasSeizure"] = df_test["HasSeizure"].map({"Yes": 1, "No": 0})
-    with pytest.warns(RuntimeWarning, match="positive_class is None, automatically set to `1`"):
+    with pytest.warns(RuntimeWarning, match=f"positive_class is None, automatically set to {repr(1)}"):
         make_risk_report(
             data_source=df_test,
             risk_name="Seizure",

@@ -94,9 +94,9 @@ def make_risk_report(
 
     # check target, it should be in the columns and be binary
     if target not in df.columns:
-        raise ValueError(f"target `{target}` not in the columns")
+        raise ValueError(f"target {repr(target)} not in the columns")
     if len(df[target].unique()) != 2:
-        raise ValueError(f"target `{target}` is not binary")
+        raise ValueError(f"target {repr(target)} is not binary")
 
     # convert all columns other than target to str type
     for col in df.columns:
@@ -117,11 +117,11 @@ def make_risk_report(
             raise ValueError("Unable to automatically determine the positive class, please specify it manually.")
         positive_class = positive_class[0]
         warnings.warn(
-            f"positive_class is None, automatically set to `{positive_class}`",
+            f"positive_class is None, automatically set to {repr(positive_class)}",
             RuntimeWarning,
         )
     if positive_class not in df[target].unique():
-        raise ValueError(f"positive_class `{positive_class}` not in the target column")
+        raise ValueError(f"positive_class {repr(positive_class)} not in the target column")
 
     features = df.columns.drop(target)
 
@@ -139,7 +139,7 @@ def make_risk_report(
     assert set(ref_classes) <= set(features), "ref_classes should be a subset of the features"
     for feature, ref_cls in ref_classes.items():
         if ref_cls not in df[feature].unique():
-            raise ValueError(f"ref class `{ref_cls}` not in the feature `{feature}`")
+            raise ValueError(f"ref class {repr(ref_cls)} not in the feature {repr(feature)}")
     ref_indicator = " (Ref.)"
 
     risk_name = risk_name or f"{positive_class} {target}"

@@ -60,7 +60,7 @@ def add_docstring(doc: str, mode: str = "replace") -> Callable:
             new_lines = max(0, new_lines) * "\n"
             func_or_cls.__doc__ = doc + new_lines + func_or_cls.__doc__
         else:
-            raise ValueError(f"`mode` \042{mode}\042 is not supported")
+            raise ValueError(f"mode {repr(mode)} is not supported")
         return func_or_cls
 
     return decorator
@@ -191,7 +191,7 @@ class Accelerator(object):
         #         )
         #     self.accelerator = ti_kernel
         else:
-            raise ValueError(f"Accelerator `{name}` is not supported")
+            raise ValueError(f"Accelerator {repr(name)} is not supported")
 
 
 accelerator = Accelerator()
