@@ -73,26 +73,25 @@ def compute_confidence_interval(
     """
 
     if confint_type not in _supported_types:
-        raise ValueError(f"`method` should be one of {repr(_supported_types)}, but got {repr(confint_type)}")
+        raise ValueError(f"method should be one of {repr(_supported_types)}, but got {repr(confint_type)}")
 
     if conf_level <= 0 or conf_level >= 1:
-        raise ValueError(f"`conf_level` should be inside the interval (0, 1), but got {repr(conf_level)}")
+        raise ValueError(f"conf_level should be inside the interval (0, 1), but got {repr(conf_level)}")
 
     if n_positive > n_total:
         raise ValueError(
-            f"`n_positive` should be less than or equal to `n_total`, "
-            f"but got `n_positive={n_positive}` and `n_total={n_total}`"
+            f"n_positive should be less than or equal to n_total, " f"but got n_positive={n_positive} and n_total={n_total}"
         )
 
     if n_positive < 0:
-        raise ValueError(f"`n_positive` should be non-negative, but got `n_positive={n_positive}`")
+        raise ValueError(f"n_positive should be non-negative, but got n_positive={n_positive}")
 
     if n_total <= 0:
-        raise ValueError(f"`n_total` should be positive, but got `n_total={n_total}`")
+        raise ValueError(f"n_total should be positive, but got n_total={n_total}")
 
     sides = str(sides).lower()
     if sides not in _SIDE_NAME_MAP:
-        raise ValueError(f"`sides` should be one of {repr(list(_SIDE_NAME_MAP))}, but got {repr(sides)}")
+        raise ValueError(f"sides should be one of {repr(list(_SIDE_NAME_MAP))}, but got {repr(sides)}")
     else:
         sides = _SIDE_NAME_MAP[sides]
 

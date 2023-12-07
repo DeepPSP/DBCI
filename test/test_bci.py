@@ -81,10 +81,10 @@ def test_confidence_interval():
         row = df_data[df_data["method"] == confint_method].iloc[0]
         assert lower == approx(
             row["lower_bound"], abs=error_bound
-        ), f"for {confint_method}, lower bound should be {row['lower_bound']:.2%}, but got {lower:.2%}"
+        ), f"for {repr(confint_method)}, lower bound should be {row['lower_bound']:.2%}, but got {lower:.2%}"
         assert upper == approx(
             row["upper_bound"], abs=error_bound
-        ), f"for {confint_method}, upper bound should be {row['upper_bound']:.2%}, but got {upper:.2%}"
+        ), f"for {repr(confint_method)}, upper bound should be {row['upper_bound']:.2%}, but got {upper:.2%}"
 
     print("Testing left-sided confidence interval")
     for confint_method in _supported_methods:
@@ -101,8 +101,8 @@ def test_confidence_interval():
         row = df_data[df_data["method"] == confint_method].iloc[0]
         assert lower == approx(
             row["lower_bound"], abs=error_bound
-        ), f"for {confint_method}, lower bound should be {row['lower_bound']:.2%}, but got {lower:.2%}"
-        assert upper == 1, f"for {confint_method}, upper bound should be {1.0:.2%}, but got {upper:.2%}"
+        ), f"for {repr(confint_method)}, lower bound should be {row['lower_bound']:.2%}, but got {lower:.2%}"
+        assert upper == 1, f"for {repr(confint_method)}, upper bound should be {1.0:.2%}, but got {upper:.2%}"
 
     print("Testing right-sided confidence interval")
     for confint_method in _supported_methods:
@@ -117,10 +117,10 @@ def test_confidence_interval():
         ).astuple()
         print(f"{confint_method.ljust(max_length)}: [{lower:.2%}, {upper:.2%}]")
         row = df_data[df_data["method"] == confint_method].iloc[0]
-        assert lower == 0, f"for {confint_method}, lower bound should be {0.0:.2%}, but got {lower:.2%}"
+        assert lower == 0, f"for {repr(confint_method)}, lower bound should be {0.0:.2%}, but got {lower:.2%}"
         assert upper == approx(
             row["upper_bound"], abs=error_bound
-        ), f"for {confint_method}, upper bound should be {row['upper_bound']:.2%}, but got {upper:.2%}"
+        ), f"for {repr(confint_method)}, upper bound should be {row['upper_bound']:.2%}, but got {upper:.2%}"
 
     # "witting" is not tested in the above, since no test data is available
     lower, upper = compute_confidence_interval(
@@ -130,7 +130,7 @@ def test_confidence_interval():
         method="witting",
         sides="left",
     ).astuple()
-    assert upper == 1, f"for `witting`, upper bound should be {1.0:.2%}, but got {upper:.2%}"
+    assert upper == 1, f"for method witting, upper bound should be {1.0:.2%}, but got {upper:.2%}"
     lower, upper = compute_confidence_interval(
         n_positive,
         n_total,
@@ -138,7 +138,7 @@ def test_confidence_interval():
         method="witting",
         sides="right",
     ).astuple()
-    assert lower == 0, f"for `witting`, lower bound should be {0.0:.2%}, but got {lower:.2%}"
+    assert lower == 0, f"for method witting, lower bound should be {0.0:.2%}, but got {lower:.2%}"
 
     # several edge cases are not covered in the loop
     # TODO add assertions for these edge cases
@@ -178,17 +178,17 @@ def test_list_confidence_interval_methods():
 
 
 def test_errors():
-    with raises(ValueError, match="`method` should be one of"):
+    with raises(ValueError, match="method should be one of"):
         compute_confidence_interval(1, 2, method="not-supported")
-    with raises(ValueError, match="`conf_level` should be inside the interval \\(0, 1\\)"):
+    with raises(ValueError, match="conf_level should be inside the interval \\(0, 1\\)"):
         compute_confidence_interval(1, 2, conf_level=0)
-    with raises(ValueError, match="`n_positive` should be less than or equal to `n_total`"):
+    with raises(ValueError, match="n_positive should be less than or equal to n_total"):
         compute_confidence_interval(2, 1)
-    with raises(ValueError, match="`n_positive` should be non-negative"):
+    with raises(ValueError, match="n_positive should be non-negative"):
         compute_confidence_interval(-1, 1)
-    with raises(ValueError, match="`n_total` should be positive"):
+    with raises(ValueError, match="n_total should be positive"):
         compute_confidence_interval(0, 0)
-    with raises(ValueError, match="`sides` should be one of"):
+    with raises(ValueError, match="sides should be one of"):
         compute_confidence_interval(1, 2, sides="3-sided")
     with raises(ValueError, match=f"method {repr('not-supported')} is not supported"):
         _compute_confidence_interval(1, 2, confint_type="not-supported")

@@ -182,7 +182,7 @@ class Accelerator(object):
             self.accelerator = dummy_accelerator
         elif name.lower() == "numba":
             if njit is dummy_accelerator:
-                warnings.warn("`numba` is not installed, dummy accelerator is used instead")
+                warnings.warn("numba is not installed, dummy accelerator is used instead")
             self.accelerator = njit
         # elif name.lower() == "taichi":
         #     if ti_kernel is dummy_accelerator:

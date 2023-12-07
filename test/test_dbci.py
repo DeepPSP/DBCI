@@ -110,22 +110,21 @@ def test_newcombee_data():
             ).astuple()
             print(f"{method.ljust(max_length)}: [{lower:.2%}, {upper:.2%}]")
             if np.isnan(confint.lower_bound):
-                assert lower < -1, f"For method {method}, unclipped lower bound should be < -1, but got {lower}"
+                assert lower < -1, f"for method {repr(method)}, unclipped lower bound should be < -1, but got {lower}"
             else:
                 assert lower == approx(
                     confint.lower_bound, abs=error_bound
-                ), f"For method {method}, lower bound should be {confint.lower_bound}, but got {lower}"
+                ), f"for method {repr(method)}, lower bound should be {confint.lower_bound}, but got {lower}"
             if np.isnan(confint.upper_bound):
-                assert upper > 1, f"For method {method}, unclipped upper bound should be > 1, but got {upper}"
+                assert upper > 1, f"for method {repr(method)}, unclipped upper bound should be > 1, but got {upper}"
             else:
                 assert upper == approx(
                     confint.upper_bound, abs=error_bound
-                ), f"For method {method}, upper bound should be {confint.upper_bound}, but got {upper}"
+                ), f"for method {repr(method)}, upper bound should be {confint.upper_bound}, but got {upper}"
 
 
 def test_difference_confidence_interval():
-    """
-    A CASE STUDY: EXAMPLE FROM AN HIV CLINICAL TRIAL
+    """A CASE STUDY: EXAMPLE FROM AN HIV CLINICAL TRIAL
 
     Consider Week 48 results of the PROGRESS trial as presented by Reynes (2010).
     There, the proportion of patients who were responders on a new treatment was 84/101 (83.2%)
@@ -297,23 +296,23 @@ def test_list_difference_confidence_interval_methods():
 
 
 def test_errors():
-    with raises(ValueError, match="`method` should be one of"):
+    with raises(ValueError, match="method should be one of"):
         compute_difference_confidence_interval(1, 2, 1, 2, method="not-supported")
-    with raises(ValueError, match="`conf_level` should be inside the interval \\(0, 1\\)"):
+    with raises(ValueError, match="conf_level should be inside the interval \\(0, 1\\)"):
         compute_difference_confidence_interval(1, 2, 1, 2, conf_level=0)
-    with raises(ValueError, match="`n_positive` should be less than or equal to `n_total`"):
+    with raises(ValueError, match="n_positive should be less than or equal to n_total"):
         compute_difference_confidence_interval(2, 1, 1, 2)
-    with raises(ValueError, match="`ref_positive` should be less than or equal to `ref_total`"):
+    with raises(ValueError, match="ref_positive should be less than or equal to ref_total"):
         compute_difference_confidence_interval(1, 2, 2, 1)
-    with raises(ValueError, match="`n_positive` should be non-negative"):
+    with raises(ValueError, match="n_positive should be non-negative"):
         compute_difference_confidence_interval(-1, 2, 1, 2)
-    with raises(ValueError, match="`n_total` should be positive"):
+    with raises(ValueError, match="n_total should be positive"):
         compute_difference_confidence_interval(0, 0, 1, 2)
-    with raises(ValueError, match="`ref_positive` should be non-negative"):
+    with raises(ValueError, match="ref_positive should be non-negative"):
         compute_difference_confidence_interval(1, 2, -1, 2)
-    with raises(ValueError, match="`ref_total` should be positive"):
+    with raises(ValueError, match="ref_total should be positive"):
         compute_difference_confidence_interval(1, 2, 0, 0)
-    with raises(ValueError, match="`sides` should be one of"):
+    with raises(ValueError, match="sides should be one of"):
         compute_difference_confidence_interval(1, 2, 1, 2, sides="3-sided")
 
     for method in [
