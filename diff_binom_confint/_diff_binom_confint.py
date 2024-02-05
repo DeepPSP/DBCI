@@ -545,7 +545,7 @@ def _true_profile_lower_upper_bounds(
         ratio_mle = 2 * u * np.cos(w) - tmp_b
         ref_ratio_mle = ratio_mle - j
         var = 0
-        for (num, r_m_, r_) in [
+        for num, r_m_, r_ in [
             (n_positive, ratio_mle, ratio),
             (ref_positive, ref_ratio_mle, ref_ratio),
             (n_negative, 1 - ratio_mle, neg_ratio),

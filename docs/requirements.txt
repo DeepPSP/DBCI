@@ -12,7 +12,6 @@ sphinx-design
 sphinxcontrib-napoleon
 sphinx-emoji-favicon
 sphinxemoji
-sphinxcontrib-pseudocode
 sphinxcontrib-bibtex
 sphinxcontrib-proof
 numpydoc

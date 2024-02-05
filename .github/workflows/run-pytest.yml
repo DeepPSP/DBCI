@@ -18,9 +18,9 @@ jobs:
         python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
@@ -39,4 +39,8 @@ jobs:
         pytest --cov=diff_binom_confint --ignore=test/test_random.py -v test
     - name: Upload coverage to Codecov
       if: matrix.python-version == '3.10'
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
+      with:
+        fail_ci_if_error: true # optional (default = false)
+        verbose: true # optional (default = false)
+        token: ${{ secrets.CODECOV_TOKEN }} # required

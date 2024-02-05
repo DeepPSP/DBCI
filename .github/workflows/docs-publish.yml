@@ -38,7 +38,7 @@ jobs:
         python-version: ["3.9"]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Clear unnecessary system components
       run: |
         echo "Free space before cleanup:"
@@ -55,7 +55,7 @@ jobs:
         sudo apt update
         sudo apt install build-essential ffmpeg libsm6 libxext6 libsndfile1 wget -y
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
@@ -72,7 +72,10 @@ jobs:
       uses: teatimeguest/setup-texlive-action@v2
       with:
         # List of TeXLive-packages contained in the scheme-basic
-        # https://gist.github.com/zr-tex8r/86b3b28f6bf21e0c24b151ce10840387
+        # https://trac.macports.org/wiki/TeXLivePackages
+        # tlmgr info --list scheme-basic
+        # tlmgr info --list collection-latex
+        # tlmgr info --list collection-basic
         packages: >-
           scheme-basic
           algorithm2e
