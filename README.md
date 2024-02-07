@@ -10,6 +10,7 @@
 [![license](https://img.shields.io/github/license/DeepPSP/DBCI?style=flat-square)](license)
 ![GitHub Release Date - Published_At](https://img.shields.io/github/release-date/DeepPSP/DBCI)
 ![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/DeepPSP/DBCI/latest)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://diff-binom-confint.streamlit.app/)
 
 Computation of confidence intervals for binomial proportions and for difference of binomial proportions.
 
