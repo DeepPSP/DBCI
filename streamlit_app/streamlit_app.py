@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 import streamlit as st
+from packaging import version
 
 from diff_binom_confint import (
     __version__,
@@ -116,6 +117,23 @@ clip = st.sidebar.toggle(
     key="clip",
     # on_change=do_computation,
 )
+# link to issue tracker on GitHub
+for _ in range(5):
+    # add some space
+    st.sidebar.write("\n")
+st.sidebar.markdown("**Report an issue**")
+if version.parse(st.__version__) < version.parse("1.31.0"):
+    st.sidebar.markdown(
+        '<p style="text-align: center;"><a href="https://github.com/DeepPSP/DBCI/issues" target="_blank">GitHub Issue Tracker</a></p>',
+        unsafe_allow_html=True,
+    )
+else:
+    st.sidebar.page_link(
+        page="https://github.com/DeepPSP/DBCI/issues",
+        label="GitHub Issue Tracker",
+        icon="🛠️",
+    )
+
 
 tab_compute, tab_report = st.tabs(["🧮 Compute", "📋 Report"])
 
