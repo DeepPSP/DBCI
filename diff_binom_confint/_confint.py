@@ -67,6 +67,8 @@ class ConfidenceInterval:
         - "right-sided" (aliases "right_sided", "right", "rs", "r"),
 
         case insensitive.
+    digits : int, default 5
+        Number of digits to round the confidence interval to in the string representation.
 
     """
 
@@ -76,6 +78,7 @@ class ConfidenceInterval:
     level: float
     method: str
     sides: str = "two-sided"
+    digits: int = 5
 
     def __post_init__(self) -> None:
         assert 0 < self.level < 1
@@ -86,7 +89,9 @@ class ConfidenceInterval:
         return (self.lower_bound, self.upper_bound)
 
     def asdict(self) -> dict:
-        return asdict(self)
+        d = asdict(self)
+        d.pop("digits")
+        return d
 
     def astable(self, to: Optional[str] = None) -> str:
         """Return the confidence interval as a pandas DataFrame."""
@@ -116,6 +121,9 @@ class ConfidenceInterval:
             raise ValueError(f"Unsupported format {repr(to)}")
 
     def __repr__(self) -> str:
-        return f"({round(self.lower_bound, 5):.5f}, {round(self.upper_bound, 5):.5f})"
+        # return f"({round(self.lower_bound, 5):.5f}, {round(self.upper_bound, 5):.5f})"
+        lower_bound = round(self.lower_bound, self.digits)
+        upper_bound = round(self.upper_bound, self.digits)
+        return f"({lower_bound:.{self.digits}f}, {upper_bound:.{self.digits}f})"
 
     __str__ = __repr__

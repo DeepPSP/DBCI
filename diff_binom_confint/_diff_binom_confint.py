@@ -35,6 +35,7 @@ def compute_difference_confidence_interval(
     confint_type: str = "wilson",
     clip: bool = True,
     sides: Union[str, int] = "two-sided",
+    digits: int = 5,
 ) -> ConfidenceInterval:
     """Compute the confidence interval of the difference
     between two binomial proportions.
@@ -64,6 +65,8 @@ def compute_difference_confidence_interval(
         - "right-sided" (aliases "right_sided", "right", "rs", "r"),
 
         case insensitive.
+    digits : int, default 5
+        Number of digits to round the confidence interval to in the string representation.
 
     Returns
     -------
@@ -108,7 +111,7 @@ def compute_difference_confidence_interval(
         sides = _SIDE_NAME_MAP[sides]
 
     confint = _compute_difference_confidence_interval(
-        n_positive, n_total, ref_positive, ref_total, conf_level, confint_type, sides
+        n_positive, n_total, ref_positive, ref_total, conf_level, confint_type, sides, digits
     )
 
     if clip:
@@ -141,6 +144,7 @@ def _compute_difference_confidence_interval(
     conf_level: float = 0.95,
     confint_type: str = "wilson",
     sides: Union[str, int] = "two-sided",
+    digits: int = 5,
 ) -> ConfidenceInterval:
     warnings.simplefilter(action="ignore", category=RuntimeWarning)
 
@@ -200,6 +204,7 @@ def _compute_difference_confidence_interval(
             conf_level,
             confint_type.lower(),
             str(sides),
+            digits,
         )
     elif confint_type.lower() in ["wald", "wald-cc"]:
         item = z * np.sqrt(ratio * neg_ratio / n_total + ref_ratio * ref_neg_ratio / ref_total)
@@ -211,6 +216,7 @@ def _compute_difference_confidence_interval(
                 conf_level,
                 confint_type.lower(),
                 str(sides),
+                digits,
             )
         return ConfidenceInterval(
             delta_ratio - item,
@@ -219,6 +225,7 @@ def _compute_difference_confidence_interval(
             conf_level,
             confint_type.lower(),
             str(sides),
+            digits,
         )
     elif confint_type.lower() in ["haldane", "jeffreys-perks"]:
         v = 0.25 / n_total - 0.25 / ref_total
@@ -245,6 +252,7 @@ def _compute_difference_confidence_interval(
             conf_level,
             confint_type.lower(),
             str(sides),
+            digits,
         )
     elif confint_type.lower() in ["mee", "miettinen-nurminen"]:
         if confint_type.lower() == "mee":
@@ -270,7 +278,7 @@ def _compute_difference_confidence_interval(
         else:  # failed in the case of n_positive == ref_positive == 0
             itv = _mee_mn_lower_upper_bounds(ratio, ref_ratio, n_total, ref_total, lamb, z)
             lower, upper = np.min(itv), np.max(itv)
-        return ConfidenceInterval(lower, upper, delta_ratio, conf_level, confint_type.lower(), str(sides))
+        return ConfidenceInterval(lower, upper, delta_ratio, conf_level, confint_type.lower(), str(sides), digits)
     elif confint_type.lower() == "true-profile":
         itv = _true_profile_lower_upper_bounds(n_positive, n_total, ref_positive, ref_total, z)
         return ConfidenceInterval(
@@ -280,6 +288,7 @@ def _compute_difference_confidence_interval(
             conf_level,
             confint_type.lower(),
             str(sides),
+            digits,
         )
     elif confint_type.lower() == "hauck-anderson":
         item = 1 / 2 / min(n_total, ref_total) + z * np.sqrt(
@@ -292,6 +301,7 @@ def _compute_difference_confidence_interval(
             conf_level,
             confint_type.lower(),
             str(sides),
+            digits,
         )
     elif confint_type.lower() in ["agresti-caffo", "carlin-louis"]:
         ratio_1 = (n_positive + 1) / (n_total + 2)
@@ -311,6 +321,7 @@ def _compute_difference_confidence_interval(
             conf_level,
             confint_type.lower(),
             str(sides),
+            digits,
         )
     elif confint_type.lower() in ["brown-li", "brown-li-jeffrey"]:
         ratio_1 = (n_positive + 0.5) / (n_total + 1)
@@ -323,6 +334,7 @@ def _compute_difference_confidence_interval(
             conf_level,
             confint_type.lower(),
             str(sides),
+            digits,
         )
     elif confint_type.lower() == "miettinen-nurminen-brown-li":
         weight = 2 / 3
@@ -334,13 +346,14 @@ def _compute_difference_confidence_interval(
             conf_level,
             "miettinen-nurminen",
             sides,
+            digits,
         ).astuple()
         lower_bl, upper_bl = _compute_difference_confidence_interval(
-            n_positive, n_total, ref_positive, ref_total, conf_level, "brown-li", sides
+            n_positive, n_total, ref_positive, ref_total, conf_level, "brown-li", sides, digits
         ).astuple()
         lower = weight * lower_mn + (1 - weight) * lower_bl
         upper = weight * upper_mn + (1 - weight) * upper_bl
-        return ConfidenceInterval(lower, upper, delta_ratio, conf_level, confint_type.lower(), str(sides))
+        return ConfidenceInterval(lower, upper, delta_ratio, conf_level, confint_type.lower(), str(sides), digits)
     elif confint_type.lower() == "exact":
         raise NotImplementedError(f"method {repr(confint_type)} is not implemented yet")
     elif confint_type.lower() == "mid-p":

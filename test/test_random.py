@@ -40,6 +40,8 @@ def test_random():
     if artifact_dir is not None and len(err_triplets) > 0:
         df_err = pd.DataFrame(err_triplets, columns=["n_total", "n_positive", "method", "error"])
         df_err.to_csv(os.path.join(artifact_dir, "bci_random_data_errors.csv"), index=False)
+    elif len(err_triplets) > 0:
+        raise ValueError(f"Errors occurred: {err_triplets}")
 
 
 def test_dbci_random():
@@ -86,3 +88,5 @@ def test_dbci_random():
             ],
         )
         df_errors.to_csv(os.path.join(artifact_dir, "dbci_random_data_errors.csv"), index=False)
+    elif len(errors) > 0:
+        raise ValueError(f"Errors occurred: {errors}")
