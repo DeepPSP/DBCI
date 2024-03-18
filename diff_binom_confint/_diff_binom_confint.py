@@ -149,10 +149,10 @@ def _compute_difference_confidence_interval(
     warnings.simplefilter(action="ignore", category=RuntimeWarning)
 
     if sides != "two-sided":
-        z = qnorm(conf_level)
+        zeta = qnorm(conf_level)
         _conf_level = 2 * conf_level - 1
     else:
-        z = qnorm((1 + conf_level) / 2)
+        zeta = qnorm((1 + conf_level) / 2)
         _conf_level = conf_level
     n_negative = n_total - n_positive
     ref_negative = ref_total - ref_positive
@@ -162,12 +162,12 @@ def _compute_difference_confidence_interval(
     ref_neg_ratio = 1 - ref_ratio
     delta_ratio = ratio - ref_ratio
     if confint_type.lower() in ["wilson", "newcombe", "score"]:
-        item1 = z * np.sqrt(4 * n_total * ratio * neg_ratio + z**2)
-        lower1 = (2 * n_total * ratio + z**2 - item1) / 2 / (n_total + z**2)
-        upper1 = (2 * n_total * ratio + z**2 + item1) / 2 / (n_total + z**2)
-        item2 = z * np.sqrt(4 * ref_total * ref_ratio * ref_neg_ratio + z**2)
-        lower2 = (2 * ref_total * ref_ratio + z**2 - item2) / 2 / (ref_total + z**2)
-        upper2 = (2 * ref_total * ref_ratio + z**2 + item2) / 2 / (ref_total + z**2)
+        item1 = zeta * np.sqrt(4 * n_total * ratio * neg_ratio + zeta**2)
+        lower1 = (2 * n_total * ratio + zeta**2 - item1) / 2 / (n_total + zeta**2)
+        upper1 = (2 * n_total * ratio + zeta**2 + item1) / 2 / (n_total + zeta**2)
+        item2 = zeta * np.sqrt(4 * ref_total * ref_ratio * ref_neg_ratio + zeta**2)
+        lower2 = (2 * ref_total * ref_ratio + zeta**2 - item2) / 2 / (ref_total + zeta**2)
+        upper2 = (2 * ref_total * ref_ratio + zeta**2 + item2) / 2 / (ref_total + zeta**2)
         return ConfidenceInterval(
             delta_ratio - np.sqrt((ratio - lower1) ** 2 + (upper2 - ref_ratio) ** 2),
             delta_ratio + np.sqrt((ref_ratio - lower2) ** 2 + (upper1 - ratio) ** 2),
@@ -179,24 +179,24 @@ def _compute_difference_confidence_interval(
     elif confint_type.lower() in ["wilson-cc", "newcombe-cc", "score-cc"]:
         # https://corplingstats.wordpress.com/2019/04/27/correcting-for-continuity/
         # equation (6) and (6')
-        e = 2 * n_total * ratio + z**2
-        f = z**2 - 1 / n_total + 4 * n_total * ratio * neg_ratio
+        e = 2 * n_total * ratio + zeta**2
+        f = zeta**2 - 1 / n_total + 4 * n_total * ratio * neg_ratio
         g = 4 * ratio - 2
-        h = 2 * (n_total + z**2)
-        # lower1 = (e - (z * np.sqrt(f + g) + 1)) / h
-        # upper1 = (e + (z * np.sqrt(f - g) + 1)) / h
+        h = 2 * (n_total + zeta**2)
+        # lower1 = (e - (zeta * np.sqrt(f + g) + 1)) / h
+        # upper1 = (e + (zeta * np.sqrt(f - g) + 1)) / h
         # should always be clipped ?
-        lower1 = (e - (z * np.sqrt(f + g) + 1)) / h if n_positive != 0 else 0
-        upper1 = (e + (z * np.sqrt(f - g) + 1)) / h if n_negative != 0 else 1
-        e = 2 * ref_total * ref_ratio + z**2
-        f = z**2 - 1 / ref_total + 4 * ref_total * ref_ratio * ref_neg_ratio
+        lower1 = (e - (zeta * np.sqrt(f + g) + 1)) / h if n_positive != 0 else 0
+        upper1 = (e + (zeta * np.sqrt(f - g) + 1)) / h if n_negative != 0 else 1
+        e = 2 * ref_total * ref_ratio + zeta**2
+        f = zeta**2 - 1 / ref_total + 4 * ref_total * ref_ratio * ref_neg_ratio
         g = 4 * ref_ratio - 2
-        h = 2 * (ref_total + z**2)
-        # lower2 = (e - (z * np.sqrt(f + g) + 1)) / h
-        # upper2 = (e + (z * np.sqrt(f - g) + 1)) / h
+        h = 2 * (ref_total + zeta**2)
+        # lower2 = (e - (zeta * np.sqrt(f + g) + 1)) / h
+        # upper2 = (e + (zeta * np.sqrt(f - g) + 1)) / h
         # should always be clipped ?
-        lower2 = (e - (z * np.sqrt(f + g) + 1)) / h if ref_positive != 0 else 0
-        upper2 = (e + (z * np.sqrt(f - g) + 1)) / h if ref_negative != 0 else 1
+        lower2 = (e - (zeta * np.sqrt(f + g) + 1)) / h if ref_positive != 0 else 0
+        upper2 = (e + (zeta * np.sqrt(f - g) + 1)) / h if ref_negative != 0 else 1
         return ConfidenceInterval(
             delta_ratio - np.sqrt((ratio - lower1) ** 2 + (upper2 - ref_ratio) ** 2),
             delta_ratio + np.sqrt((ref_ratio - lower2) ** 2 + (upper1 - ratio) ** 2),
@@ -207,7 +207,7 @@ def _compute_difference_confidence_interval(
             digits,
         )
     elif confint_type.lower() in ["wald", "wald-cc"]:
-        item = z * np.sqrt(ratio * neg_ratio / n_total + ref_ratio * ref_neg_ratio / ref_total)
+        item = zeta * np.sqrt(ratio * neg_ratio / n_total + ref_ratio * ref_neg_ratio / ref_total)
         if confint_type.lower() == "wald-cc":
             return ConfidenceInterval(
                 delta_ratio - item - 0.5 / n_total - 0.5 / ref_total,
@@ -238,13 +238,13 @@ def _compute_difference_confidence_interval(
             np.sqrt(
                 u * (4 * psi * (1 - psi) - delta_ratio**2)
                 + 2 * v * (1 - 2 * psi) * delta_ratio
-                + 4 * ((z * u) ** 2) * psi * (1 - psi)
-                + (z * v * (1 - 2 * psi)) ** 2
+                + 4 * ((zeta * u) ** 2) * psi * (1 - psi)
+                + (zeta * v * (1 - 2 * psi)) ** 2
             )
-            * z
-            / (1 + u * z**2)
+            * zeta
+            / (1 + u * zeta**2)
         )
-        theta_star = (delta_ratio + v * (1 - 2 * psi) * z**2) / (1 + u * z**2)
+        theta_star = (delta_ratio + v * (1 - 2 * psi) * zeta**2) / (1 + u * zeta**2)
         return ConfidenceInterval(
             theta_star - w,
             theta_star + w,
@@ -276,11 +276,11 @@ def _compute_difference_confidence_interval(
                 full_output=False,
             )
         else:  # failed in the case of n_positive == ref_positive == 0
-            itv = _mee_mn_lower_upper_bounds(ratio, ref_ratio, n_total, ref_total, lamb, z)
+            itv = _mee_mn_lower_upper_bounds(ratio, ref_ratio, n_total, ref_total, lamb, zeta)
             lower, upper = np.min(itv), np.max(itv)
         return ConfidenceInterval(lower, upper, delta_ratio, conf_level, confint_type.lower(), str(sides), digits)
     elif confint_type.lower() == "true-profile":
-        itv = _true_profile_lower_upper_bounds(n_positive, n_total, ref_positive, ref_total, z)
+        itv = _true_profile_lower_upper_bounds(n_positive, n_total, ref_positive, ref_total, zeta)
         return ConfidenceInterval(
             np.min(itv),
             np.max(itv),
@@ -291,7 +291,7 @@ def _compute_difference_confidence_interval(
             digits,
         )
     elif confint_type.lower() == "hauck-anderson":
-        item = 1 / 2 / min(n_total, ref_total) + z * np.sqrt(
+        item = 1 / 2 / min(n_total, ref_total) + zeta * np.sqrt(
             ratio * neg_ratio / (n_total - 1) + ref_ratio * ref_neg_ratio / (ref_total - 1)
         )
         return ConfidenceInterval(
@@ -310,7 +310,7 @@ def _compute_difference_confidence_interval(
             "agresti-caffo": 2,
             "carlin-louis": 3,
         }
-        item = z * np.sqrt(
+        item = zeta * np.sqrt(
             (ratio_1 * (1 - ratio_1) / (n_total + denom_add[confint_type.lower()]))
             + (ratio_2 * (1 - ratio_2) / (ref_total + denom_add[confint_type.lower()]))
         )
@@ -326,7 +326,7 @@ def _compute_difference_confidence_interval(
     elif confint_type.lower() in ["brown-li", "brown-li-jeffrey"]:
         ratio_1 = (n_positive + 0.5) / (n_total + 1)
         ratio_2 = (ref_positive + 0.5) / (ref_total + 1)
-        item = z * np.sqrt(ratio_1 * (1 - ratio_1) / n_total + ratio_2 * (1 - ratio_2) / ref_total)
+        item = zeta * np.sqrt(ratio_1 * (1 - ratio_1) / n_total + ratio_2 * (1 - ratio_2) / ref_total)
         return ConfidenceInterval(
             ratio_1 - ratio_2 - item,
             ratio_1 - ratio_2 + item,
@@ -475,7 +475,7 @@ def _mee_mn_lower_upper_bounds(
     n_total: int,
     ref_total: int,
     lamb: float,
-    z: float,
+    zeta: float,
 ) -> np.ndarray:
     theta = ref_total / n_total
     delta_ratio = ratio - ref_ratio
@@ -509,7 +509,7 @@ def _mee_mn_lower_upper_bounds(
             # https://github.com/DeepPSP/DBCI/issues/1
             var = np.finfo(np.float64).eps
         var = (delta_ratio - j) / var
-        if -z < var < z:
+        if -zeta < var < zeta:
             # flag = True
             itv.append(j)
         # elif flag:
@@ -523,7 +523,7 @@ def _true_profile_lower_upper_bounds(
     n_total: int,
     ref_positive: int,
     ref_total: int,
-    z: float,
+    zeta: float,
 ) -> np.ndarray:
     theta = ref_total / n_total
     ratio = n_positive / n_total
@@ -566,7 +566,7 @@ def _true_profile_lower_upper_bounds(
         ]:
             if num > 0:  # omitting any terms corresponding to empty cells
                 var += num * np.log(r_m_ / r_)
-        if var >= -(z**2) / 2:
+        if var >= -(zeta**2) / 2:
             # flag = True
             itv.append(j)
         # elif flag:

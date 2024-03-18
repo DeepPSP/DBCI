@@ -175,7 +175,7 @@ The correct computation of `Mee`, `Miettinen-Nurminen` are given in the **code b
 
     results = data.table()
     for (m in c("wilson", "wald", "waldcc", "agresti-coull", "jeffreys",
-                    "modified wilson", "wilsoncc","modified jeffreys",
+                    "modified wilson", "wilsoncc", "modified jeffreys",
                     "clopper-pearson", "arcsine", "logit", "witting", "pratt",
                     "midp", "lik", "blaker")){
         ci = BinomCI(84,101,method = m)

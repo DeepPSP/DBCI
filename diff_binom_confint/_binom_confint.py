@@ -131,21 +131,21 @@ def _compute_confidence_interval(
     digits: int = 5,
 ) -> ConfidenceInterval:
     if sides != "two-sided":
-        z = qnorm(conf_level)
+        zeta = qnorm(conf_level)
         margin = 1 - conf_level
         _conf_level = 1 - 2 * margin
     else:
-        z = qnorm((1 + conf_level) / 2)
+        zeta = qnorm((1 + conf_level) / 2)
         margin = 0.5 * (1 - conf_level)
         _conf_level = conf_level
     n_negative = n_total - n_positive
     ratio = n_positive / n_total
     neg_ratio = 1 - ratio
     if confint_type.lower() in ["wilson", "newcombe"]:
-        item = z * np.sqrt((ratio * neg_ratio + z * z / (4 * n_total)) / n_total)
+        item = zeta * np.sqrt((ratio * neg_ratio + zeta * zeta / (4 * n_total)) / n_total)
         return ConfidenceInterval(
-            ((ratio + z * z / (2 * n_total) - item) / (1 + z * z / n_total)),
-            ((ratio + z * z / (2 * n_total) + item) / (1 + z * z / n_total)),
+            ((ratio + zeta * zeta / (2 * n_total) - item) / (1 + zeta * zeta / n_total)),
+            ((ratio + zeta * zeta / (2 * n_total) + item) / (1 + zeta * zeta / n_total)),
             ratio,
             conf_level,
             confint_type.lower(),
@@ -155,13 +155,13 @@ def _compute_confidence_interval(
     elif confint_type.lower() in ["wilson-cc", "newcombe-cc"]:
         # https://corplingstats.wordpress.com/2019/04/27/correcting-for-continuity/
         # equation (6) and (6')
-        e = 2 * n_total * ratio + z**2
-        f = z**2 - 1 / n_total + 4 * n_total * ratio * neg_ratio
+        e = 2 * n_total * ratio + zeta**2
+        f = zeta**2 - 1 / n_total + 4 * n_total * ratio * neg_ratio
         g = 4 * ratio - 2
-        h = 2 * (n_total + z**2)
+        h = 2 * (n_total + zeta**2)
         return ConfidenceInterval(
-            (e - (z * np.sqrt(f + g) + 1)) / h,
-            (e + (z * np.sqrt(f - g) + 1)) / h,
+            (e - (zeta * np.sqrt(f + g) + 1)) / h,
+            (e + (zeta * np.sqrt(f - g) + 1)) / h,
             ratio,
             conf_level,
             confint_type.lower(),
@@ -169,7 +169,7 @@ def _compute_confidence_interval(
             digits,
         )
     elif confint_type.lower() in ["wald", "wald-cc"]:
-        item = z * np.sqrt(ratio * neg_ratio / n_total)
+        item = zeta * np.sqrt(ratio * neg_ratio / n_total)
         if confint_type.lower() == "wald-cc":
             item += 0.5 / n_total
         return ConfidenceInterval(
@@ -182,8 +182,8 @@ def _compute_confidence_interval(
             digits,
         )
     elif confint_type.lower() == "agresti-coull":
-        ratio_tilde = (n_positive + 0.5 * z**2) / (n_total + z**2)
-        item = z * np.sqrt(ratio_tilde * (1 - ratio_tilde) / (n_total + z**2))
+        ratio_tilde = (n_positive + 0.5 * zeta**2) / (n_total + zeta**2)
+        item = zeta * np.sqrt(ratio_tilde * (1 - ratio_tilde) / (n_total + zeta**2))
         return ConfidenceInterval(
             ratio_tilde - item,
             ratio_tilde + item,
@@ -217,8 +217,8 @@ def _compute_confidence_interval(
     elif confint_type.lower() == "arcsine":
         ratio_tilde = (n_positive + 0.375) / (n_total + 0.75)
         return ConfidenceInterval(
-            np.sin(np.arcsin(np.sqrt(ratio_tilde)) - 0.5 * z / np.sqrt(n_total)) ** 2,
-            np.sin(np.arcsin(np.sqrt(ratio_tilde)) + 0.5 * z / np.sqrt(n_total)) ** 2,
+            np.sin(np.arcsin(np.sqrt(ratio_tilde)) - 0.5 * zeta / np.sqrt(n_total)) ** 2,
+            np.sin(np.arcsin(np.sqrt(ratio_tilde)) + 0.5 * zeta / np.sqrt(n_total)) ** 2,
             ratio_tilde,
             conf_level,
             confint_type.lower(),
@@ -227,9 +227,9 @@ def _compute_confidence_interval(
         )
     elif confint_type.lower() == "logit":
         lambda_hat = np.log(ratio / neg_ratio)  # TODO: fix the case when ratio = 0 or 1
-        V_hat = 1 / ratio / n_negative
-        lambda_lower = lambda_hat - z * np.sqrt(V_hat)
-        lambda_upper = lambda_hat + z * np.sqrt(V_hat)
+        V_hat = 1 / ratio / n_negative  # derivative of `lambda_hat` w.r.t. `n_positive`
+        lambda_lower = lambda_hat - zeta * np.sqrt(V_hat)
+        lambda_upper = lambda_hat + zeta * np.sqrt(V_hat)
         return ConfidenceInterval(
             np.exp(lambda_lower) / (1 + np.exp(lambda_lower)),
             np.exp(lambda_upper) / (1 + np.exp(lambda_upper)),
@@ -283,13 +283,13 @@ def _compute_confidence_interval(
         else:
             a = ((n_positive + 1) / n_negative) ** 2
             b = 81 * (n_positive + 1) * n_negative - 9 * n_total - 8
-            c = -3 * z * np.sqrt(9 * (n_positive + 1) * n_negative * (9 * n_total + 5 - z**2) + n_total + 1)
-            d = 81 * (n_positive + 1) ** 2 - 9 * (n_positive + 1) * (2 + z**2) + 1
+            c = -3 * zeta * np.sqrt(9 * (n_positive + 1) * n_negative * (9 * n_total + 5 - zeta**2) + n_total + 1)
+            d = 81 * (n_positive + 1) ** 2 - 9 * (n_positive + 1) * (2 + zeta**2) + 1
             upper = 1 / (1 + a * ((b + c) / d) ** 3)
             a = (n_positive / (n_negative - 1)) ** 2
             b = 81 * n_positive * (n_negative - 1) - 9 * n_total - 8
-            c = 3 * z * np.sqrt(9 * n_positive * (n_negative - 1) * (9 * n_total + 5 - z**2) + n_total + 1)
-            d = 81 * n_positive**2 - 9 * n_positive * (2 + z**2) + 1
+            c = 3 * zeta * np.sqrt(9 * n_positive * (n_negative - 1) * (9 * n_total + 5 - zeta**2) + n_total + 1)
+            d = 81 * n_positive**2 - 9 * n_positive * (2 + zeta**2) + 1
             lower = 1 / (1 + a * ((b + c) / d) ** 3)
             return ConfidenceInterval(lower, upper, ratio, conf_level, confint_type.lower(), str(sides), digits)
     elif confint_type.lower() == "witting":
@@ -328,9 +328,9 @@ def _compute_confidence_interval(
     elif confint_type.lower() == "lik":
         tol = 1e-5
         lower, upper = 0, 1
-        if n_positive != 0 and tol < ratio and _bin_dev(tol, n_positive, ratio, n_total, -z, tol) <= 0:
+        if n_positive != 0 and tol < ratio and _bin_dev(tol, n_positive, ratio, n_total, -zeta, tol) <= 0:
             lower = uniroot(
-                lambda y: _bin_dev(y, n_positive, ratio, n_total, -z, tol),
+                lambda y: _bin_dev(y, n_positive, ratio, n_total, -zeta, tol),
                 tol,
                 1 - tol if (ratio < tol or ratio == 1) else ratio,
                 full_output=False,
@@ -342,7 +342,7 @@ def _compute_confidence_interval(
                     n_positive,
                     tol if ratio > 1 - tol else ratio,
                     n_total,
-                    z,
+                    zeta,
                     tol,
                 )
                 < 0
@@ -351,20 +351,20 @@ def _compute_confidence_interval(
                     n_positive,
                     1 - tol if (ratio < tol or ratio == 1) else ratio,
                     n_total,
-                    -z,
+                    -zeta,
                     tol,
                 )
                 <= 0
             ):
                 upper = lower = uniroot(
-                    lambda y: _bin_dev(y, n_positive, ratio, n_total, -z, tol),
+                    lambda y: _bin_dev(y, n_positive, ratio, n_total, -zeta, tol),
                     tol,
                     ratio,
                     full_output=False,
                 )
             else:
                 upper = uniroot(
-                    lambda y: _bin_dev(y, n_positive, ratio, n_total, z, tol),
+                    lambda y: _bin_dev(y, n_positive, ratio, n_total, zeta, tol),
                     tol if ratio > 1 - tol else ratio,
                     1 - tol,
                     full_output=False,
@@ -384,8 +384,8 @@ def _compute_confidence_interval(
                 upper -= tol
         return ConfidenceInterval(lower, upper, ratio, conf_level, confint_type.lower(), str(sides), digits)
     elif confint_type.lower() in ["modified-wilson", "modified-newcombe"]:
-        term1 = (n_positive + 0.5 * z**2) / (n_total + z**2)
-        term2 = z * np.sqrt(n_total) * np.sqrt(ratio * neg_ratio + z**2 / (4 * n_total)) / (n_total + z**2)
+        term1 = (n_positive + 0.5 * zeta**2) / (n_total + zeta**2)
+        term2 = zeta * np.sqrt(n_total) * np.sqrt(ratio * neg_ratio + zeta**2 / (4 * n_total)) / (n_total + zeta**2)
         if (n_total <= 50 and n_positive in [1, 2]) or (n_total >= 51 and n_positive in [1, 2, 3]):
             lower = 0.5 * qchisq(margin, 2 * n_positive, 0) / n_total
         else:
