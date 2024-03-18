@@ -49,7 +49,8 @@ def do_computation():
                 conf_level=st.session_state.conf_level,
                 sides=st.session_state.sides,
                 clip=st.session_state.clip,
-            ).astable(to="markdown")
+            ).astable(to="html", digits=st.session_state.digits),
+            unsafe_allow_html=True,
         )
         return
 
@@ -65,7 +66,8 @@ def do_computation():
                 conf_level=st.session_state.conf_level,
                 sides=st.session_state.sides,
                 clip=st.session_state.clip,
-            ).astable(to="markdown")
+            ).astable(to="html", digits=st.session_state.digits),
+            unsafe_allow_html=True,
         )
         return
 
@@ -102,9 +104,19 @@ conf_level = st.sidebar.slider(
     key="conf_level",
     # on_change=do_computation,
 )
+# int slider for the number of digits to display
+digits = st.sidebar.slider(
+    label="Dispaly Digits",
+    min_value=3,
+    max_value=15,
+    value=7,
+    step=1,
+    key="digits",
+    # on_change=do_computation,
+)
 # select left- or right- or two-sided
 sides = st.sidebar.selectbox(
-    label="sides",
+    label="Sides",
     options=["left", "right", "two"],
     index=2,
     key="sides",
@@ -112,7 +124,7 @@ sides = st.sidebar.selectbox(
 )
 # toggle to clip or not
 clip = st.sidebar.toggle(
-    label="Clip the confidence interval to [0, 1]",
+    label="Clip the interval to [0, 1]",
     value=True,
     key="clip",
     # on_change=do_computation,
@@ -225,7 +237,8 @@ with tab_compute:
                 conf_level=conf_level,
                 sides=sides,
                 clip=clip,
-            ).astable(to="markdown")
+            ).astable(to="html", digits=st.session_state.digits),
+            unsafe_allow_html=True,
         )
     if diff_button:
         if warning_msg != "":
@@ -243,7 +256,8 @@ with tab_compute:
                 conf_level=conf_level,
                 sides=sides,
                 clip=clip,
-            ).astable(to="markdown")
+            ).astable(to="html", digits=st.session_state.digits),
+            unsafe_allow_html=True,
         )
 
 with tab_report:
