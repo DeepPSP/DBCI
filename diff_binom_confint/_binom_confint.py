@@ -194,7 +194,7 @@ def _compute_confidence_interval(
             digits,
         )
     elif confint_type.lower() == "jeffreys":
-        print(margin, sides)
+        # print(margin, sides)
         return ConfidenceInterval(
             qbeta(margin, n_positive + 0.5, n_negative + 0.5) if n_positive > 0 else 0,
             qbeta(1 - margin, n_positive + 0.5, n_negative + 0.5) if n_negative > 0 else 1,
@@ -226,10 +226,10 @@ def _compute_confidence_interval(
             digits,
         )
     elif confint_type.lower() == "logit":
-        lambda_hat = np.log(ratio / neg_ratio)  # TODO: fix the case when ratio = 0 or 1
-        V_hat = 1 / ratio / n_negative  # derivative of `lambda_hat` w.r.t. `n_positive`
-        lambda_lower = lambda_hat - zeta * np.sqrt(V_hat)
-        lambda_upper = lambda_hat + zeta * np.sqrt(V_hat)
+        # lambda_hat = np.log(ratio / neg_ratio)
+        # V_hat = 1 / ratio / n_negative  # derivative of `lambda_hat` w.r.t. `n_positive`
+        # lambda_lower = lambda_hat - zeta * np.sqrt(V_hat)
+        # lambda_upper = lambda_hat + zeta * np.sqrt(V_hat)
         # note that for x = n_positive, one has (apply exp() and use L'Hopital's rule to get the limits)
         # :math:`\lim_{x \to 0+} lambda\_lower = -\infty`, hence :math:`\lim_{x \to 0+} \exp(lambda\_lower) / (1 + \exp(lambda\_lower)) = 0`
         # :math:`\lim_{x \to 0+} lambda\_upper = -\infty`, hence :math:`\lim_{x \to 0+} \exp(lambda\_upper) / (1 + \exp(lambda\_upper)) = 0`
@@ -242,6 +242,11 @@ def _compute_confidence_interval(
             return ConfidenceInterval(0, 0, ratio, conf_level, confint_type.lower(), str(sides), digits)
         elif n_positive == n_total:
             return ConfidenceInterval(1, 1, ratio, conf_level, confint_type.lower(), str(sides), digits)
+
+        lambda_hat = np.log(ratio / neg_ratio)
+        V_hat = 1 / ratio / n_negative  # derivative of `lambda_hat` w.r.t. `n_positive`
+        lambda_lower = lambda_hat - zeta * np.sqrt(V_hat)
+        lambda_upper = lambda_hat + zeta * np.sqrt(V_hat)
         return ConfidenceInterval(
             np.exp(lambda_lower) / (1 + np.exp(lambda_lower)),
             np.exp(lambda_upper) / (1 + np.exp(lambda_upper)),
@@ -309,8 +314,8 @@ def _compute_confidence_interval(
         # n_pos_tilde = n_positive
         n_pos_tilde = n_positive + RNG.uniform(0, 1)
         return ConfidenceInterval(
-            _qbinom_abscont(_conf_level, n_total, n_pos_tilde),
-            _qbinom_abscont(1 - _conf_level, n_total, n_pos_tilde),
+            _qbinom_abscont(_conf_level, n_total, n_pos_tilde) if n_positive != 0 else 0.0,
+            _qbinom_abscont(1 - _conf_level, n_total, n_pos_tilde) if n_positive != n_total else 1.0,
             ratio,
             conf_level,
             confint_type.lower(),
