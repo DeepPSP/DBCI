@@ -40,7 +40,7 @@ def compute_confidence_interval(
     confint_type: str = "wilson",
     clip: bool = True,
     sides: Union[str, int] = "two-sided",
-    digits: int = 5,
+    digits: int = 7,
 ) -> ConfidenceInterval:
     """Compute the confidence interval for a binomial proportion.
 
@@ -65,7 +65,7 @@ def compute_confidence_interval(
         - "right-sided" (aliases "right_sided", "right", "rs", "r"),
 
         case insensitive.
-    digits : int, default 5
+    digits : int, default 7
         Number of digits to round the confidence interval to in the string representation.
 
     Returns
@@ -128,7 +128,7 @@ def _compute_confidence_interval(
     conf_level: float = 0.95,
     confint_type: str = "wilson",
     sides: Union[str, int] = "two-sided",
-    digits: int = 5,
+    digits: int = 7,
 ) -> ConfidenceInterval:
     if sides != "two-sided":
         zeta = qnorm(conf_level)

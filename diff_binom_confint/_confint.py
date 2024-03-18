@@ -67,7 +67,7 @@ class ConfidenceInterval:
         - "right-sided" (aliases "right_sided", "right", "rs", "r"),
 
         case insensitive.
-    digits : int, default 5
+    digits : int, default 7
         Number of digits to round the confidence interval to in the string representation.
 
     """
@@ -78,7 +78,7 @@ class ConfidenceInterval:
     level: float
     method: str
     sides: str = "two-sided"
-    digits: int = 5
+    digits: int = 7
 
     def __post_init__(self) -> None:
         assert 0 < self.level < 1

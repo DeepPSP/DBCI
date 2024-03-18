@@ -25,7 +25,7 @@ def test_confidence_interval():
         sides="left_sided",
     )
 
-    assert str(confint_1) == str(confint_2) == "(0.80601, 0.98226)"
+    assert str(confint_1) == str(confint_2) == "(0.8060068, 0.9822621)"
     assert confint_1 != confint_2
 
     assert confint_1.asdict() == {
