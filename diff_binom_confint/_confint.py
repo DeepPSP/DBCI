@@ -3,7 +3,7 @@
 
 from dataclasses import asdict, dataclass
 from enum import Enum
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 
 import pandas as pd
 
@@ -93,13 +93,41 @@ class ConfidenceInterval:
         d.pop("digits")
         return d
 
-    def astable(self, to: Optional[str] = None) -> str:
-        """Return the confidence interval as a pandas DataFrame."""
+    def astable(self, to: Optional[str] = None, digits: Optional[Union[int, bool]] = None) -> Union[str, pd.DataFrame]:
+        """Return the confidence interval as a table (dataframe).
+
+        Parameters
+        ----------
+        to : str, default None
+            Format of the table. Supported formats are "latex", "latex_raw", "html", "markdown", "md", "string", "json".
+        digits : int or bool, default None
+            Number of digits to round the confidence interval to in the string representation.
+            If ``True``, use the default digits. If ``False`` or ``None``, use the float data type.
+
+        Returns
+        -------
+        str or pandas.DataFrame
+            The confidence interval as a table (dataframe) in the specified format.
+
+        """
+        if digits is None:
+            # float data type
+            lower_bound, upper_bound = self.lower_bound, self.upper_bound
+        elif isinstance(digits, bool) and digits is True:
+            # string data type with default digits
+            lower_bound = f"{self.lower_bound:.{self.digits}f}"
+            upper_bound = f"{self.upper_bound:.{self.digits}f}"
+        elif isinstance(digits, int):
+            # string data type with specified digits
+            lower_bound = f"{self.lower_bound:.{digits}f}"
+            upper_bound = f"{self.upper_bound:.{digits}f}"
+        else:
+            raise ValueError(f"Unsupported digits type {repr(digits)}")
         table = pd.DataFrame(
             {
                 "Estimate": [self.estimate],
-                "Lower Bound": [self.lower_bound],
-                "Upper Bound": [self.upper_bound],
+                "Lower Bound": [lower_bound],
+                "Upper Bound": [upper_bound],
                 "Confidence Level": [self.level],
                 "Method": [self.method],
                 "Sides": [self.sides],
@@ -110,7 +138,7 @@ class ConfidenceInterval:
         elif to in ["latex", "latex_raw"]:
             return table.to_latex(index=False, escape=False)
         elif to in ["html"]:
-            return table.to_html(index=False)
+            return table.to_html(index=False, escape=False)
         elif to in ["markdown", "md"]:
             return table.to_markdown(index=False)
         elif to in ["string"]:
