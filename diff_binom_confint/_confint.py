@@ -110,7 +110,7 @@ class ConfidenceInterval:
             The confidence interval as a table (dataframe) in the specified format.
 
         """
-        if digits is None:
+        if (digits is None) or (isinstance(digits, bool) and digits is False):
             # float data type
             lower_bound, upper_bound = self.lower_bound, self.upper_bound
         elif isinstance(digits, bool) and digits is True:

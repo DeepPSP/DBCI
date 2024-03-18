@@ -2,6 +2,7 @@
 """
 
 import pandas as pd
+import pytest
 
 from diff_binom_confint._confint import ConfidenceInterval
 
@@ -44,3 +45,9 @@ def test_confidence_interval():
 
     for fmt in ["html", "latex", "latex_raw", "markdown", "md", "string", "json"]:
         assert isinstance(confint_1.astable(to=fmt), str)
+
+    for digits in [None, True, False, 3]:
+        assert isinstance(confint_1.astable(to="html", digits=digits), str)
+
+    with pytest.raises(ValueError, match="Unsupported digits type"):
+        confint_1.astable(digits="xxx")
