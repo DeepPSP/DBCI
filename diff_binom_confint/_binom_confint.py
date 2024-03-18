@@ -230,6 +230,18 @@ def _compute_confidence_interval(
         V_hat = 1 / ratio / n_negative  # derivative of `lambda_hat` w.r.t. `n_positive`
         lambda_lower = lambda_hat - zeta * np.sqrt(V_hat)
         lambda_upper = lambda_hat + zeta * np.sqrt(V_hat)
+        # note that for x = n_positive, one has (apply exp() and use L'Hopital's rule to get the limits)
+        # :math:`\lim_{x \to 0+} lambda\_lower = -\infty`, hence :math:`\lim_{x \to 0+} \exp(lambda\_lower) / (1 + \exp(lambda\_lower)) = 0`
+        # :math:`\lim_{x \to 0+} lambda\_upper = -\infty`, hence :math:`\lim_{x \to 0+} \exp(lambda\_upper) / (1 + \exp(lambda\_upper)) = 0`
+        # :math:`\lim_{x \to n\_total-} lambda\_lower = +\infty`, hence :math:`\lim_{x \to n\_total-} \exp(lambda\_lower) / (1 + \exp(lambda\_lower)) = 1`
+        # :math:`\lim_{x \to n\_total-} lambda\_upper = +\infty`, hence :math:`\lim_{x \to n\_total-} \exp(lambda\_upper) / (1 + \exp(lambda\_upper)) = 1`
+        # therefore one can set
+        # confidence interval = [0, 0] if n_positive = 0
+        # confidence interval = [1, 1] if n_positive = n_total
+        if n_positive == 0:
+            return ConfidenceInterval(0, 0, ratio, conf_level, confint_type.lower(), str(sides), digits)
+        elif n_positive == n_total:
+            return ConfidenceInterval(1, 1, ratio, conf_level, confint_type.lower(), str(sides), digits)
         return ConfidenceInterval(
             np.exp(lambda_lower) / (1 + np.exp(lambda_lower)),
             np.exp(lambda_upper) / (1 + np.exp(lambda_upper)),
