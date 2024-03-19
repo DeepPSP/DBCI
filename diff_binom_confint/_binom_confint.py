@@ -1,7 +1,7 @@
 """
 """
 
-from typing import Union
+from typing import Optional, Union
 
 import numpy as np
 from deprecate_kwargs import deprecate_kwargs
@@ -19,6 +19,7 @@ __all__ = [
 
 
 RNG = np.random.default_rng()  # random number generator
+DEFAULT_METHOD = "wilson"
 
 
 # aliases of statistical functions
@@ -37,7 +38,7 @@ def compute_confidence_interval(
     n_positive: int,
     n_total: int,
     conf_level: float = 0.95,
-    confint_type: str = "wilson",
+    confint_type: Optional[str] = None,
     clip: bool = True,
     sides: Union[str, int] = "two-sided",
     digits: int = 7,
@@ -52,8 +53,9 @@ def compute_confidence_interval(
         Total number of samples.
     conf_level : float, default 0.95
         Confidence level, should be inside the interval ``(0, 1)``.
-    confint_type : str, default "wilson"
+    confint_type : str, optional
         Type (computation method) of the confidence interval.
+        Default is "wilson".
     clip : bool, default True
         Whether to clip the confidence interval to the interval ``(0, 1)``.
     sides : str or int, default "two-sided"
@@ -74,7 +76,8 @@ def compute_confidence_interval(
         The confidence interval.
 
     """
-
+    if confint_type is None:
+        confint_type = DEFAULT_METHOD
     if confint_type not in _supported_types:
         raise ValueError(f"method should be one of {repr(_supported_types)}, but got {repr(confint_type)}")
 
