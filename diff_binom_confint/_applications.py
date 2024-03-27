@@ -237,9 +237,11 @@ def make_risk_report(
                     f"{n_affected[item] / len(df):.1%}",
                     f"{n_positive[item]}",
                     f"{positive_target_risk[item]['risk']:.1%} (from {positive_target_risk[item]['confidence_interval'][0]:.1%} to {positive_target_risk[item]['confidence_interval'][1]:.1%})",
-                    f"{positive_target_risk_diff[item]['risk_difference']:.1%} (from {positive_target_risk_diff[item]['confidence_interval'][0]:.1%} to {positive_target_risk_diff[item]['confidence_interval'][1]:.1%})"
-                    if item != ref_item
-                    else "REF",
+                    (
+                        f"{positive_target_risk_diff[item]['risk_difference']:.1%} (from {positive_target_risk_diff[item]['confidence_interval'][0]:.1%} to {positive_target_risk_diff[item]['confidence_interval'][1]:.1%})"
+                        if item != ref_item
+                        else "REF"
+                    ),
                 ]
             )
             key = str(item) + (ref_indicator if item == ref_item else "")
@@ -255,9 +257,9 @@ def make_risk_report(
                 },
                 f"{risk_name} Risk Difference": {
                     "risk_difference": positive_target_risk_diff[item]["risk_difference"] if item != ref_item else 0,
-                    "confidence_interval": positive_target_risk_diff[item]["confidence_interval"]
-                    if item != ref_item
-                    else (0, 0),
+                    "confidence_interval": (
+                        positive_target_risk_diff[item]["confidence_interval"] if item != ref_item else (0, 0)
+                    ),
                 },
             }
             if is_split:
@@ -280,9 +282,9 @@ def make_risk_report(
     elif return_type.lower() == "latex":
         rows = [line.replace("%", r"\%") for line in df_risk_table.to_latex(header=False, index=False).splitlines()]
         rows[0] = r"\begin{tabular}{@{\extracolsep{6pt}}lllllll@{}}"
-        rows[
-            2
-        ] = r"\multicolumn{2}{l}{Feature} & \multicolumn{affected_cols}{l}{Affected} & \multicolumn{2}{l}{risk_name Risk ($95\%$ CI)} & risk_name Risk Difference  ($95\%$ CI) \\ \cline{1-2}\cline{3-4}\cline{5-6}\cline{7-7}"
+        rows[2] = (
+            r"\multicolumn{2}{l}{Feature} & \multicolumn{affected_cols}{l}{Affected} & \multicolumn{2}{l}{risk_name Risk ($95\%$ CI)} & risk_name Risk Difference  ($95\%$ CI) \\ \cline{1-2}\cline{3-4}\cline{5-6}\cline{7-7}"
+        )
         rows[2].replace("risk_name", risk_name).replace("95", str(int(conf_level * 100)))
         if is_split:
             rows[2].replace("affected_cols", "3")
