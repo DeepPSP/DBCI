@@ -2,6 +2,7 @@ import warnings
 from pathlib import Path
 from typing import Dict, Optional, Sequence, Tuple, Union
 
+import numpy as np
 import pandas as pd
 
 from ._binom_confint import compute_confidence_interval
@@ -116,6 +117,8 @@ def make_risk_report(
         if len(positive_class) != 1:
             raise ValueError("Unable to automatically determine the positive class, please specify it manually.")
         positive_class = positive_class[0]
+        if isinstance(positive_class, np.generic):
+            positive_class = positive_class.item()
         warnings.warn(
             f"positive_class is None, automatically set to {repr(positive_class)}",
             RuntimeWarning,
