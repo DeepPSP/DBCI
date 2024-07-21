@@ -41,7 +41,7 @@ def test_random():
         df_err = pd.DataFrame(err_quadruples, columns=["n_total", "n_positive", "method", "error"])
         df_err.to_csv(os.path.join(artifact_dir, "bci_random_data_errors.csv"), index=False)
     elif len(err_quadruples) > 0:
-        raise ValueError(f"Errors occurred: {err_quadruples}")
+        raise ValueError(f"ConfInt Errors occurred: {err_quadruples}")
 
 
 def test_dbci_random():
@@ -89,4 +89,4 @@ def test_dbci_random():
         )
         df_errors.to_csv(os.path.join(artifact_dir, "dbci_random_data_errors.csv"), index=False)
     elif len(errors) > 0:
-        raise ValueError(f"Errors occurred: {errors}")
+        raise ValueError(f"DiffConfInt Errors occurred: {errors}")

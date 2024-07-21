@@ -32,6 +32,7 @@ jobs:
         python setup.py install_egg_info # Workaround https://github.com/pypa/pip/issues/4537
         python -m pip install -e .[dev]
         python -m pip freeze
+        pip list
     - name: Run test with pytest and collect coverage
       run: |
         pytest --cov=diff_binom_confint --ignore=test/test_random.py -v test
