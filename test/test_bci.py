@@ -3,7 +3,6 @@
 
 import re
 from pathlib import Path
-from typing import List
 
 import pandas as pd
 from pytest import approx, raises, warns
@@ -21,7 +20,7 @@ from diff_binom_confint._binom_confint import (
 _TEST_DATA_DIR = Path(__file__).parent / "test-data"
 
 
-def test_load_data() -> List[pd.DataFrame]:
+def test_load_data() -> None:
     test_file_pattern = "example-(?P<n_positive>[\\d]+)-(?P<n_total>[\\d]+)\\.csv"
     test_files = Path(_TEST_DATA_DIR).glob("*.csv")
     test_data = []
@@ -44,7 +43,8 @@ def test_load_data() -> List[pd.DataFrame]:
                 }
             )
     print(f"Totally {len(test_data)} test data loaded")
-    return test_data
+    # return test_data
+    assert len(test_data) > 0, "No test data loaded"
 
 
 def test_confidence_interval():
@@ -192,3 +192,15 @@ def test_errors():
         compute_confidence_interval(1, 2, sides="3-sided")
     with raises(ValueError, match=f"method {repr('not-supported')} is not supported"):
         _compute_confidence_interval(1, 2, confint_type="not-supported")
+
+
+def test_reported_error_cases():
+    """Test the error cases reported to the issue tracker
+    to check if the error is still present.
+    """
+    error_cases = [
+        {"n_positive": 2, "n_total": 2, "method": "witting", "conf_level": 0.975},  # issue #5
+    ]
+
+    for case in error_cases:
+        compute_confidence_interval(**case)

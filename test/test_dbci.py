@@ -5,7 +5,6 @@ import re
 import warnings
 from collections import defaultdict
 from pathlib import Path
-from typing import List
 
 import numpy as np
 import pandas as pd
@@ -25,7 +24,7 @@ from diff_binom_confint._diff_binom_confint import (
 _TEST_DATA_DIR = Path(__file__).parent / "test-data"
 
 
-def test_load_data() -> List[pd.DataFrame]:
+def test_load_data() -> None:
     test_file_pattern = (
         "example-(?P<n_positive>[\\d]+)-(?P<n_total>[\\d]+)-vs-" "(?P<ref_positive>[\\d]+)-(?P<ref_total>[\\d]+)\\.csv"
     )
@@ -54,7 +53,8 @@ def test_load_data() -> List[pd.DataFrame]:
                 }
             )
     print(f"Totally {len(test_data)} test data loaded")
-    return test_data
+    # return test_data
+    assert len(test_data) > 0, "No test data loaded"
 
 
 def load_newcombee_data() -> dict:
@@ -151,10 +151,13 @@ def test_difference_confidence_interval():
     # ), f"""methods {set(_supported_methods) - set(df_data["method"].values)} has no test data"""
     no_test_data_methods = list(set(_supported_methods) - set(df_data["method"].values))
     if len(no_test_data_methods) > 0:
-        warnings.warn(
-            f"""methods {no_test_data_methods} has no test data""",
-            RuntimeWarning,
-        )
+        exclude_methods = ["carlin-louis"]  # currently not supported
+        _no_test_data_methods = list(set(no_test_data_methods) - set(exclude_methods))
+        if len(_no_test_data_methods) > 0:
+            warnings.warn(
+                f"""methods {no_test_data_methods} has no test data""",
+                RuntimeWarning,
+            )
 
     max_length = max([len(x) for x in _supported_methods]) + 1
     error_bound = 1e-4
@@ -236,10 +239,13 @@ def test_difference_confidence_interval_edge_case():
     # ), f"""methods {set(_supported_methods) - set(df_data["method"].values)} has no test data"""
     no_test_data_methods = list(set(_supported_methods) - set(df_data["method"].values))
     if len(no_test_data_methods) > 0:
-        warnings.warn(
-            f"""methods {no_test_data_methods} has no test data""",
-            RuntimeWarning,
-        )
+        exclude_methods = ["carlin-louis"]  # currently not supported
+        _no_test_data_methods = list(set(no_test_data_methods) - set(exclude_methods))
+        if len(_no_test_data_methods) > 0:
+            warnings.warn(
+                f"""methods {_no_test_data_methods} has no test data""",
+                RuntimeWarning,
+            )
 
     max_length = max([len(x) for x in _supported_methods]) + 1 + len("[clipped] ")
     error_bound = 1e-4
@@ -329,3 +335,22 @@ def test_errors():
 
     with raises(ValueError, match=f"method {repr('not-supported')} is not supported"):
         _compute_difference_confidence_interval(1, 2, 1, 2, confint_type="not-supported")
+
+
+def test_reported_error_cases():
+    """Test the error cases reported to the issue tracker
+    to check if the error is still present.
+    """
+    error_cases = [
+        {
+            "n_positive": 37823,
+            "n_total": 645638,
+            "ref_positive": 240,
+            "ref_total": 4105,
+            "method": "miettinen-nurminen",
+            "conf_level": 0.95,
+        },  # issue #1
+    ]
+
+    for case in error_cases:
+        compute_difference_confidence_interval(**case)
