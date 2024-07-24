@@ -35,11 +35,11 @@ def test_random():
                         method=method,
                     )
                 except Exception as e:
-                    errors.append((n_positive, n_total, method, traceback.format_exc()))
+                    errors.append((n_positive, n_total, method, e.__class__.__name__, traceback.format_exc()))
                     pbar.set_postfix_str(f"err count: {len(errors)}")
 
     if artifact_dir is not None and len(errors) > 0:
-        df_err = pd.DataFrame(errors, columns=["n_total", "n_positive", "method", "error_traceback"])
+        df_err = pd.DataFrame(errors, columns=["n_total", "n_positive", "method", "error_type", "error_traceback"])
         df_err.to_csv(os.path.join(artifact_dir, "bci_random_data_errors.csv"), index=False)
     elif len(errors) > 0:
         raise ValueError(f"ConfInt Errors occurred: {errors}")
@@ -71,7 +71,7 @@ def test_dbci_random():
                             ref_positive,
                             ref_total,
                             method,
-                            # e.__class__.__name__,
+                            e.__class__.__name__,
                             traceback.format_exc(),
                         )
                     )
@@ -86,6 +86,7 @@ def test_dbci_random():
                 "ref_positive",
                 "ref_total",
                 "method",
+                "error_type",
                 "error_traceback",
             ],
         )
