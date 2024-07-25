@@ -316,9 +316,9 @@ def _compute_confidence_interval(
         # stochastic, checked by seeting n_pos_tilde = n_positive
         # n_pos_tilde = n_positive
         if n_positive == n_total:
-            n_pos_tilde = RNG.uniform(0, 0.97)
+            n_pos_tilde = n_positive + RNG.uniform(0, 0.97)
         elif n_positive == 0:
-            n_pos_tilde = RNG.uniform(0.03, 1)
+            n_pos_tilde = n_positive + RNG.uniform(0.03, 1)
         else:
             n_pos_tilde = n_positive + RNG.uniform(0, 1)
         return ConfidenceInterval(
