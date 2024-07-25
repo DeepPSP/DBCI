@@ -315,7 +315,12 @@ def _compute_confidence_interval(
     elif confint_type.lower() == "witting":
         # stochastic, checked by seeting n_pos_tilde = n_positive
         # n_pos_tilde = n_positive
-        n_pos_tilde = n_positive + RNG.uniform(0, 1)
+        if n_positive == n_total:
+            n_pos_tilde = n_positive + RNG.uniform(0, 0.97)
+        elif n_positive == 0:
+            n_pos_tilde = n_positive + RNG.uniform(0.03, 1)
+        else:
+            n_pos_tilde = n_positive + RNG.uniform(0, 1)
         return ConfidenceInterval(
             _qbinom_abscont(_conf_level, n_total, n_pos_tilde) if n_positive != 0 else 0.0,
             _qbinom_abscont(1 - _conf_level, n_total, n_pos_tilde) if n_positive != n_total else 1.0,
