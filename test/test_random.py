@@ -2,6 +2,7 @@
 """
 
 import os
+import traceback
 
 import numpy as np
 import pandas as pd
@@ -20,7 +21,7 @@ def test_random():
     from diff_binom_confint._binom_confint import _supported_methods
 
     rng = np.random.default_rng()
-    err_quadruples = []
+    errors = []
     with tqdm(range(random_data_amount), mininterval=1.0, total=random_data_amount) as pbar:
         for _ in pbar:
             n_total = rng.integers(1, random_data_range)
@@ -34,14 +35,14 @@ def test_random():
                         method=method,
                     )
                 except Exception as e:
-                    err_quadruples.append((n_positive, n_total, method, e.__class__.__name__))
-                    pbar.set_postfix_str(f"err count: {len(err_quadruples)}")
+                    errors.append((n_positive, n_total, method, e.__class__.__name__, traceback.format_exc()))
+                    pbar.set_postfix_str(f"err count: {len(errors)}")
 
-    if artifact_dir is not None and len(err_quadruples) > 0:
-        df_err = pd.DataFrame(err_quadruples, columns=["n_total", "n_positive", "method", "error"])
+    if artifact_dir is not None and len(errors) > 0:
+        df_err = pd.DataFrame(errors, columns=["n_total", "n_positive", "method", "error_type", "error_traceback"])
         df_err.to_csv(os.path.join(artifact_dir, "bci_random_data_errors.csv"), index=False)
-    elif len(err_quadruples) > 0:
-        raise ValueError(f"ConfInt Errors occurred: {err_quadruples}")
+    elif len(errors) > 0:
+        raise ValueError(f"ConfInt Errors occurred: {errors}")
 
 
 def test_dbci_random():
@@ -71,6 +72,7 @@ def test_dbci_random():
                             ref_total,
                             method,
                             e.__class__.__name__,
+                            traceback.format_exc(),
                         )
                     )
                     pbar.set_postfix_str(f"err count: {len(errors)}")
@@ -84,7 +86,8 @@ def test_dbci_random():
                 "ref_positive",
                 "ref_total",
                 "method",
-                "error",
+                "error_type",
+                "error_traceback",
             ],
         )
         df_errors.to_csv(os.path.join(artifact_dir, "dbci_random_data_errors.csv"), index=False)
