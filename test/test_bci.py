@@ -200,6 +200,7 @@ def test_reported_error_cases():
     """
     error_cases = [
         {"n_positive": 2, "n_total": 2, "method": "witting", "conf_level": 0.975},  # issue #5
+        {"n_positive": 0, "n_total": 850, "method": "witting", "conf_level": 0.975},  # issue #5
     ]
 
     for case in error_cases:
