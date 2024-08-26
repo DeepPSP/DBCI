@@ -1,0 +1,70 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "diff-binom-confint"
+dynamic = ["version"]
+description = "Computation of confidence intervals for binomial proportions and for difference of binomial proportions."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.6"
+authors = [
+    { name = "DeepPSP", email = "wenh06@gmail.com" },
+]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "deprecate-kwargs",
+    "Deprecated",
+    "Jinja2",
+    "numpy",
+    "openpyxl",
+    "pandas",
+    "scipy",
+    "tabulate",
+]
+
+[project.optional-dependencies]
+acc = [
+    "numba",
+]
+dev = [
+    "numba",
+    "pandas",
+    "pre-commit",
+    "pytest",
+    "pytest-cov",
+    "pytest-xdist",
+    "tqdm",
+]
+test = [
+    "pandas",
+    "pre-commit",
+    "pytest",
+    "pytest-cov",
+    "pytest-xdist",
+    "tqdm",
+]
+
+[project.urls]
+Homepage = "https://github.com/DeepPSP/DBCI"
+
+[tool.hatch.version]
+path = "diff_binom_confint/version.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/diff_binom_confint",
+]
