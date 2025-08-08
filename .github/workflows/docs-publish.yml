@@ -70,7 +70,8 @@ jobs:
         pip list
     - name: Setup TeX Live
       # This is used to render the tikz plots, algorithm2e, etc.
-      uses: teatimeguest/setup-texlive-action@v3
+      # uses: teatimeguest/setup-texlive-action@v3
+      uses: zauguin/install-texlive@v4
       with:
         # List of TeXLive-packages contained in the scheme-basic
         # https://trac.macports.org/wiki/TeXLivePackages
