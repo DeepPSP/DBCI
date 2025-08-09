@@ -1,6 +1,8 @@
 numpy
+pandas
+openpyxl
+tabulate
 scipy
 deprecate-kwargs
 Deprecated
-dataclasses  # Python 3.6 only
-typing-extensions  # Python 3.6 only
+Jinja2

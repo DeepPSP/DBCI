@@ -1,0 +1,75 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+# NOTE that this workflow should run with numba installed, without which the tests will take a long time to run.
+
+name: Run Massive Random Test with PyTest
+
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    # runs once every week
+    - cron: '0 0 * * 0'
+
+env:
+  ARTIFACTS_DIR: ${{ github.workspace }}/artifacts-${{ github.run_number }}
+  RANDOM_DATA_AMOUNT: 10000
+  RANDOM_DATA_RANGE: 1000000
+
+jobs:
+  build:
+
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        os: [ubuntu-22.04, ubuntu-22.04]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip setuptools wheel
+        python -m pip install -r requirements.txt
+        python -m pip install pytest pytest-xdist # Testing packages
+        python -m pip uninstall diff-binom-confint --yes # Remove if already installed
+        python setup.py install_egg_info # Workaround https://github.com/pypa/pip/issues/4537
+        python -m pip install -e .[dev]
+        python -m pip freeze
+        pip list
+    - name: Create artifacts directory if not exists
+      run: |
+        mkdir -p $ARTIFACTS_DIR
+        # clear artifacts directory if exists
+        rm -rf $ARTIFACTS_DIR/*
+    - name: Run massive random test
+      run: |
+        pytest -v test/test_random.py
+    - name: Check if artifacts directory is empty
+      id: check_artifacts_empty
+      run: |
+        if [ "$(ls -A $ARTIFACTS_DIR)" ]; then
+          echo "Artifacts directory is not empty."
+          echo "Errors found in massive random test."
+          echo "is_empty=false" >> "$GITHUB_OUTPUT"
+        else
+          echo "is_empty=true" >> "$GITHUB_OUTPUT"
+        fi
+    - name: Upload artifacts if artifacts directory is not empty
+      if : ${{ steps.check_artifacts_empty.outputs.is_empty == 'false' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: artifacts-${{ github.run_number }}
+        path: $ARTIFACTS_DIR
+    - name: Fail if artifacts directory is not empty
+      if : ${{ steps.check_artifacts_empty.outputs.is_empty == 'false' }}
+      run: |
+        exit 1

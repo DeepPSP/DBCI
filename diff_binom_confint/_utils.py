@@ -3,7 +3,7 @@
 
 import re
 import warnings
-from typing import Callable, Optional, Union, List
+from typing import Callable, List, Optional, Union
 
 try:
     from numba import njit
@@ -24,23 +24,24 @@ __all__ = [
 
 
 def add_docstring(doc: str, mode: str = "replace") -> Callable:
-    """
-    decorator to add docstring to a function or a class
+    """Decorator to add docstring to a function or a class.
 
     Parameters
     ----------
-    doc: str,
-        the docstring to be added
-    mode: str, default "replace",
-        the mode of the docstring,
-        can be "replace", "append" or "prepend",
-        case insensitive
+    doc : str
+        The docstring to be added.
+    mode : str, default "replace"
+        The mode of the docstring,
+        can be "replace", "append" or "prepend", case insensitive.
+
+    Returns
+    -------
+    callable
+        The function or class with docstring modified.
 
     """
 
     def decorator(func_or_cls: Callable) -> Callable:
-        """ """
-
         pattern = "(\\s^\n){1,}"
         if mode.lower() == "replace":
             func_or_cls.__doc__ = doc
@@ -59,7 +60,7 @@ def add_docstring(doc: str, mode: str = "replace") -> Callable:
             new_lines = max(0, new_lines) * "\n"
             func_or_cls.__doc__ = doc + new_lines + func_or_cls.__doc__
         else:
-            raise ValueError(f"mode {mode} is not supported")
+            raise ValueError(f"mode {repr(mode)} is not supported")
         return func_or_cls
 
     return decorator
@@ -72,27 +73,26 @@ def remove_parameters_returns_from_docstring(
     parameters_indicator: str = "Parameters",
     returns_indicator: str = "Returns",
 ) -> str:
-    """
-    remove parameters and/or returns from docstring,
-    which is of the format of numpydoc
+    """Remove parameters and/or returns from docstring,
+    which is of the format of numpydoc.
 
     Parameters
     ----------
-    doc: str,
-        docstring to be processed
-    parameters: str or list of str, default None,
-        parameters to be removed
-    returns: str or list of str, default None,
-        returned values to be removed
-    parameters_indicator: str, default "Parameters",
-        the indicator of the parameters section
-    returns_indicator: str, default "Returns",
-        the indicator of the returns section
+    doc : str
+        The docstring to be processed.
+    parameters : str or list of str, default None
+        Parameters to be removed.
+    returns : str or list of str, default None
+        Returned values to be removed.
+    parameters_indicator : str, default "Parameters"
+        The indicator of the parameters section.
+    returns_indicator : str, default "Returns"
+        The indicator of the returns section.
 
     Returns
     -------
-    new_doc: str,
-        the processed docstring
+    new_doc : str
+        The processed docstring.
 
     """
     if parameters is None:
@@ -111,28 +111,23 @@ def remove_parameters_returns_from_docstring(
     indices2remove = []
     for idx, line in enumerate(new_doc):
         if line.strip().startswith(parameters_indicator):
-            parameters_indent = " " * line.index(parameters_indicator)
+            candidate = " " * line.index(parameters_indicator)
+            if idx < len(new_doc) - 1 and new_doc[idx + 1] == candidate + "-" * len(parameters_indicator):
+                parameters_indent = candidate
         if line.strip().startswith(returns_indicator):
             returns_indent = " " * line.index(returns_indicator)
-        if parameters_indent is not None and len(line.lstrip()) == len(line) - len(
-            parameters_indent
-        ):
+        if parameters_indent is not None and len(line.lstrip()) == len(line) - len(parameters_indent):
             if any([line.lstrip().startswith(p) for p in parameters]):
                 if start_idx is not None:
                     indices2remove.extend(list(range(start_idx, idx)))
                 start_idx = idx
             elif start_idx is not None:
-                if (
-                    line.lstrip().startswith(returns_indicator)
-                    and len(new_doc[idx - 1].strip()) == 0
-                ):
+                if line.lstrip().startswith(returns_indicator) and len(new_doc[idx - 1].strip()) == 0:
                     indices2remove.extend(list(range(start_idx, idx - 1)))
                 else:
                     indices2remove.extend(list(range(start_idx, idx)))
                 start_idx = None
-        if returns_indent is not None and len(line.lstrip()) == len(line) - len(
-            returns_indent
-        ):
+        if returns_indent is not None and len(line.lstrip()) == len(line) - len(returns_indent):
             if any([line.lstrip().startswith(p) for p in returns]):
                 if start_idx is not None:
                     indices2remove.extend(list(range(start_idx, idx)))
@@ -143,13 +138,20 @@ def remove_parameters_returns_from_docstring(
     if start_idx is not None:
         indices2remove(list(range(start_idx, len(new_doc))))
         new_doc.extend(["\n", parameters_indicator or returns_indicator])
-    new_doc = "\n".join(
-        [line for idx, line in enumerate(new_doc) if idx not in indices2remove]
-    )
+    new_doc = [line for idx, line in enumerate(new_doc) if idx not in indices2remove]
+    # remove trailing empty lines
+    idx = max(idx for idx, line in enumerate(new_doc) if len(line.strip()) > 0)
+    new_doc = new_doc[: idx + 1]
+    if returns_indent is not None:
+        if new_doc[-1] == returns_indent + "-" * len(returns_indicator) and new_doc[-2] == returns_indent + returns_indicator:
+            new_doc.extend([returns_indent + "None"])
+    new_doc.extend(["", returns_indent])
+    new_doc = "\n".join(new_doc)
     return new_doc
 
 
 def dummy_accelerator(func: callable) -> callable:
+    """Dummy accelerator."""
     return func
 
 
@@ -161,7 +163,11 @@ if njit is None:
 
 
 class Accelerator(object):
-    """ """
+    """Accelerator.
+
+    If `numba` is installed, `numba` is used as the default accelerator.
+    Otherwise, a dummy accelerator (no acceleration) is used.
+    """
 
     def __init__(self) -> None:
         if njit is not dummy_accelerator:
@@ -176,9 +182,7 @@ class Accelerator(object):
             self.accelerator = dummy_accelerator
         elif name.lower() == "numba":
             if njit is dummy_accelerator:
-                warnings.warn(
-                    "`numba` is not installed, dummy accelerator is used instead"
-                )
+                warnings.warn("numba is not installed, dummy accelerator is used instead")
             self.accelerator = njit
         # elif name.lower() == "taichi":
         #     if ti_kernel is dummy_accelerator:
@@ -187,7 +191,7 @@ class Accelerator(object):
         #         )
         #     self.accelerator = ti_kernel
         else:
-            raise ValueError(f"Accelerator {name} is not supported")
+            raise ValueError(f"Accelerator {repr(name)} is not supported")
 
 
 accelerator = Accelerator()

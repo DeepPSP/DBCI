@@ -1,11 +1,11 @@
 """
 """
 
-import setuptools
 from pathlib import Path
 
-from diff_binom_confint import __version__
+import setuptools
 
+from diff_binom_confint import __version__
 
 cwd = Path(__file__).resolve().parent
 
@@ -14,10 +14,11 @@ long_description = (cwd / "README.md").read_text(encoding="utf-8")
 extras = {}
 extras["test"] = [
     "pandas",
-    "black==22.3.0",
-    "flake8",
+    "pre-commit",
+    "tqdm",
     "pytest",
     "pytest-xdist",
+    "pytest-cov",
 ]
 extras["acc"] = ["numba"]
 extras["dev"] = extras["test"] + extras["acc"]
@@ -40,8 +41,6 @@ setuptools.setup(
             "test*",
         ]
     ),
-    # package_data=,
-    # entry_points=,
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
@@ -50,10 +49,12 @@ setuptools.setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
     python_requires=">=3.6",
-    install_requires=open("requirements.txt").readlines(),
+    install_requires=(cwd / "requirements.txt").read_text().splitlines(),
     extras_require=extras,
 )
