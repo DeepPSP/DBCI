@@ -1,9 +1,9 @@
 """
 """
 
-from ._wang import _wang_lower_upper_bounds
+from ._wang import wang_binomial_ci
 
 
 __all__ = [
-    "_wang_lower_upper_bounds",
+    "wang_binomial_ci",
 ]
