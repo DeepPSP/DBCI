@@ -2,6 +2,7 @@
 Shan, G. and Wang, W., “ExactCIdiff: an R package for computing exact confidence intervals for the difference of two proportions”, The R Journal, 5(2), 62-71 (2013).
 """
 
+import warnings
 from typing import List, Union
 
 import numpy as np
@@ -59,23 +60,25 @@ def wang_binomial_ci(
     """
     # Input validation
     if not isinstance(n_total, int) or n_total < 1:
-        raise ValueError("number of subjects n_total must be a positive integer")
+        raise ValueError("Number of subjects n_total must be a positive integer.")
     if not isinstance(ref_total, int) or ref_total < 1:
-        raise ValueError("number of subjects ref_total must be a positive integer")
+        raise ValueError("Number of subjects ref_total must be a positive integer.")
     if not isinstance(grid_one, int) or grid_one < 1:
-        raise ValueError("number of grid in the first step search grid_one must be a positive integer")
+        raise ValueError("Number of grid in the first step search grid_one must be a positive integer.")
     if not isinstance(grid_two, int) or grid_two < 1:
-        raise ValueError("number of grid in the second step search grid_two must be a positive integer")
+        raise ValueError("Number of grid in the second step search grid_two must be a positive integer.")
     if n_total + ref_total > 100:
-        print("It may take more time to compute the confidence limits")
+        warnings.warn(
+            "It may take more time to compute the confidence limits, and the results might be incorrect.", RuntimeWarning
+        )
     if not isinstance(n_positive, int) or n_positive < 0 or n_positive > n_total:
-        raise ValueError("observed number of response n_positive must be an integer between 0 and n_total")
+        raise ValueError("Observed number of response n_positive must be an integer between 0 and n_total.")
     if not isinstance(ref_positive, int) or ref_positive < 0 or ref_positive > ref_total:
-        raise ValueError("observed number of response ref_positive must be an integer between 0 and ref_total")
+        raise ValueError("Observed number of response ref_positive must be an integer between 0 and ref_total.")
     if not isinstance(conf_level, (int, float)) or conf_level <= 0 or conf_level >= 1:
-        raise ValueError("conf.level must be a positive number between 0 and 1, default 0.95")
+        raise ValueError("conf_level must be a positive number between 0 and 1, default 0.95.")
     if not isinstance(precision, (int, float)) or precision <= 0:
-        raise ValueError("precision must be a positive number, default 0.00001")
+        raise ValueError("precision must be a positive number, default 0.00001.")
 
     sides = str(sides).lower()
     if sides not in _SIDE_NAME_MAP:
