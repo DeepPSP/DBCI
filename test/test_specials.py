@@ -417,7 +417,7 @@ def test_wang_method():
     n_test = 7
     tot_ub = 100
     for _ in range(n_test):
-        n_total = np.random.randint(int(0.75 * tot_ub))
+        n_total = np.random.randint(1, int(0.75 * tot_ub))
         n_positive = np.random.randint(n_total + 1)
         ref_total = np.random.randint(1, tot_ub - n_total)
         ref_positive = np.random.randint(ref_total + 1)
@@ -434,4 +434,17 @@ def test_wang_method():
         assert np.isclose(
             (r_lb, r_ub), (lb, ub), atol=1e-4
         ).all(), f"R result: {r_lb, r_ub}, Python result: {lb, ub} for {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }"  # noqa: E202, E251
-        print(f"Test passed for {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }")
+        print(f"Test passed for {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }")  # noqa: E202, E251
+
+    # test one-sided
+    r_result = r["wang_binomial_ci_r"](n_positive, n_total, ref_positive, ref_total, CItype="Lower")
+    r_result_dict = dict(zip(r_result.names, r_result))
+    r_lb, r_ub = [item[1] for item in r_result_dict["ExactCI"].items()]
+    lb, ub = wang_binomial_ci(n_positive, n_total, ref_positive, ref_total, sides="left").astuple()
+    assert np.isclose((r_lb, r_ub), (lb, ub), atol=1e-4).all()
+
+    r_result = r["wang_binomial_ci_r"](n_positive, n_total, ref_positive, ref_total, CItype="Upper")
+    r_result_dict = dict(zip(r_result.names, r_result))
+    r_lb, r_ub = [item[1] for item in r_result_dict["ExactCI"].items()]
+    lb, ub = wang_binomial_ci(n_positive, n_total, ref_positive, ref_total, sides="right").astuple()
+    assert np.isclose((r_lb, r_ub), (lb, ub), atol=1e-4).all()

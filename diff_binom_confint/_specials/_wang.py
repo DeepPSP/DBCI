@@ -99,7 +99,7 @@ def wang_binomial_ci(
             grid_one,
             grid_two,
         )
-        print(f"Left CI: {ci_l}")
+        # print(f"Left CI: {ci_l}")
         ci_u = binomial_ci_one_sided(
             n_positive,
             n_total,
@@ -111,7 +111,7 @@ def wang_binomial_ci(
             grid_one,
             grid_two,
         )
-        print(f"Right CI: {ci_u}")
+        # print(f"Right CI: {ci_u}")
         lower, upper = ci_l[1], ci_u[2]
         estimate = ci_u[0]
         return ConfidenceInterval(lower, upper, estimate, conf_level, "wang", sides_val)
