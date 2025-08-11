@@ -4,7 +4,7 @@ fail_fast: false
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: end-of-file-fixer
       - id: trailing-whitespace
@@ -17,6 +17,7 @@ repos:
     rev: 7.3.0
     hooks:
       - id: flake8
+        additional_dependencies: [pycodestyle>=2.11.0]
         args: [--max-line-length=128, '--exclude=./.*,build,dist', '--ignore=E501,W503,E231,E203', --count, --statistics, --show-source]
   - repo: https://github.com/pycqa/isort
     rev: 6.0.1
