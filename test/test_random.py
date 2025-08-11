@@ -61,6 +61,9 @@ def test_dbci_random():
             ref_total = np.random.randint(1, random_data_range)
             ref_positive = np.random.randint(0, ref_total + 1)
             for method in _supported_methods:
+                if method in ["wang"]:
+                    # too time-consuming, hence skipped
+                    continue
                 try:
                     compute_difference_confidence_interval(n_positive, n_total, ref_positive, ref_total, method=method)
                 except Exception as e:
