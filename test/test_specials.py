@@ -433,5 +433,5 @@ def test_wang_method():
         # compare results
         assert np.isclose(
             (r_lb, r_ub), (lb, ub), atol=1e-2
-        ).all(), f"R result: {r_lb, r_ub}, Python result: {lb, ub} for {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }"
+        ).all(), f"R result: {r_lb, r_ub}, Python result: {lb, ub} for {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }"  # noqa: E202, E251
         print(f"Test passed for {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }")
