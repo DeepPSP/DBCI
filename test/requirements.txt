@@ -1,0 +1,7 @@
+pandas
+pre-commit
+tqdm
+pytest
+pytest-xdist
+pytest-cov
+rpy2
