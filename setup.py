@@ -1,5 +1,4 @@
-"""
-"""
+""" """
 
 from pathlib import Path
 
@@ -19,6 +18,7 @@ extras["test"] = [
     "pytest",
     "pytest-xdist",
     "pytest-cov",
+    "rpy2",
 ]
 extras["acc"] = ["numba"]
 extras["dev"] = extras["test"] + extras["acc"]

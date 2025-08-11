@@ -1,5 +1,4 @@
-"""
-"""
+""" """
 
 from ._wang import wang_binomial_ci
 

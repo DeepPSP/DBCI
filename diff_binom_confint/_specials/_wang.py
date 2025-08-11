@@ -123,12 +123,6 @@ def wang_binomial_ci(
         return confint
     else:
         ci = binomial_ci_one(n_positive, n_total, ref_positive, ref_total, conf_level, sides, precision, grid_one, grid_two)
-        # result = {
-        #     "conf_level": conf_level,
-        #     "sides": sides,
-        #     "estimate": ci[0],
-        #     "exact_ci": [ci[1], ci[2]]
-        # }
         confint = ConfidenceInterval(
             ci[1],  # lower bound
             ci[2],  # upper bound
