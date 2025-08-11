@@ -122,7 +122,7 @@ def wang_binomial_ci(
         )
         return confint
     else:
-        ci = binomial_ci_one(n_total, ref_total, n_positive, ref_positive, conf_level, sides, precision, grid_one, grid_two)
+        ci = binomial_ci_one(n_positive, n_total, ref_positive, ref_total, conf_level, sides, precision, grid_one, grid_two)
         # result = {
         #     "conf_level": conf_level,
         #     "sides": sides,
