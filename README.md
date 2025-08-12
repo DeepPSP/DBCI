@@ -120,7 +120,7 @@ confint = compute_difference_confidence_interval(
 | santner-snell               | :x:                |
 | chan-zhang                  | :x:                |
 | agresti-min                 | :x:                |
-| wang                        | :x:                |
+| wang                        | :heavy_check_mark: |
 | pradhan-banerjee            | :x:                |
 
 </details>
