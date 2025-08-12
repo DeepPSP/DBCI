@@ -69,7 +69,7 @@ def wang_binomial_ci(
         raise ValueError("grid_two must be a positive integer.")
     if n_total + ref_total > 100:
         warnings.warn(
-            "It may take more time to compute the confidence limits, and the results might be incorrect.",
+            "It may take more time to compute the confidence limits.",
             RuntimeWarning,
         )
     if not isinstance(n_positive, int) or n_positive < 0 or n_positive > n_total:

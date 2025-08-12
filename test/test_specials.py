@@ -1,6 +1,8 @@
 import numpy as np
+import pytest
 from rpy2.robjects import r
 
+from diff_binom_confint import compute_difference_confidence_interval
 from diff_binom_confint._specials import wang_binomial_ci
 
 # fmt: off
@@ -428,7 +430,7 @@ def test_wang_method():
         r_lb, r_ub = [item[1] for item in r_result_dict["ExactCI"].items()]
 
         # results computed from Python function
-        lb, ub = wang_binomial_ci(n_positive, n_total, ref_positive, ref_total).astuple()
+        lb, ub = compute_difference_confidence_interval(n_positive, n_total, ref_positive, ref_total, method="wang").astuple()
 
         # compare results
         assert np.isclose(
@@ -436,15 +438,51 @@ def test_wang_method():
         ).all(), f"R result: {r_lb, r_ub}, Python result: {lb, ub} for {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }"  # noqa: E202, E251
         print(f"Test passed for {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }")  # noqa: E202, E251
 
+    n_positive, n_total, ref_positive, ref_total = 2,5,3,8
+
     # test one-sided
     r_result = r["wang_binomial_ci_r"](n_positive, n_total, ref_positive, ref_total, CItype="Lower")
     r_result_dict = dict(zip(r_result.names, r_result))
     r_lb, r_ub = [item[1] for item in r_result_dict["ExactCI"].items()]
-    lb, ub = wang_binomial_ci(n_positive, n_total, ref_positive, ref_total, sides="left").astuple()
+    lb, ub = compute_difference_confidence_interval(n_positive, n_total, ref_positive, ref_total, method="wang", sides="left").astuple()
     assert np.isclose((r_lb, r_ub), (lb, ub), atol=1e-4).all()
 
     r_result = r["wang_binomial_ci_r"](n_positive, n_total, ref_positive, ref_total, CItype="Upper")
     r_result_dict = dict(zip(r_result.names, r_result))
     r_lb, r_ub = [item[1] for item in r_result_dict["ExactCI"].items()]
-    lb, ub = wang_binomial_ci(n_positive, n_total, ref_positive, ref_total, sides="right").astuple()
+    lb, ub = compute_difference_confidence_interval(n_positive, n_total, ref_positive, ref_total, method="wang", sides="right").astuple()
     assert np.isclose((r_lb, r_ub), (lb, ub), atol=1e-4).all()
+
+    # test input validation
+    with pytest.raises(ValueError, match="Number of subjects n_total must be a positive integer."):
+        wang_binomial_ci(n_positive, 0, ref_positive, ref_total)
+    with pytest.raises(ValueError, match="Number of subjects ref_total must be a positive integer."):
+        wang_binomial_ci(n_positive, n_total, ref_positive, 0)
+    with pytest.raises(ValueError, match="grid_one must be a positive integer."):
+        wang_binomial_ci(n_positive, n_total, ref_positive, ref_total, grid_one=0)
+    with pytest.raises(ValueError, match="grid_two must be a positive integer."):
+        wang_binomial_ci(n_positive, n_total, ref_positive, ref_total, grid_two=0)
+    with pytest.raises(ValueError, match="n_positive must be an integer between 0 and n_total."):
+        wang_binomial_ci(-1, n_total, ref_positive, ref_total)
+    with pytest.raises(ValueError, match="n_positive must be an integer between 0 and n_total."):
+        wang_binomial_ci(n_total + 1, n_total, ref_positive, ref_total)
+    with pytest.raises(ValueError, match="ref_positive must be an integer between 0 and ref_total."):
+        wang_binomial_ci(n_positive, n_total, -1, ref_total)
+    with pytest.raises(ValueError, match="ref_positive must be an integer between 0 and ref_total."):
+        wang_binomial_ci(n_positive, n_total, ref_total + 1, ref_total)
+    with pytest.raises(ValueError, match="conf_level must be in \\(0,1\\)."):
+        wang_binomial_ci(n_positive, n_total, ref_positive, ref_total, conf_level=0)
+    with pytest.raises(ValueError, match="conf_level must be in \\(0,1\\)."):
+        wang_binomial_ci(n_positive, n_total, ref_positive, ref_total, conf_level=1)
+    with pytest.raises(ValueError, match="precision must be positive."):
+        wang_binomial_ci(n_positive, n_total, ref_positive, ref_total, precision=0)
+    with pytest.raises(ValueError, match="sides should be one of"):
+        wang_binomial_ci(n_positive, n_total, ref_positive, ref_total, sides="invalid")
+
+    with pytest.warns(RuntimeWarning, match="It may take more time to compute the confidence limits."):
+        wang_binomial_ci(1, 50, 1, 51)
+
+    # test edge cases
+    wang_binomial_ci(n_total, n_total, 0, ref_total)
+    wang_binomial_ci(0, n_total, ref_total, ref_total)
+    wang_binomial_ci(1, 1, 1, 1)
