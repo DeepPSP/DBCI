@@ -1,5 +1,4 @@
-"""
-"""
+""" """
 
 import warnings
 from typing import Optional, Union
@@ -11,6 +10,7 @@ from scipy.optimize import brentq
 from scipy.stats import norm
 
 from ._confint import _SIDE_NAME_MAP, ConfidenceInterval, ConfidenceIntervalSides
+from ._specials import wang_binomial_ci
 from ._utils import accelerator, add_docstring, remove_parameters_returns_from_docstring
 
 __all__ = [
@@ -376,7 +376,14 @@ def _compute_difference_confidence_interval(
     elif confint_type.lower() == "agresti-min":
         raise NotImplementedError(f"method {repr(confint_type)} is not implemented yet")
     elif confint_type.lower() == "wang":
-        raise NotImplementedError(f"method {repr(confint_type)} is not implemented yet")
+        return wang_binomial_ci(
+            n_positive,
+            n_total,
+            ref_positive,
+            ref_total,
+            conf_level,
+            sides,
+        )
     elif confint_type.lower() == "pradhan-banerjee":
         raise NotImplementedError(f"method {repr(confint_type)} is not implemented yet")
     else:
@@ -412,7 +419,7 @@ _supported_types = [
     # "santner-snell",
     # "chan-zhang",
     # "agresti-min",
-    # "wang",
+    "wang",
     # "pradhan-banerjee",
 ]
 _supported_methods = _supported_types

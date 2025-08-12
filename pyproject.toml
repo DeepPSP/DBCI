@@ -40,6 +40,25 @@ dependencies = [
 acc = [
     "numba",
 ]
+docs = [
+    "sphinx<7.0",
+    "nbsphinx",
+    "sphinx-theme",
+    "pydata-sphinx-theme",
+    "sphinx-rtd-theme",
+    "sphinx-book-theme",
+    "sphinx-autobuild",
+    "sphinx-markdown-tables",
+    "sphinx-copybutton",
+    "sphinx-multiversion",
+    "sphinx-design",
+    "sphinxcontrib-napoleon",
+    "sphinx-emoji-favicon",
+    "sphinxemoji",
+    "sphinxcontrib-bibtex",
+    "sphinxcontrib-proof",
+    "numpydoc",
+]
 dev = [
     "numba",
     "pandas",
@@ -48,6 +67,7 @@ dev = [
     "pytest-cov",
     "pytest-xdist",
     "tqdm",
+    "rpy2",
 ]
 test = [
     "pandas",
@@ -56,6 +76,7 @@ test = [
     "pytest-cov",
     "pytest-xdist",
     "tqdm",
+    "rpy2",
 ]
 
 [project.urls]

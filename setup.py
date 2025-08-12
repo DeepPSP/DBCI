@@ -1,5 +1,4 @@
-"""
-"""
+""" """
 
 from pathlib import Path
 
@@ -12,16 +11,10 @@ cwd = Path(__file__).resolve().parent
 long_description = (cwd / "README.md").read_text(encoding="utf-8")
 
 extras = {}
-extras["test"] = [
-    "pandas",
-    "pre-commit",
-    "tqdm",
-    "pytest",
-    "pytest-xdist",
-    "pytest-cov",
-]
+extras["docs"] = (cwd / "docs" / "requirements.txt").read_text().splitlines()
 extras["acc"] = ["numba"]
-extras["dev"] = extras["test"] + extras["acc"]
+extras["test"] = (cwd / "test" / "requirements.txt").read_text().splitlines()
+extras["dev"] = extras["acc"] + extras["test"]
 
 
 setuptools.setup(

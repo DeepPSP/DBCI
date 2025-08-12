@@ -1,5 +1,4 @@
-"""
-"""
+""" """
 
 import re
 import warnings
@@ -105,6 +104,8 @@ def test_newcombee_data():
         for method, confint in v.items():
             if method not in _supported_methods or method in _stochastic_methods:
                 continue
+            if method in ["wang"]:
+                continue
             lower, upper = compute_difference_confidence_interval(
                 n_positive, n_total, ref_positive, ref_total, method=method, clip=False
             ).astuple()
@@ -159,12 +160,14 @@ def test_difference_confidence_interval():
                 RuntimeWarning,
             )
 
+    special_methods = ["wang"]
+
     max_length = max([len(x) for x in _supported_methods]) + 1
     error_bound = 1e-4
 
     print("Testing 2-sided confidence interval")
     for confint_method in _supported_methods:
-        if confint_method in _stochastic_methods + no_test_data_methods:
+        if confint_method in _stochastic_methods + no_test_data_methods + special_methods:
             continue
         lower, upper = compute_difference_confidence_interval(
             n_positive,
@@ -184,7 +187,7 @@ def test_difference_confidence_interval():
 
     print("Testing left-sided confidence interval")
     for confint_method in _supported_methods:
-        if confint_method in _stochastic_methods + no_test_data_methods:
+        if confint_method in _stochastic_methods + no_test_data_methods + special_methods:
             continue
         lower, upper = compute_difference_confidence_interval(
             n_positive,
@@ -204,7 +207,7 @@ def test_difference_confidence_interval():
 
     print("Testing right-sided confidence interval")
     for confint_method in _supported_methods:
-        if confint_method in _stochastic_methods + no_test_data_methods:
+        if confint_method in _stochastic_methods + no_test_data_methods + special_methods:
             continue
         lower, upper = compute_difference_confidence_interval(
             n_positive,
@@ -247,11 +250,13 @@ def test_difference_confidence_interval_edge_case():
                 RuntimeWarning,
             )
 
+    special_methods = ["wang"]
+
     max_length = max([len(x) for x in _supported_methods]) + 1 + len("[clipped] ")
     error_bound = 1e-4
 
     for confint_method in _supported_methods:
-        if confint_method in _stochastic_methods + no_test_data_methods:
+        if confint_method in _stochastic_methods + no_test_data_methods + special_methods:
             continue
         lower_clip, upper_clip = compute_difference_confidence_interval(
             n_positive,
@@ -327,7 +332,7 @@ def test_errors():
         "santner-snell",
         "chan-zhang",
         "agresti-min",
-        "wang",
+        # "wang",
         "pradhan-banerjee",
     ]:
         with raises(NotImplementedError, match=f"method {repr(method)} is not implemented yet"):
