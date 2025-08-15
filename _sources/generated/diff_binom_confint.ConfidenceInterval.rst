@@ -14,6 +14,8 @@
    .. autosummary::
    
       ~ConfidenceInterval.__init__
+      ~ConfidenceInterval.asdict
+      ~ConfidenceInterval.astable
       ~ConfidenceInterval.astuple
    
    
@@ -24,6 +26,7 @@
 
    .. autosummary::
    
+      ~ConfidenceInterval.digits
       ~ConfidenceInterval.sides
       ~ConfidenceInterval.lower_bound
       ~ConfidenceInterval.upper_bound

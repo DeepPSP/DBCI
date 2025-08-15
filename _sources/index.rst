@@ -42,6 +42,12 @@ One can install the \ `Numba <https://numba.pydata.org/>`__\  accelerated versio
 
    python -m pip install diff-binom-confint[acc]
 
+Streamlit app
+^^^^^^^^^^^^^^^
+
+One can also use the \ `Streamlit app <https://diff-binom-confint.streamlit.app>`_\  to compute confidence intervals for binomial proportions,
+and even upload a categorized table of data to obtain a report of risk report for binomial confidence intervals.
+
 Usage examples
 ^^^^^^^^^^^^^^^
 
