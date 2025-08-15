@@ -6,7 +6,8 @@
 [![PyPI](https://img.shields.io/pypi/v/diff-binom-confint?style=flat-square)](https://pypi.org/project/diff-binom-confint/)
 [![RTD Status](https://readthedocs.org/projects/dbci/badge/?version=latest)](https://dbci.readthedocs.io/en/latest/?badge=latest)
 [![gh-page status](https://github.com/DeepPSP/DBCI/actions/workflows/docs-publish.yml/badge.svg?branch=doc)](https://github.com/DeepPSP/DBCI/actions/workflows/docs-publish.yml)
-[![downloads](https://img.shields.io/pypi/dm/diff-binom-confint?style=flat-square)](https://pypistats.org/packages/diff-binom-confint)
+<!-- [![downloads](https://img.shields.io/pypi/dm/diff-binom-confint?style=flat-square)](https://pypistats.org/packages/diff-binom-confint) -->
+[![PyPI Downloads](https://static.pepy.tech/badge/diff-binom-confint/month)](https://pepy.tech/projects/diff-binom-confint)
 [![license](https://img.shields.io/github/license/DeepPSP/DBCI?style=flat-square)](license)
 ![GitHub Release Date - Published_At](https://img.shields.io/github/release-date/DeepPSP/DBCI)
 ![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/DeepPSP/DBCI/latest)
