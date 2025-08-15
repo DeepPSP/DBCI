@@ -8,14 +8,11 @@ Changelog <https://keepachangelog.com/en/1.1.0/>`__, and this project
 adheres to `Semantic
 Versioning <https://semver.org/spec/v2.0.0.html>`__.
 
-`Unreleased <https://github.com/DeepPSP/DBCI/compare/v0.0.17...HEAD>`__
+`Unreleased <https://github.com/DeepPSP/DBCI/compare/v0.1.0...HEAD>`__
 ----------------------------------------------------------------------------
 
 Added
 ~~~~~
-
-- Add the `wang` method for computing confidence intervals for the
-  difference of two proportions in `#8 <https://github.com/DeepPSP/DBCI/pull/8>`__.
 
 Changed
 ~~~~~~~
@@ -31,6 +28,15 @@ Fixed
 
 Security
 ~~~~~~~~
+
+`0.1.0 <https://github.com/DeepPSP/DBCI/compare/v0.0.17...v0.1.0>`__ - 2025-8-15
+-----------------------------------------------------------------------------------
+
+Added
+~~~~~
+
+- Add the `wang` method for computing confidence intervals for the
+  difference of two proportions in `#8 <https://github.com/DeepPSP/DBCI/pull/8>`__.
 
 `0.0.17 <https://github.com/DeepPSP/DBCI/compare/v0.0.16...v0.0.17>`__ - 2024-7-30
 -----------------------------------------------------------------------------------
