@@ -23,6 +23,7 @@ def wang_binomial_ci(
     precision: float = 1e-5,
     grid_one: int = 30,
     grid_two: int = 20,
+    verbose: bool = False,
 ) -> ConfidenceInterval:
     """Calculate exact confidence intervals for the difference of two proportions
     using the method from Wang (2013).
@@ -52,6 +53,8 @@ def wang_binomial_ci(
         Number of grid points in first step, by default 30
     grid_two : int, optional
         Number of grid points in second step, by default 20
+    verbose : bool, optional
+        Verbosity for debug message.
 
     Returns
     -------
@@ -99,7 +102,8 @@ def wang_binomial_ci(
             grid_one,
             grid_two,
         )
-        # print(f"Left CI: {ci_l}")
+        if verbose:
+            print(f"Left CI: {ci_l}")
         ci_u = binomial_ci_one_sided(
             n_positive,
             n_total,
@@ -111,7 +115,8 @@ def wang_binomial_ci(
             grid_one,
             grid_two,
         )
-        # print(f"Right CI: {ci_u}")
+        if verbose:
+            print(f"Right CI: {ci_u}")
         lower, upper = ci_l[1], ci_u[2]
         estimate = ci_u[0]
         return ConfidenceInterval(lower, upper, estimate, conf_level, "wang", sides_val)
@@ -456,10 +461,22 @@ def _prob2step(delv, delta, n, m, i1, i2, grid_one, grid_two):
     part1 = np.log(comb(n, i1))[:, None] + np.outer(i1, np.log(p0 + delv)) + np.outer(n - i1, np.log(1 - p0 - delv))
     part2 = np.log(comb(m, i2))[:, None] + np.outer(i2, np.log(p0)) + np.outer(m - i2, np.log(1 - p0))
     sumofprob = np.exp(part1 + part2).sum(axis=0)
+
+    # plateau-aware refinement (R: which(sumofprob == max(sumofprob)))
+    mansum = sumofprob.max()
+    atol = 1e-14 * (mansum if mansum > 0 else 1.0)
+    plateau_idx = np.where(np.isclose(sumofprob, mansum, rtol=0.0, atol=atol))[0]
+    leftmost = plateau_idx.min()
+    rightmost = plateau_idx.max()
+
     stepv = (p0[-1] - p0[0]) / grid_one
-    maxloc = np.argmax(sumofprob)
-    lowerb = max(p0[0], p0[maxloc] - stepv) + delta
-    upperb = min(p0[-1], p0[maxloc] + stepv) - delta
+    lowerb = max(p0[0], p0[rightmost] - stepv) + delta
+    upperb = min(p0[-1], p0[leftmost] + stepv) - delta
+
+    # stepv = (p0[-1] - p0[0]) / grid_one
+    # maxloc = np.argmax(sumofprob)
+    # lowerb = max(p0[0], p0[maxloc] - stepv) + delta
+    # upperb = min(p0[-1], p0[maxloc] + stepv) - delta
 
     p0 = np.linspace(lowerb, upperb, grid_two)
     part1 = np.log(comb(n, i1))[:, None] + np.outer(i1, np.log(p0 + delv)) + np.outer(n - i1, np.log(1 - p0 - delv))
@@ -478,10 +495,22 @@ def _prob2steplmin(delv, delta, n, m, i1, i2, grid_one, grid_two):
     part1 = np.log(comb(n, i1))[:, None] + np.outer(i1, np.log(p0 + delv)) + np.outer(n - i1, np.log(1 - p0 - delv))
     part2 = np.log(comb(m, i2))[:, None] + np.outer(i2, np.log(p0)) + np.outer(m - i2, np.log(1 - p0))
     sumofprob = np.exp(part1 + part2).sum(axis=0)
+
+    # plateau-aware refinement for minima (R: which(sumofprob == min(sumofprob)))
+    mansum = sumofprob.min()
+    atol = 1e-14 * (abs(mansum) if mansum != 0 else 1.0)
+    plateau_idx = np.where(np.isclose(sumofprob, mansum, rtol=0.0, atol=atol))[0]
+    leftmost = plateau_idx.min()
+    rightmost = plateau_idx.max()
+
     stepv = (p0[-1] - p0[0]) / grid_one
-    minloc = np.argmin(sumofprob)
-    lowerb = max(p0[0], p0[minloc] - stepv) + delta
-    upperb = min(p0[-1], p0[minloc] + stepv) - delta
+    lowerb = max(p0[0], p0[rightmost] - stepv) + delta
+    upperb = min(p0[-1], p0[leftmost] + stepv) - delta
+
+    # stepv = (p0[-1] - p0[0]) / grid_one
+    # minloc = np.argmin(sumofprob)
+    # lowerb = max(p0[0], p0[minloc] - stepv) + delta
+    # upperb = min(p0[-1], p0[minloc] + stepv) - delta
 
     p0 = np.linspace(lowerb, upperb, grid_two)
     part1 = np.log(comb(n, i1))[:, None] + np.outer(i1, np.log(p0 + delv)) + np.outer(n - i1, np.log(1 - p0 - delv))
