@@ -41,7 +41,7 @@ acc = [
     "numba",
 ]
 docs = [
-    "sphinx<7.0",
+    "sphinx",
     "nbsphinx",
     "sphinx-theme",
     "pydata-sphinx-theme",
