@@ -8,8 +8,8 @@ repos:
     hooks:
       - id: end-of-file-fixer
       - id: trailing-whitespace
-  - repo: https://github.com/psf/black
-    rev: 25.1.0
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 25.12.0
     hooks:
       - id: black
         args: [--line-length=128, --extend-exclude=.ipynb, --verbose]
@@ -20,7 +20,7 @@ repos:
         additional_dependencies: [pycodestyle>=2.11.0]
         args: [--max-line-length=128, '--exclude=./.*,build,dist', '--ignore=E501,W503,E231,E203', --count, --statistics, --show-source]
   - repo: https://github.com/pycqa/isort
-    rev: 6.0.1
+    rev: 7.0.0
     hooks:
       - id: isort
         args: [--profile=black, --line-length=128]
