@@ -58,9 +58,7 @@ def test_remove_parameters_returns_from_docstring():
         parameters=["returns_indicator", "parameters_indicator"],
         returns="new_doc",
     )
-    assert (
-        new_docstring
-        == """Remove parameters and/or returns from docstring,
+    assert new_docstring == """Remove parameters and/or returns from docstring,
     which is of the format of numpydoc.
 
     Parameters
@@ -77,7 +75,6 @@ def test_remove_parameters_returns_from_docstring():
     None
 
     """
-    )
 
     new_docstring = remove_parameters_returns_from_docstring(
         remove_parameters_returns_from_docstring.__doc__,
