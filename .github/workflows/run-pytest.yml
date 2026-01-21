@@ -38,7 +38,7 @@ jobs:
         pytest --cov=diff_binom_confint --ignore=test/test_random.py -v test
     - name: Upload coverage to Codecov
       if: matrix.python-version == '3.10'
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       with:
         fail_ci_if_error: true # optional (default = false)
         verbose: true # optional (default = false)
