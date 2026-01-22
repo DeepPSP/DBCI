@@ -132,7 +132,6 @@ partvector<-round(Ls[1,1]*(m+2)+Ls[1,2])
 allvector<-setdiff(allvector,partvector)
 
 
-
 ################### from the second table  ################################
 
 morepoint=1
@@ -144,7 +143,6 @@ if(x==n && y==0 && CItype=="Lower"){output[2]=Ls[1,4];output[3]=1;kk<-dimoftable
 if(x==0 && y==m && CItype=="Lower"){output[2]=-1;output[3]=1;kk<-dimoftable}
 if(x==n && y==0 && CItype=="Upper"){output[2]=-1;output[3]=1;kk<-dimoftable}
 if(x==0 && y==m && CItype=="Upper"){output[2]=-1;output[3]=-Ls[1,4];kk<-dimoftable}
-
 
 
 while(kk<=(dimoftable-2))
@@ -205,8 +203,6 @@ leftvector<-setdiff(allvector,partvector)
 I2<-round(leftvector%%(m+2))
 I1<-round((leftvector-leftvector%%(m+2))/(m+2))
 }
-
-
 
 
 prob2step<-function(delv)
@@ -359,8 +355,6 @@ if(probmid>=alpha)
 NCres<-round(imin,digits=pround)
 return(NCres)
 	}## end of function morepointLsest
-
-
 
 
 if(i>=2)

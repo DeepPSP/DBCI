@@ -101,6 +101,7 @@ def wang_binomial_ci(
             precision,
             grid_one,
             grid_two,
+            verbose,
         )
         if verbose:
             print(f"Left CI: {ci_l}")
@@ -114,6 +115,7 @@ def wang_binomial_ci(
             precision,
             grid_one,
             grid_two,
+            verbose,
         )
         if verbose:
             print(f"Right CI: {ci_u}")
@@ -122,7 +124,7 @@ def wang_binomial_ci(
         return ConfidenceInterval(lower, upper, estimate, conf_level, "wang", sides_val)
     else:
         ci = binomial_ci_one_sided(
-            n_positive, n_total, ref_positive, ref_total, conf_level, sides_val, precision, grid_one, grid_two
+            n_positive, n_total, ref_positive, ref_total, conf_level, sides_val, precision, grid_one, grid_two, verbose
         )
         return ConfidenceInterval(ci[1], ci[2], ci[0], conf_level, "wang", sides_val)
 
@@ -137,6 +139,7 @@ def binomial_ci_one_sided(
     precision: float,
     grid_one: int,
     grid_two: int,
+    verbose: bool = False,
 ) -> List[float]:
     """Helper function that calculates one-sided confidence interval.
 
@@ -160,11 +163,13 @@ def binomial_ci_one_sided(
         "right-sided" (aliases "right_sided", "right", "rs", "r"),
         case insensitive.
     precision : float, optional
-        Precision for the search algorithm, by default 1e-5
+        Precision for the search algorithm, by default 1e-5.
     grid_one : int, optional
-        Number of grid points in first step, by default 30
+        Number of grid points in first step, by default 30.
     grid_two : int, optional
-        Number of grid points in second step, by default 20
+        Number of grid points in second step, by default 20.
+    verbose : bool, optional
+        Verbosity for debug message, by default False.
 
     Returns
     -------
@@ -204,7 +209,7 @@ def binomial_ci_one_sided(
     f[:, 2] = (p1hat - p0hat) / np.sqrt(denom)
 
     # Sort f by the third column in descending order
-    f = f[(-f[:, 2]).argsort(), :]
+    f = f[(-f[:, 2]).argsort(kind="stable"), :]
 
     allvector = np.round(f[:, 0] * (m + 2) + f[:, 1]).astype(int)
     allvectormove = np.round((f[:, 0] + 1) * (m + 3) + (f[:, 1] + 1)).astype(int)
@@ -268,7 +273,7 @@ def binomial_ci_one_sided(
 
         # Generate N
         n_arr = np.unique(np.vstack((a, b)), axis=0)
-        nvector = ((n_arr[:, 0] + 1) * (m + 3) + n_arr[:, 1] + 1).astype(int)
+        nvector = ((n_arr[:, 0] + 1) * (m + 3) + n_arr[:, 1] + 1).astype(int)  # type: ignore
         nvector = nvector[np.isin(nvector, allvectormove)]
 
         skvector = ((s[:kk, 0] + 1) * (m + 3) + s[:kk, 1] + 1).astype(int)
@@ -303,6 +308,7 @@ def binomial_ci_one_sided(
         else:
             length_nc = nc_arr.shape[0]
 
+        ncmax = 0  # avoid pylance warning
         for ci in range(length_nc):
             ls_arr[kk, 0:2] = nc_arr[ci, 0:2]
             i1_vec = ls_arr[: (kk + 1), 0]
@@ -363,7 +369,7 @@ def binomial_ci_one_sided(
         if length_nc >= 2:
             valid = ~np.isnan(nc_arr[:, 0])
             ncnomiss = nc_arr[valid]
-            ncnomiss = ncnomiss[(-ncnomiss[:, 2]).argsort(), :]
+            ncnomiss = ncnomiss[(-ncnomiss[:, 2]).argsort(kind="stable"), :]
             morepoint = np.sum(ncnomiss[:, 2] >= ncnomiss[0, 2] - delta)
             if morepoint >= 2:
                 ls_arr[kk : kk + morepoint, 0:2] = ncnomiss[:morepoint, 0:2]
@@ -429,7 +435,8 @@ def binomial_ci_one_sided(
 
         kk1 = kk
 
-    output = [val.item() if isinstance(val, np.generic) else val for val in output]
+    # output = [val.item() if isinstance(val, np.generic) else val for val in output]
+    output = np.array(output).tolist()
 
     return output
 
@@ -456,27 +463,24 @@ def _prob2step(delv, delta, n, m, i1, i2, grid_one, grid_two):
         p0 = np.linspace(-delv + delta, 1 - delta, grid_one)
     else:
         p0 = np.linspace(delta, 1 - delv - delta, grid_one)
+
     i1 = np.atleast_1d(i1)
     i2 = np.atleast_1d(i2)
     part1 = np.log(comb(n, i1))[:, None] + np.outer(i1, np.log(p0 + delv)) + np.outer(n - i1, np.log(1 - p0 - delv))
     part2 = np.log(comb(m, i2))[:, None] + np.outer(i2, np.log(p0)) + np.outer(m - i2, np.log(1 - p0))
     sumofprob = np.exp(part1 + part2).sum(axis=0)
 
-    # plateau-aware refinement (R: which(sumofprob == max(sumofprob)))
-    mansum = sumofprob.max()
-    atol = 1e-14 * (mansum if mansum > 0 else 1.0)
-    plateau_idx = np.where(np.isclose(sumofprob, mansum, rtol=0.0, atol=atol))[0]
+    # mansum = sumofprob.max()
+    # atol = 1e-14 * (mansum if mansum > 0 else 1.0)
+    # plateau_idx = np.where(np.isclose(sumofprob, mansum, rtol=0.0, atol=atol))[0]
+    plateau_idx = np.where(sumofprob == sumofprob.max())[0]
     leftmost = plateau_idx.min()
     rightmost = plateau_idx.max()
 
-    stepv = (p0[-1] - p0[0]) / grid_one
+    denom = (grid_one - 1) if grid_one > 1 else 1
+    stepv = (p0[-1] - p0[0]) / denom
     lowerb = max(p0[0], p0[rightmost] - stepv) + delta
     upperb = min(p0[-1], p0[leftmost] + stepv) - delta
-
-    # stepv = (p0[-1] - p0[0]) / grid_one
-    # maxloc = np.argmax(sumofprob)
-    # lowerb = max(p0[0], p0[maxloc] - stepv) + delta
-    # upperb = min(p0[-1], p0[maxloc] + stepv) - delta
 
     p0 = np.linspace(lowerb, upperb, grid_two)
     part1 = np.log(comb(n, i1))[:, None] + np.outer(i1, np.log(p0 + delv)) + np.outer(n - i1, np.log(1 - p0 - delv))
@@ -490,27 +494,24 @@ def _prob2steplmin(delv, delta, n, m, i1, i2, grid_one, grid_two):
         p0 = np.linspace(-delv + delta, 1 - delta, grid_one)
     else:
         p0 = np.linspace(delta, 1 - delv - delta, grid_one)
+
     i1 = np.atleast_1d(i1)
     i2 = np.atleast_1d(i2)
     part1 = np.log(comb(n, i1))[:, None] + np.outer(i1, np.log(p0 + delv)) + np.outer(n - i1, np.log(1 - p0 - delv))
     part2 = np.log(comb(m, i2))[:, None] + np.outer(i2, np.log(p0)) + np.outer(m - i2, np.log(1 - p0))
     sumofprob = np.exp(part1 + part2).sum(axis=0)
 
-    # plateau-aware refinement for minima (R: which(sumofprob == min(sumofprob)))
-    mansum = sumofprob.min()
-    atol = 1e-14 * (abs(mansum) if mansum != 0 else 1.0)
-    plateau_idx = np.where(np.isclose(sumofprob, mansum, rtol=0.0, atol=atol))[0]
+    # mansum = sumofprob.min()
+    # atol = 1e-14 * (abs(mansum) if mansum != 0 else 1.0)
+    # plateau_idx = np.where(np.isclose(sumofprob, mansum, rtol=0.0, atol=atol))[0]
+    plateau_idx = np.where(sumofprob == sumofprob.min())[0]
     leftmost = plateau_idx.min()
     rightmost = plateau_idx.max()
 
-    stepv = (p0[-1] - p0[0]) / grid_one
+    denom = (grid_one - 1) if grid_one > 1 else 1
+    stepv = (p0[-1] - p0[0]) / denom
     lowerb = max(p0[0], p0[rightmost] - stepv) + delta
     upperb = min(p0[-1], p0[leftmost] + stepv) - delta
-
-    # stepv = (p0[-1] - p0[0]) / grid_one
-    # minloc = np.argmin(sumofprob)
-    # lowerb = max(p0[0], p0[minloc] - stepv) + delta
-    # upperb = min(p0[-1], p0[minloc] + stepv) - delta
 
     p0 = np.linspace(lowerb, upperb, grid_two)
     part1 = np.log(comb(n, i1))[:, None] + np.outer(i1, np.log(p0 + delv)) + np.outer(n - i1, np.log(1 - p0 - delv))
