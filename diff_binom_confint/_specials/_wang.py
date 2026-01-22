@@ -479,8 +479,16 @@ def _prob2step(delv, delta, n, m, i1, i2, grid_one, grid_two):
 
     denom = (grid_one - 1) if grid_one > 1 else 1
     stepv = (p0[-1] - p0[0]) / denom
-    lowerb = max(p0[0], p0[rightmost] - stepv) + delta
-    upperb = min(p0[-1], p0[leftmost] + stepv) - delta
+    # lowerb = max(p0[0], p0[rightmost] - stepv) + delta
+    # upperb = min(p0[-1], p0[leftmost] + stepv) - delta
+
+    raw_lowerb = max(p0[0], p0[rightmost] - stepv) + delta
+    raw_upperb = min(p0[-1], p0[leftmost] + stepv) - delta
+    if raw_lowerb <= raw_upperb:
+        lowerb, upperb = raw_lowerb, raw_upperb
+    else:
+        # Ensure bounds are ordered for linspace; swap if necessary
+        lowerb, upperb = raw_upperb, raw_lowerb
 
     p0 = np.linspace(lowerb, upperb, grid_two)
     part1 = np.log(comb(n, i1))[:, None] + np.outer(i1, np.log(p0 + delv)) + np.outer(n - i1, np.log(1 - p0 - delv))
