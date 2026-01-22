@@ -435,16 +435,16 @@ def test_wang_method():
         # compare results
         if not np.isclose((r_lb, r_ub), (lb, ub), atol=ERR_LIMIT_STRICT).all():
             warnings.warn(
-                f"Strict test failed for {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = },"
+                f"Strict test failed for {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }, "
                 f"R result: {r_lb, r_ub}, Python result: {lb, ub}. falling back to loose test.",
                 RuntimeWarning,
             )
             assert np.isclose(
                 (r_lb, r_ub), (lb, ub), atol=ERR_LIMIT_LOOSE
-            ).all(), f"R result: {r_lb, r_ub}, Python result: {lb, ub} for {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }"  # noqa: E202, E251
-            print(f"Loose test passed for {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }")  # noqa: E202, E251
+            ).all(), f"R result: {r_lb, r_ub}, Python result: {lb, ub} for {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }"
+            print(f"Loose test passed for {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }")
         else:
-            print(f"Strict test passed for {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }")  # noqa: E202, E251
+            print(f"Strict test passed for {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }")
 
     n_positive, n_total, ref_positive, ref_total = 2,5,3,8
 
@@ -455,16 +455,16 @@ def test_wang_method():
     lb, ub = compute_difference_confidence_interval(n_positive, n_total, ref_positive, ref_total, method="wang", sides="left").astuple()  # type: ignore
     if not np.isclose((r_lb, r_ub), (lb, ub), atol=ERR_LIMIT_STRICT).all():
         warnings.warn(
-            f"Strict test failed for one-sided lower {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = },"
+            f"Strict test failed for one-sided lower {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }, "
             f"R result: {r_lb, r_ub}, Python result: {lb, ub}. falling back to loose test.",
             RuntimeWarning,
         )
         assert np.isclose(
             (r_lb, r_ub), (lb, ub), atol=ERR_LIMIT_LOOSE
-        ).all(), f"R result: {r_lb, r_ub}, Python result: {lb, ub} for one-sided lower {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }"  # noqa: E202, E251
-        print(f"Loose test passed for one-sided lower {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }")  # noqa: E202, E251
+        ).all(), f"R result: {r_lb, r_ub}, Python result: {lb, ub} for one-sided lower {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }"
+        print(f"Loose test passed for one-sided lower {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }")
     else:
-        print(f"Strict test passed for one-sided lower {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }")  # noqa: E202, E251
+        print(f"Strict test passed for one-sided lower {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }")
 
     r_result = r["wang_binomial_ci_r"](n_positive, n_total, ref_positive, ref_total, CItype="Upper")  # type: ignore
     r_result_dict = dict(zip(r_result.names, r_result))
@@ -478,10 +478,10 @@ def test_wang_method():
         )
         assert np.isclose(
             (r_lb, r_ub), (lb, ub), atol=ERR_LIMIT_LOOSE
-        ).all(), f"R result: {r_lb, r_ub}, Python result: {lb, ub} for one-sided upper {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }"  # noqa: E202, E251
-        print(f"Loose test passed for one-sided upper {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }")  # noqa: E202, E251
+        ).all(), f"R result: {r_lb, r_ub}, Python result: {lb, ub} for one-sided upper {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }"
+        print(f"Loose test passed for one-sided upper {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }")
     else:
-        print(f"Strict test passed for one-sided upper {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }")  # noqa: E202, E251
+        print(f"Strict test passed for one-sided upper {n_positive = }, {n_total = }, {ref_positive = }, {ref_total = }")
 
     # test input validation
     with pytest.raises(ValueError, match="Number of subjects n_total must be a positive integer."):
