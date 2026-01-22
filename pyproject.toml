@@ -24,6 +24,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
 dependencies = [
     "deprecate-kwargs",
@@ -41,7 +42,7 @@ acc = [
     "numba",
 ]
 docs = [
-    "sphinx<8.0",
+    "sphinx",
     "nbsphinx",
     "sphinx-theme",
     "pydata-sphinx-theme",
