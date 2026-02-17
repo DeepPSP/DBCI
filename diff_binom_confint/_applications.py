@@ -1,3 +1,5 @@
+import re
+import textwrap
 import warnings
 from pathlib import Path
 from typing import Dict, Optional, Sequence, Tuple, Union
@@ -11,6 +13,15 @@ from ._diff_binom_confint import compute_difference_confidence_interval
 __all__ = [
     "make_risk_report",
 ]
+
+
+def _latex_escape(line: str) -> str:
+    """Escape special characters in LaTeX."""
+    # Escape % (not preceded by \)
+    line = re.sub(r"(?<!\\)%", r"\\%", line)
+    # Escape _ (not preceded by \)
+    line = re.sub(r"(?<!\\)_", r"\\_", line)
+    return line
 
 
 def make_risk_report(
@@ -220,7 +231,7 @@ def make_risk_report(
                     n_positive[ref_item],
                     n_affected[ref_item],
                     conf_level,
-                    method,
+                    diff_method,
                     **kwargs,
                 ).astuple(),
             }
@@ -283,17 +294,37 @@ def make_risk_report(
     if return_type.lower() == "pd":
         return df_risk_table
     elif return_type.lower() == "latex":
-        rows = [line.replace("%", r"\%") for line in df_risk_table.to_latex(header=False, index=False).splitlines()]
-        rows[0] = r"\begin{tabular}{@{\extracolsep{6pt}}lllllll@{}}"
-        rows[2] = (
-            r"\multicolumn{2}{l}{Feature} & \multicolumn{affected_cols}{l}{Affected} & \multicolumn{2}{l}{risk_name Risk ($95\%$ CI)} & risk_name Risk Difference  ($95\%$ CI) \\ \cline{1-2}\cline{3-4}\cline{5-6}\cline{7-7}"
-        )
-        rows[2].replace("risk_name", risk_name).replace("95", str(int(conf_level * 100)))
+        latex_body = df_risk_table.to_latex(header=False, index=False)
+        body_lines = latex_body.splitlines()
+
         if is_split:
-            rows[2].replace("affected_cols", "3")
+            header = rf"""
+                \begin{{tabular}}{{@{{\extracolsep{{6pt}}}}llllllll@{{}}}}
+                \toprule
+                \multicolumn{{2}}{{l}}{{Feature}} &
+                \multicolumn{{3}}{{l}}{{Affected}} &
+                \multicolumn{{2}}{{l}}{{{risk_name} Risk (${int(conf_level*100)}\%$ CI)}} &
+                {risk_name} Risk Difference (${int(conf_level*100)}\%$ CI) \\
+                \cmidrule(lr){{1-2}}\cmidrule(lr){{3-5}}\cmidrule(lr){{6-7}}\cmidrule(lr){{8-8}}
+                & & n & \% & t/v & n & \% & \\ \midrule
+                """
         else:
-            rows[2].replace("affected_cols", "2")
-        ret_lines = "\n".join(rows)
+            header = rf"""
+                \begin{{tabular}}{{@{{\extracolsep{{6pt}}}}lllllll@{{}}}}
+                \toprule
+                \multicolumn{{2}}{{l}}{{Feature}} &
+                \multicolumn{{2}}{{l}}{{Affected}} &
+                \multicolumn{{2}}{{l}}{{{risk_name} Risk (${int(conf_level*100)}\%$ CI)}} &
+                {risk_name} Risk Difference (${int(conf_level*100)}\%$ CI) \\
+                \cmidrule(lr){{1-2}}\cmidrule(lr){{3-4}}\cmidrule(lr){{5-6}}\cmidrule(lr){{7-7}}
+                & & n & \% & n & \% & \\ \midrule
+                """
+        # remove extra leading spaces
+        header = textwrap.dedent(header).strip()
+
+        body = "\n".join(_latex_escape(line) for line in body_lines[5:-1])
+
+        ret_lines = header + "\n" + body + "\n\\end{tabular}"
         if save_path is not None:
             save_path.with_suffix(".tex").write_text(ret_lines)
         return ret_lines
@@ -303,3 +334,5 @@ def make_risk_report(
         return df_risk_table.to_html(index=False)
     elif return_type.lower() == "dict":
         return ret_dict
+    else:
+        raise ValueError(f"Unsupported return_type {repr(return_type)}")

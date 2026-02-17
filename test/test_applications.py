@@ -108,4 +108,13 @@ def test_make_risk_report():
             target="HasSeizure",
         )
 
+    with pytest.raises(ValueError, match="Unsupported return_type"):
+        make_risk_report(
+            data_source=df_test,
+            risk_name="Seizure",
+            target="HasSeizure",
+            positive_class="Yes",
+            return_type="xxx",
+        )
+
     shutil.rmtree(_TMP_DIR)
