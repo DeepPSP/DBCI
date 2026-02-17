@@ -26,7 +26,7 @@ Removed
 Fixed
 ~~~~~
 
-- Fix errors in edge cases (mainly when `n_total` equals `ref_total`)
+- (NOT fully resolved yet) Fix errors in edge cases (mainly when `n_total` equals `ref_total`)
   in the computation of difference of two proportions confidence intervals
   using `wang` method.
 - Fix errors in generating latex table for risk report (function ``make_risk_report``):
