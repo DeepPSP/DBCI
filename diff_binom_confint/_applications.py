@@ -16,12 +16,24 @@ __all__ = [
 
 
 def _latex_escape(line: str) -> str:
-    """Escape special characters in LaTeX."""
-    # Escape % (not preceded by \)
-    line = re.sub(r"(?<!\\)%", r"\\%", line)
-    # Escape _ (not preceded by \)
-    line = re.sub(r"(?<!\\)_", r"\\_", line)
-    return line
+    """Escape LaTeX special characters in a string."""
+    # LaTeX special characters that need escaping:
+    #    \  &  %  $  #  _  {  }  ~  ^
+    # We replace each occurrence with its escaped form.
+    specials = {
+        "\\": r"\textbackslash{}",
+        "&": r"\&",
+        "%": r"\%",
+        "$": r"\$",
+        "#": r"\#",
+        "_": r"\_",
+        "{": r"\{",
+        "}": r"\}",
+        "~": r"\textasciitilde{}",
+        "^": r"\textasciicircum{}",
+    }
+    pattern = re.compile(r"([\\&%$#_{}~^])")
+    return pattern.sub(lambda m: specials[m.group(1)], line)
 
 
 def make_risk_report(
