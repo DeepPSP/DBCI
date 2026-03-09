@@ -31,10 +31,10 @@ def test_make_risk_report():
         [str(_TMP_DIR / "risk-report"), None],  # save_path
     )
 
-    for data_source, ref_classes, risk_name, return_type, save_path in grid:
+    for data_source, rc, risk_name, return_type, save_path in grid:
         report = make_risk_report(
             data_source=data_source,
-            ref_classes=ref_classes,
+            ref_classes=rc,
             risk_name=risk_name,
             return_type=return_type,
             save_path=save_path,
@@ -48,6 +48,16 @@ def test_make_risk_report():
             assert isinstance(report, dict)
         elif return_type in ("latex", "md", "markdown", "html"):
             assert isinstance(report, str)
+
+    with pytest.raises(ValueError, match="Unsupported return_type"):
+        make_risk_report(
+            data_source=df_test,
+            ref_classes=ref_classes,
+            risk_name="Seizure",
+            target="HasSeizure",
+            positive_class="Yes",
+            return_type="xxx",
+        )
 
     with pytest.raises(ValueError, match=f"target {repr('xxx')} not in the columns"):
         make_risk_report(

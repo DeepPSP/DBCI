@@ -26,9 +26,12 @@ Removed
 Fixed
 ~~~~~
 
-- Fix errors in edge cases (mainly when `n_total` equals `ref_total`)
+- (NOT fully resolved yet) Fix errors in edge cases (mainly when `n_total` equals `ref_total`)
   in the computation of difference of two proportions confidence intervals
   using `wang` method.
+- Fix errors in generating LaTeX table for risk report (function ``make_risk_report``):
+  - Escape special characters in LaTeX.
+  - Fix the header for the generated LaTeX table.
 
 Security
 ~~~~~~~~
