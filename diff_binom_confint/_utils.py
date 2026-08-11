@@ -135,8 +135,7 @@ def remove_parameters_returns_from_docstring(
                 indices2remove.extend(list(range(start_idx, idx)))
                 start_idx = None
     if start_idx is not None:
-        indices2remove(list(range(start_idx, len(new_doc))))
-        new_doc.extend(["\n", parameters_indicator or returns_indicator])
+        indices2remove.extend(list(range(start_idx, len(new_doc))))
     new_doc = [line for idx, line in enumerate(new_doc) if idx not in indices2remove]
     # remove trailing empty lines
     idx = max(idx for idx, line in enumerate(new_doc) if len(line.strip()) > 0)
